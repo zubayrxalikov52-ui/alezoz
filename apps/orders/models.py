@@ -163,7 +163,7 @@ class Order(models.Model):
 
     def to_dict(self):
         from django.conf import settings
-        bot_username = getattr(settings, 'TELEGRAM_BOT_USERNAME', 'asdqregefv_bot')
+        bot_username = getattr(settings, 'TELEGRAM_BOT_USERNAME', 'alezozmilliycafebot')
         return {
             'id': self.pk,
             'order_number': self.order_number,

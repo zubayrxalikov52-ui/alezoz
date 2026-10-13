@@ -116,7 +116,7 @@
                     <div style="background:rgba(41,182,246,0.08); border:1px solid rgba(41,182,246,0.2); border-radius:12px; padding:14px; margin-bottom:14px;">
                         <p style="color:#7dd3fc; font-size:14px; font-weight:600; margin-bottom:6px;">📱 Tasdiqlash kodi olish:</p>
                         <ol style="color:#e2e8f0; font-size:13px; line-height:2; padding-left:18px; margin:0;">
-                            <li>Telegram botimizga o'ting: <a id="bot-link" href="https://t.me/asdqregefv_bot" target="_blank" style="color:#7dd3fc; text-decoration:underline;">Al Ezoz boti</a></li>
+                            <li>Telegram botimizga o'ting: <a id="bot-link" href="https://t.me/alezozmilliycafebot" target="_blank" style="color:#7dd3fc; text-decoration:underline;">Al Ezoz boti</a></li>
                             <li>Botga <code style="background:rgba(255,255,255,0.1); padding:1px 6px; border-radius:4px;">/start</code> yoki istalgan xabar yuboring</li>
                             <li>Bot sizga <b>6 xonali kod</b> yuboradi</li>
                             <li>Kodni pastdagi maydonga kiriting</li>
@@ -187,7 +187,7 @@
             <ul class="footer-links">
                 <li><a href="tel:+998909115252" style="color:inherit; text-decoration:none;">📞 +998 90 911 52 52</a></li>
                 <li><a href="tel:+998901381823" style="color:inherit; text-decoration:none;">📞 +998 90 138 18 23</a></li>
-                <li><a href="https://t.me/asdqregefv_bot" target="_blank" style="color:inherit; text-decoration:none;" data-i18n="footer.bot">✈️ Telegram boti</a></li>
+                <li><a href="https://t.me/alezozmilliycafebot" target="_blank" style="color:inherit; text-decoration:none;" data-i18n="footer.bot">✈️ Telegram boti</a></li>
             </ul>
         </div>
     </footer>
@@ -261,7 +261,7 @@
                     statusTitle.textContent = isRu ? '📋 Ожидается подтверждение — Требуется код' : '📋 Buyurtma kutilmoqda — Tasdiqlash kerak';
                     statusDesc.textContent = isRu ? 'Для подтверждения заказа перейдите в Telegram-бот и отправьте команду /start.' : 'Buyurtmani tasdiqlash uchun Telegram bot orqali 6 xonali kodni oling.';
                     confirmationBox.style.display = 'block';
-                    botLink.href = data.bot_start_url || `https://t.me/${data.bot_username || 'asdqregefv_bot'}?start=${data.tracking_code}`;
+                    botLink.href = data.bot_start_url || `https://t.me/${data.bot_username || 'alezozmilliycafebot'}?start=${data.tracking_code}`;
                     
                     if (data.telegram_username) {
                         document.getElementById('username-hint').style.display = 'block';
