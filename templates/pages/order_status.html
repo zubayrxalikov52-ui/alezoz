@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Al Ezoz — Buyurtma holati</title>
+    <link rel="stylesheet" href="/static/style.css?v=20261010-alezoz">
+    <link rel="stylesheet" href="/static/common_extra.css?v=20261010-alezoz">
+    <script src="/static/app.js?v=202610101241" defer></script>
+</head>
+
+<body>
+
+    <div class="background"></div>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="table-info">
+            <div class="table-icon">♧</div>
+            <div>
+                <strong>Al Ezoz</strong>
+                <small data-i18n="status.trackingSub">Kuzatuv tizimi</small>
+            </div>
+        </div>
+
+        <nav class="main-nav">
+            <ul class="nav-links">
+                <li><a href="/" class="nav-link" data-i18n="nav.home">Bosh sahifa</a></li>
+                <li><a href="/menu" class="nav-link" data-i18n="nav.menu">Menyu</a></li>
+                <li><a href="/about" class="nav-link" data-i18n="nav.about">Biz haqimizda</a></li>
+                <li><a href="/contact" class="nav-link" data-i18n="nav.contact">Aloqa</a></li>
+                <li>
+                    <a href="/cart" class="nav-link">
+                        <span data-i18n="nav.cart">Savat</span>
+                        <span class="cart-nav-badge cart-count-badge">0</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="logo">
+            <span>Al Ezoz</span>
+            <small>MILLI CAFE</small>
+        </div>
+
+        <div class="header-actions">
+            <button class="mobile-nav-toggle" aria-label="Menyuni ochish">☰</button>
+            <button id="theme-btn" class="round-btn">🎨</button>
+            <div class="lang-toggle-group">
+                <button type="button" class="lang-btn-item active" data-lang="uz" title="O'zbekcha"><span>🇺🇿</span> UZ</button>
+                <button type="button" class="lang-btn-item" data-lang="ru" title="Русский"><span>🇷🇺</span> RU</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MOBILE DRAWER -->
+    <div class="drawer-backdrop"></div>
+    <aside class="mobile-drawer">
+        <div class="drawer-header">
+            <div class="logo" style="position:static; transform:none;">
+                <span style="font-size:30px;">Al Ezoz</span>
+                <small>MILLI CAFE</small>
+            </div>
+            <button class="drawer-close">✕</button>
+        </div>
+        <ul class="drawer-links">
+            <li><a href="/" class="nav-link">🏠 Bosh sahifa</a></li>
+            <li><a href="/menu" class="nav-link">🍽 Menyu</a></li>
+            <li><a href="/about" class="nav-link">ℹ️ <span data-i18n="nav.about">Biz haqimizda</span></a></li>
+            <li><a href="/contact" class="nav-link">📞 Aloqa</a></li>
+            <li><a href="/cart" class="nav-link">🛒 Savat (<span class="cart-count-badge">0</span>)</a></li>
+        </ul>
+    </aside>
+
+    <main>
+        <div class="tracking-wrapper">
+            <span class="welcome-small" data-i18n="status.badge">BUYURTMA KUZATUVI</span>
+            <h1 style="font-size:36px; margin:10px 0;">
+                Buyurtma <span id="display-order-num">#...</span>
+            </h1>
+            <p style="color:var(--muted); font-size:14px;">
+                Buyurtmangiz holati real vaqt rejimida oshxonamiz tomonidan yangilanadi.
+            </p>
+
+            <!-- TIMELINE -->
+            <div class="timeline" id="status-timeline">
+                <div class="timeline-step" id="step-pending">
+                    <div class="step-icon">📋</div>
+                    <span data-i18n="status.stepPending">Yuborildi</span>
+                </div>
+                <div class="timeline-step" id="step-confirmed">
+                    <div class="step-icon">✅</div>
+                    <span data-i18n="status.stepConfirmed">Tasdiqlandi</span>
+                </div>
+                <div class="timeline-step" id="step-preparing">
+                    <div class="step-icon">👨‍🍳</div>
+                    <span data-i18n="status.stepPreparing">Tayyorlanmoqda</span>
+                </div>
+                <div class="timeline-step" id="step-ready">
+                    <div class="step-icon">🔥</div>
+                    <span data-i18n="status.stepReady">Tayyor</span>
+                </div>
+                <div class="timeline-step" id="step-delivered">
+                    <div class="step-icon">🎉</div>
+                    <span data-i18n="status.stepDelivered">Yetkazildi</span>
+                </div>
+            </div>
+
+            <!-- STATUS BADGE & DETAILS -->
+            <div id="status-message-box" style="padding:16px; border-radius:16px; background:rgba(232,187,88,0.1); border:1px solid rgba(232,187,88,0.3); margin-bottom:24px;">
+                <h3 id="current-status-title" style="color:var(--gold); font-size:18px; margin-bottom:4px;">Holat yuklanmoqda...</h3>
+                <p id="current-status-desc" style="color:var(--muted); font-size:13px;">Ma’lumotlar tekshirilmoqda</p>
+                
+                <div id="confirmation-box" style="display:none; margin-top:15px; padding-top:15px; border-top:1px solid rgba(232,187,88,0.3);">
+                    <div style="background:rgba(41,182,246,0.08); border:1px solid rgba(41,182,246,0.2); border-radius:12px; padding:14px; margin-bottom:14px;">
+                        <p style="color:#7dd3fc; font-size:14px; font-weight:600; margin-bottom:6px;">📱 Tasdiqlash kodi olish:</p>
+                        <ol style="color:#e2e8f0; font-size:13px; line-height:2; padding-left:18px; margin:0;">
+                            <li>Telegram botimizga o'ting: <a id="bot-link" href="https://t.me/asdqregefv_bot" target="_blank" style="color:#7dd3fc; text-decoration:underline;">Al Ezoz boti</a></li>
+                            <li>Botga <code style="background:rgba(255,255,255,0.1); padding:1px 6px; border-radius:4px;">/start</code> yoki istalgan xabar yuboring</li>
+                            <li>Bot sizga <b>6 xonali kod</b> yuboradi</li>
+                            <li>Kodni pastdagi maydonga kiriting</li>
+                        </ol>
+                        <p id="username-hint" style="display:none; color:#4ade80; font-size:12px; margin-top:8px;">
+                            ✅ Kod <b id="username-display"></b> username'iga yuboriladi
+                        </p>
+                    </div>
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <input type="text" id="confirm-code-input" class="form-input" placeholder="6 xonali kod" maxlength="6" style="max-width:160px; letter-spacing:4px; font-size:18px; text-align:center;" oninput="this.value=this.value.replace(/\D/g,'')">
+                        <button onclick="confirmOrder()" class="btn-secondary" style="white-space:nowrap;">✅ Tasdiqlash</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ORDER DETAILS CARD -->
+            <div style="text-align:left; background:rgba(8,15,20,0.7); border:1px solid var(--border); border-radius:18px; padding:24px;">
+                <h4 style="font-size:16px; margin-bottom:14px; color:var(--white);">Buyurtma ma’lumotlari</h4>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; font-size:14px; margin-bottom:16px;">
+                    <div><span style="color:var(--muted);" data-i18n="status.custName">Mijoz:</span> <strong id="det-name" style="color:var(--white);">-</strong></div>
+                    <div><span style="color:var(--muted);" data-i18n="status.custPhone">Telefon:</span> <strong id="det-phone" style="color:var(--white);">-</strong></div>
+                    <div><span style="color:var(--muted);" data-i18n="status.orderType">Turi:</span> <strong id="det-type" style="color:var(--white);">-</strong></div>
+                    <div><span style="color:var(--muted);" data-i18n="status.custAddress">Manzil:</span> <strong id="det-address" style="color:var(--white);">-</strong></div>
+                </div>
+
+                <h4 style="font-size:15px; margin:16px 0 10px 0; color:var(--gold);">Taomlar ro‘yxati</h4>
+                <div id="det-items" style="border-top:1px solid var(--border); padding-top:10px;">
+                    <!-- Items -->
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:16px; padding-top:14px; border-top:1px solid var(--border);">
+                    <span style="font-size:16px;">Jami to‘lov:</span>
+                    <strong id="det-total" style="font-size:22px; color:var(--gold);">0 so‘m</strong>
+                </div>
+            </div>
+
+            <div style="margin-top:30px; display:flex; justify-content:center; gap:16px;">
+                <a href="/menu" class="btn-secondary">🍽 Menyuga qaytish</a>
+                <a href="/" class="btn-primary">🏠 Bosh sahifa</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="footer-brand">
+            <span class="logo-text">Al Ezoz</span>
+            <small>MILLI CAFE</small>
+            <p data-i18n="footer.desc">Toshkent markazidagi eng mazali taomlar, yuqori darajadagi xizmat va shinam muhit maskani.</p>
+        </div>
+        <div class="footer-col">
+            <h4 data-i18n="footer.pages">Sahifalar</h4>
+            <ul class="footer-links">
+                <li><a href="/" data-i18n="nav.home">Bosh sahifa</a></li>
+                <li><a href="/menu" data-i18n="nav.menu">Menyu</a></li>
+                <li><a href="/about" data-i18n="nav.about">Biz haqimizda</a></li>
+                <li><a href="/contact" data-i18n="nav.contact">Aloqa</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4 data-i18n="footer.hoursTitle">Ish tartibi</h4>
+            <ul class="footer-links">
+                <li data-i18n="footer.hoursDays">Har kuni: 09:00 — 23:00</li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Bog‘lanish</h4>
+            <ul class="footer-links">
+                <li><a href="tel:+998909115252" style="color:inherit; text-decoration:none;">📞 +998 90 911 52 52</a></li>
+                <li><a href="tel:+998901381823" style="color:inherit; text-decoration:none;">📞 +998 90 138 18 23</a></li>
+                <li><a href="https://t.me/asdqregefv_bot" target="_blank" style="color:inherit; text-decoration:none;" data-i18n="footer.bot">✈️ Telegram boti</a></li>
+            </ul>
+        </div>
+    </footer>
+
+        <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const orderNum = urlParams.get('num') || urlParams.get('tc') || urlParams.get('tracking') || '';
+        document.getElementById('display-order-num').textContent = orderNum ? '#' + orderNum : '#---';
+
+        const stepOrder = ['pending', 'confirmed', 'preparing', 'ready', 'delivered'];
+        let currentTrackingCode = '';
+
+        async function fetchOrderStatus() {
+            if (!orderNum) return;
+            try {
+                const res = await fetch(`/api/orders/${orderNum}`);
+                if (!res.ok) throw new Error();
+                const data = await res.json();
+                
+                currentTrackingCode = data.tracking_code;
+
+                document.getElementById('det-name').textContent = data.customer_name;
+                document.getElementById('det-phone').textContent = data.customer_phone;
+                                const isRu = (typeof AllonApp !== 'undefined' && AllonApp.getCurrentLanguage() === 'ru');
+                const curr = isRu ? 'сум' : "so‘m";
+                let orderTypeText = '';
+                if (data.order_type === 'delivery') {
+                    orderTypeText = isRu ? 'Доставка (Курьер)' : 'Yetkazib berish';
+                } else if (data.table_number) {
+                    orderTypeText = (isRu ? 'Стол №' : 'Stol: ') + data.table_number;
+                } else {
+                    orderTypeText = isRu ? 'Самовывоз' : 'Olib ketish';
+                }
+                document.getElementById('det-type').textContent = orderTypeText;
+                document.getElementById('det-address').textContent = data.delivery_address || '-';
+                document.getElementById('det-total').textContent = data.total.toLocaleString('uz-UZ') + ' ' + curr;
+
+                let itemsHtml = '';
+                (data.items || []).forEach(it => {
+                    const displayName = (typeof AllonApp !== 'undefined') ? AllonApp.translateItemName(it.name) : it.name;
+                    itemsHtml += `
+                        <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:14px;">
+                            <span>${displayName} x ${it.quantity}</span>
+                            <span style="color:var(--gold);">${it.total.toLocaleString('uz-UZ')} ${curr}</span>
+                        </div>
+                    `;
+                });
+                document.getElementById('det-items').innerHTML = itemsHtml;
+
+                // Update timeline
+                const currentStatus = data.status;
+                const curIdx = stepOrder.indexOf(currentStatus);
+
+                stepOrder.forEach((st, idx) => {
+                    const stepEl = document.getElementById('step-' + st);
+                    if (!stepEl) return;
+                    stepEl.classList.remove('completed', 'active');
+                    if (idx < curIdx) {
+                        stepEl.classList.add('completed');
+                    } else if (idx === curIdx) {
+                        stepEl.classList.add('active');
+                    }
+                });
+
+                const statusTitle = document.getElementById('current-status-title');
+                const statusDesc = document.getElementById('current-status-desc');
+                const confirmationBox = document.getElementById('confirmation-box');
+                const botLink = document.getElementById('bot-link');
+
+                if (currentStatus === 'pending') {
+                    statusTitle.textContent = isRu ? '📋 Ожидается подтверждение — Требуется код' : '📋 Buyurtma kutilmoqda — Tasdiqlash kerak';
+                    statusDesc.textContent = isRu ? 'Для подтверждения заказа перейдите в Telegram-бот и отправьте команду /start.' : 'Buyurtmani tasdiqlash uchun Telegram bot orqali 6 xonali kodni oling.';
+                    confirmationBox.style.display = 'block';
+                    botLink.href = data.bot_start_url || `https://t.me/${data.bot_username || 'asdqregefv_bot'}?start=${data.tracking_code}`;
+                    
+                    if (data.telegram_username) {
+                        document.getElementById('username-hint').style.display = 'block';
+                        document.getElementById('username-display').textContent = '@' + data.telegram_username;
+                    }
+                } else {
+                    confirmationBox.style.display = 'none';
+                    if (currentStatus === 'confirmed') {
+                        statusTitle.textContent = isRu ? '✅ Заказ подтвержден' : '✅ Buyurtma tasdiqlandi';
+                        statusDesc.textContent = isRu ? 'Кухня приступила к подготовке ингредиентов.' : 'Oshxona masalliqlarni tayyorlashga kirishdi.';
+                    } else if (currentStatus === 'preparing') {
+                        statusTitle.textContent = isRu ? '👨‍🍳 Повар готовит блюдо' : '👨‍🍳 Oshpazimiz taomni tayyorlamoqda';
+                        statusDesc.textContent = isRu ? 'Ваше блюдо готовится с любовью и скоро будет готово!' : 'Taomingiz mehr bilan pishirilmoqda va tez orada tayyor bo‘ladi!';
+                    } else if (currentStatus === 'ready') {
+                        statusTitle.textContent = isRu ? '🔥 Блюдо готово!' : '🔥 Taom tayyor!';
+                        statusDesc.textContent = isRu ? 'Заказ готов, передается курьеру или готов к выдаче.' : 'Buyurtma oshxonadan chiqdi, kuryerga topshirilmoqda yoki olib ketishingiz mumkin.';
+                    } else if (currentStatus === 'delivered') {
+                        statusTitle.textContent = isRu ? '🎉 Заказ успешно доставлен!' : '🎉 Buyurtma muvaffaqiyatli yetkazildi!';
+                        statusDesc.textContent = isRu ? 'Приятного аппетита! Спасибо, что выбрали Al Ezoz.' : 'Yoqimli ishtaha! Al Ezoz xizmatidan foydalanganingiz uchun tashakkur.';
+                    } else if (currentStatus === 'cancelled') {
+                        statusTitle.textContent = isRu ? '❌ Заказ отменен' : '❌ Buyurtma bekor qilindi';
+                        statusDesc.textContent = isRu ? 'По возникшим вопросам обратитесь к администрации.' : 'Savollar bo‘lsa ma’muriyat bilan bog‘laning.';
+                    }
+                }
+            } catch (err) {
+                console.error(err);
+            }
+        }
+        
+        async function confirmOrder() {
+            const code = document.getElementById('confirm-code-input').value;
+            if (!code || code.length !== 6) {
+                alert('Iltimos 6 xonali tasdiqlash kodini kiriting');
+                return;
+            }
+            try {
+                const res = await fetch(`/api/orders/${currentTrackingCode}/confirm`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({code})
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    alert('Buyurtma muvaffaqiyatli tasdiqlandi!');
+                    fetchOrderStatus();
+                } else {
+                    alert(data.detail || 'Xatolik yuz berdi');
+                }
+            } catch(e) {
+                alert('Xatolik yuz berdi');
+            }
+        }
+
+        window.addEventListener('appLanguageChanged', () => fetchOrderStatus());
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchOrderStatus();
+            setInterval(fetchOrderStatus, 5000); // Polling status every 5 seconds
+        });
+    </script>
+</body>
+</html>
+
+
+
+

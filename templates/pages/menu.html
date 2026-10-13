@@ -1,0 +1,1893 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Al Ezoz — Menyu</title>
+
+    <link rel="stylesheet" href="/static/style.css?v=20261010-alezoz">
+    <link rel="stylesheet" href="/static/common_extra.css?v=20261010-alezoz">
+    <script src="/static/app.js?v=202610101241" defer></script>
+</head>
+
+<body>
+
+    <div class="background"></div>
+
+    <!-- HEADER -->
+
+    <header class="header">
+
+        <div class="table-info">
+            <div class="table-icon">♧</div>
+
+            <div>
+                <strong>Stol №7</strong>
+                <small data-i18n="table.welcome">Xush kelibsiz!</small>
+            </div>
+        </div>
+
+
+        <div class="menu-control">
+            <button id="menu-btn" class="menu-btn">
+                <span>☷</span>
+                <span data-i18n="nav.menu">Menyu</span>
+            </button>
+
+            <div id="menu-dropdown" class="menu-dropdown">
+                <button class="category active" data-category="all">
+                    <span>▦</span>
+                    Barchasi
+                </button>
+                <button class="category" data-category="food">
+                    <span>🍽</span>
+                    Taomlar
+                </button>
+                <button class="category" data-category="salad">
+                    <span>🥗</span>
+                    Salatlar
+                </button>
+                <button class="category" data-category="snack">
+                    <span>🍟</span>
+                    Snacklar
+                </button>
+                <button class="category" data-category="drink">
+                    <span>🥤</span>
+                    Ichimliklar
+                </button>
+                <button class="category" data-category="dessert">
+                    <span>🍰</span>
+                    Desertlar
+                </button>
+            </div>
+        </div>
+
+
+        <!-- DESKTOP NAVBAR -->
+        <nav class="main-nav">
+            <ul class="nav-links">
+                <li><a href="/" class="nav-link" data-i18n="nav.home">Bosh sahifa</a></li>
+                <li><a href="/menu" class="nav-link active" data-i18n="nav.menu">Menyu</a></li>
+                <li><a href="/about" class="nav-link" data-i18n="nav.about">Biz haqimizda</a></li>
+                <li><a href="/contact" class="nav-link" data-i18n="nav.contact">Aloqa</a></li>
+                <li>
+                    <a href="/cart" class="nav-link">
+                        <span data-i18n="nav.cart">Savat</span>
+                        <span class="cart-nav-badge cart-count-badge">0</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+
+        <div class="logo">
+            <span>Al Ezoz</span>
+            <small>MILLI CAFE</small>
+        </div>
+
+
+        <div class="header-actions">
+            <button class="mobile-nav-toggle" aria-label="Menyuni ochish">☰</button>
+            <button id="theme-btn" class="round-btn">
+                ☼
+            </button>
+            <div class="lang-toggle-group">
+                <button type="button" class="lang-btn-item active" data-lang="uz" title="O'zbekcha"><span>🇺🇿</span> UZ</button>
+                <button type="button" class="lang-btn-item" data-lang="ru" title="Русский"><span>🇷🇺</span> RU</button>
+            </div>
+        </div>
+
+    </header>
+
+    <!-- MOBILE DRAWER -->
+    <div class="drawer-backdrop"></div>
+    <aside class="mobile-drawer">
+        <div class="drawer-header">
+            <div class="logo" style="position:static; transform:none;">
+                <span style="font-size:30px;">Al Ezoz</span>
+                <small>MILLI CAFE</small>
+            </div>
+            <button class="drawer-close">✕</button>
+        </div>
+        <ul class="drawer-links">
+            <li><a href="/" class="nav-link">🏠 <span data-i18n="nav.home">Bosh sahifa</span></a></li>
+            <li><a href="/menu" class="nav-link active">🍽 <span data-i18n="nav.menu">Menyu</span></a></li>
+            <li><a href="/about" class="nav-link">ℹ️ <span data-i18n="nav.about">Biz haqimizda</span></a></li>
+            <li><a href="/contact" class="nav-link">📞 <span data-i18n="nav.contact">Aloqa</span></a></li>
+            <li><a href="/cart" class="nav-link">🛒 <span data-i18n="nav.cart">Savat</span> (<span class="cart-count-badge">0</span>)</a></li>
+            <li style="margin-top:20px; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px;">
+                <a href="/secure-admin/" class="nav-link" style="color:#e8bb58;">🔐 Admin Panel</a>
+            </li>
+            <li>
+                <a href="/chef-panel/" class="nav-link" style="color:#60a5fa;">👨‍🍳 Oshpaz Paneli</a>
+            </li>
+        </ul>
+    </aside>
+
+
+    <!-- MAIN -->
+
+    <main class="main">
+
+        <section class="menu-section">
+
+            <div class="welcome">
+
+                <span class="welcome-small">
+                    AL EZOZ
+                </span>
+
+                <h1>
+                    Mazali taomlar
+                    <br>
+                    <span>yaxshi kayfiyat.</span>
+                </h1>
+
+                <div class="line"></div>
+
+                <p data-i18n="menu.desc">
+                    Menyudan istagan taomingizni tanlang
+                    va buyurtmangizni savatga qo‘shing.
+                </p>
+
+            </div>
+
+
+            <!-- 50 TA MAHSULOT -->
+
+            <div id="food-list" class="food-list">
+
+
+                <!-- 1 -->
+
+                <article class="food-card" data-category="food">
+
+                    <img
+                        src="https://loremflickr.com/600/400/burger?lock=1"
+                        alt="Classic Burger">
+
+                    <div class="food-info">
+
+                        <h3>Classic Burger</h3>
+
+                        <p>
+                            Mol go‘shti, cheddar va maxsus sous
+                        </p>
+
+                        <strong>45 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 2 -->
+
+                <article class="food-card" data-category="food">
+
+                    <img
+                        src="https://loremflickr.com/600/400/burger?lock=2"
+                        alt="Double Burger">
+
+                    <div class="food-info">
+
+                        <h3>Double Burger</h3>
+
+                        <p>
+                            Ikki qavatli go‘sht va cheddar
+                        </p>
+
+                        <strong>65 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 3 -->
+
+                <article class="food-card" data-category="food">
+
+                    <img
+                        src="https://loremflickr.com/600/400/burger?lock=3"
+                        alt="Chicken Burger">
+
+                    <div class="food-info">
+
+                        <h3>Chicken Burger</h3>
+
+                        <p>
+                            Qarsildoq tovuq va maxsus sous
+                        </p>
+
+                        <strong>50 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 4 -->
+
+                <article class="food-card" data-category="food">
+
+                    <img
+                        src="https://loremflickr.com/600/400/burger?lock=4"
+                        alt="Cheese Burger">
+
+                    <div class="food-info">
+
+                        <h3>Cheese Burger</h3>
+
+                        <p>
+                            Mol go‘shti va cheddar pishlog‘i
+                        </p>
+
+                        <strong>55 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 5 -->
+
+                <article class="food-card" data-category="food">
+
+                    <img
+                        src="https://loremflickr.com/600/400/burger?lock=5"
+                        alt="Spicy Burger">
+
+                    <div class="food-info">
+
+                        <h3>Spicy Burger</h3>
+
+                        <p>
+                            Achchiq sous va jalapeno
+                        </p>
+
+                        <strong>52 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 6 -->
+
+                <article class="food-card" data-category="food">
+
+                    <img
+                        src="https://loremflickr.com/600/400/pizza?lock=6"
+                        alt="Margherita Pizza">
+
+                    <div class="food-info">
+
+                        <h3>Margherita Pizza</h3>
+
+                        <p>
+                            Pomidor, mozzarella va rayhon
+                        </p>
+
+                        <strong>60 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 7 -->
+
+                <article class="food-card" data-category="food">
+
+                    <img
+                        src="https://loremflickr.com/600/400/pizza?lock=7"
+                        alt="Pepperoni Pizza">
+
+                    <div class="food-info">
+
+                        <h3>Pepperoni Pizza</h3>
+
+                        <p>
+                            Pepperoni, mozzarella va sous
+                        </p>
+
+                        <strong>70 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 8 -->
+
+                <article class="food-card" data-category="food">
+
+                    <img
+                        src="https://loremflickr.com/600/400/pizza?lock=8"
+                        alt="Chicken Pizza">
+
+                    <div class="food-info">
+
+                        <h3>Chicken Pizza</h3>
+
+                        <p>
+                            Tovuq, mozzarella va qo‘ziqorin
+                        </p>
+
+                        <strong>68 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 9 -->
+
+                <article class="food-card" data-category="food">
+
+                    <img
+                        src="https://loremflickr.com/600/400/pizza?lock=9"
+                        alt="Four Cheese Pizza">
+
+                    <div class="food-info">
+
+                        <h3>Four Cheese Pizza</h3>
+
+                        <p>
+                            To‘rt xil pishloq
+                        </p>
+
+                        <strong>75 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 10 -->
+
+                <article class="food-card" data-category="food">
+
+                    <img
+                        src="https://loremflickr.com/600/400/pizza?lock=10"
+                        alt="Meat Pizza">
+
+                    <div class="food-info">
+
+                        <h3>Meat Pizza</h3>
+
+                        <p>
+                            Go‘sht, kolbasa va mozzarella
+                        </p>
+
+                        <strong>78 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 11 -->
+
+                <article class="food-card" data-category="food">
+
+                    <img
+                        src="https://loremflickr.com/600/400/steak?lock=11"
+                        alt="Chicken Steak">
+
+                    <div class="food-info">
+
+                        <h3>Chicken Steak</h3>
+
+                        <p>
+                            Grilda pishirilgan tovuq
+                        </p>
+
+                        <strong>75 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 12 -->
+
+                <article class="food-card" data-category="food">
+
+                    <img
+                        src="https://loremflickr.com/600/400/steak?lock=12"
+                        alt="Beef Steak">
+
+                    <div class="food-info">
+
+                        <h3>Beef Steak</h3>
+
+                        <p>
+                            Yumshoq mol go‘shti
+                        </p>
+
+                        <strong>120 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 13 -->
+
+                <article class="food-card" data-category="food">
+
+                    <img
+                        src="https://loremflickr.com/600/400/chicken?lock=13"
+                        alt="Chicken Grill">
+
+                    <div class="food-info">
+
+                        <h3>Chicken Grill</h3>
+
+                        <p>
+                            Tovuq va yangi sabzavotlar
+                        </p>
+
+                        <strong>70 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 14 -->
+
+                <article class="food-card" data-category="food">
+
+                    <img
+                        src="https://loremflickr.com/600/400/pasta?lock=14"
+                        alt="Chicken Pasta">
+
+                    <div class="food-info">
+
+                        <h3>Chicken Pasta</h3>
+
+                        <p>
+                            Tovuq va qaymoqli pasta
+                        </p>
+
+                        <strong>55 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 15 -->
+
+                <article class="food-card" data-category="food">
+
+                    <img
+                        src="https://loremflickr.com/600/400/pasta?lock=15"
+                        alt="Carbonara">
+
+                    <div class="food-info">
+
+                        <h3>Carbonara</h3>
+
+                        <p>
+                            Pasta, qaymoq va parmesan
+                        </p>
+
+                        <strong>60 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 16 -->
+
+                <article class="food-card" data-category="food">
+
+                    <img
+                        src="https://loremflickr.com/600/400/plov?lock=16"
+                        alt="Osh">
+
+                    <div class="food-info">
+
+                        <h3>Osh</h3>
+
+                        <p>
+                            An’anaviy o‘zbek palovi
+                        </p>
+
+                        <strong>40 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 17 -->
+
+                <article class="food-card" data-category="food">
+
+                    <img
+                        src="https://loremflickr.com/600/400/kebab?lock=17"
+                        alt="Qozon Kabob">
+
+                    <div class="food-info">
+
+                        <h3>Qozon Kabob</h3>
+
+                        <p>
+                            Kartoshka va yumshoq go‘sht
+                        </p>
+
+                        <strong>65 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 18 -->
+
+                <article class="food-card" data-category="food">
+
+                    <img
+                        src="https://loremflickr.com/600/400/dumplings?lock=18"
+                        alt="Manti">
+
+                    <div class="food-info">
+
+                        <h3>Manti</h3>
+
+                        <p>
+                            Go‘shtli bug‘da pishirilgan manti
+                        </p>
+
+                        <strong>45 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 19 -->
+
+                <article class="food-card" data-category="food">
+
+                    <img
+                        src="https://loremflickr.com/600/400/noodles?lock=19"
+                        alt="Lag'mon">
+
+                    <div class="food-info">
+
+                        <h3>Lag‘mon</h3>
+
+                        <p>
+                            Uy lag‘moni, go‘sht va sabzavot
+                        </p>
+
+                        <strong>45 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 20 -->
+
+                <article class="food-card" data-category="food">
+
+                    <img
+                        src="https://loremflickr.com/600/400/kebab?lock=20"
+                        alt="Shashlik">
+
+                    <div class="food-info">
+
+                        <h3>Shashlik</h3>
+
+                        <p>
+                            Ko‘mirda pishirilgan go‘sht
+                        </p>
+
+                        <strong>35 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 21 -->
+
+                <article class="food-card" data-category="salad">
+
+                    <img
+                        src="https://loremflickr.com/600/400/salad?lock=21"
+                        alt="Caesar Salad">
+
+                    <div class="food-info">
+
+                        <h3>Caesar Salad</h3>
+
+                        <p>
+                            Tovuq, parmesan va maxsus sous
+                        </p>
+
+                        <strong>45 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 22 -->
+
+                <article class="food-card" data-category="salad">
+
+                    <img
+                        src="https://loremflickr.com/600/400/salad?lock=22"
+                        alt="Greek Salad">
+
+                    <div class="food-info">
+
+                        <h3>Greek Salad</h3>
+
+                        <p>
+                            Pomidor, bodring, feta va zaytun
+                        </p>
+
+                        <strong>40 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 23 -->
+
+                <article class="food-card" data-category="salad">
+
+                    <img
+                        src="https://loremflickr.com/600/400/salad?lock=23"
+                        alt="Fresh Salad">
+
+                    <div class="food-info">
+
+                        <h3>Fresh Salad</h3>
+
+                        <p>
+                            Bodring, pomidor va ko‘katlar
+                        </p>
+
+                        <strong>30 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 24 -->
+
+                <article class="food-card" data-category="salad">
+
+                    <img
+                        src="https://loremflickr.com/600/400/salad?lock=24"
+                        alt="Chicken Salad">
+
+                    <div class="food-info">
+
+                        <h3>Chicken Salad</h3>
+
+                        <p>
+                            Tovuq va yangi sabzavotlar
+                        </p>
+
+                        <strong>42 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 25 -->
+
+                <article class="food-card" data-category="salad">
+
+                    <img
+                        src="https://loremflickr.com/600/400/salad?lock=25"
+                        alt="Avocado Salad">
+
+                    <div class="food-info">
+
+                        <h3>Avocado Salad</h3>
+
+                        <p>
+                            Avokado, pomidor va ko‘katlar
+                        </p>
+
+                        <strong>55 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 26 -->
+
+                <article class="food-card" data-category="snack">
+
+                    <img
+                        src="https://loremflickr.com/600/400/fries?lock=26"
+                        alt="French Fries">
+
+                    <div class="food-info">
+
+                        <h3>French Fries</h3>
+
+                        <p>
+                            Qarsildoq kartoshka fri
+                        </p>
+
+                        <strong>20 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 27 -->
+
+                <article class="food-card" data-category="snack">
+
+                    <img
+                        src="https://loremflickr.com/600/400/fries?lock=27"
+                        alt="Cheese Fries">
+
+                    <div class="food-info">
+
+                        <h3>Cheese Fries</h3>
+
+                        <p>
+                            Fri va eritilgan cheddar
+                        </p>
+
+                        <strong>30 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 28 -->
+
+                <article class="food-card" data-category="snack">
+
+                    <img
+                        src="https://loremflickr.com/600/400/nuggets?lock=28"
+                        alt="Chicken Nuggets">
+
+                    <div class="food-info">
+
+                        <h3>Chicken Nuggets</h3>
+
+                        <p>
+                            Qarsildoq tovuq naggetslari
+                        </p>
+
+                        <strong>35 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 29 -->
+
+                <article class="food-card" data-category="snack">
+
+                    <img
+                        src="https://loremflickr.com/600/400/wings?lock=29"
+                        alt="Chicken Wings">
+
+                    <div class="food-info">
+
+                        <h3>Chicken Wings</h3>
+
+                        <p>
+                            Achchiq sousdagi tovuq qanotlari
+                        </p>
+
+                        <strong>45 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 30 -->
+
+                <article class="food-card" data-category="snack">
+
+                    <img
+                        src="https://loremflickr.com/600/400/onionrings?lock=30"
+                        alt="Onion Rings">
+
+                    <div class="food-info">
+
+                        <h3>Onion Rings</h3>
+
+                        <p>
+                            Qarsildoq piyoz halqalari
+                        </p>
+
+                        <strong>25 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 31 -->
+
+                <article class="food-card" data-category="drink">
+
+                    <img
+                        src="https://loremflickr.com/600/400/cola?lock=31"
+                        alt="Cola">
+
+                    <div class="food-info">
+
+                        <h3>Cola</h3>
+
+                        <p>
+                            Sovutilgan Coca-Cola
+                        </p>
+
+                        <strong>12 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 32 -->
+
+                <article class="food-card" data-category="drink">
+
+                    <img
+                        src="https://loremflickr.com/600/400/orange?lock=32"
+                        alt="Fanta">
+
+                    <div class="food-info">
+
+                        <h3>Fanta</h3>
+
+                        <p>
+                            Sovutilgan apelsinli ichimlik
+                        </p>
+
+                        <strong>12 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 33 -->
+
+                <article class="food-card" data-category="drink">
+
+                    <img
+                        src="https://loremflickr.com/600/400/soda?lock=33"
+                        alt="Sprite">
+
+                    <div class="food-info">
+
+                        <h3>Sprite</h3>
+
+                        <p>
+                            Sovutilgan limonli ichimlik
+                        </p>
+
+                        <strong>12 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 34 -->
+
+                <article class="food-card" data-category="drink">
+
+                    <img
+                        src="https://loremflickr.com/600/400/lemonade?lock=34"
+                        alt="Limonade">
+
+                    <div class="food-info">
+
+                        <h3>Limonade</h3>
+
+                        <p>
+                            Limon va yalpiz bilan
+                        </p>
+
+                        <strong>25 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 35 -->
+
+                <article class="food-card" data-category="drink">
+
+                    <img
+                        src="https://loremflickr.com/600/400/orangejuice?lock=35"
+                        alt="Orange Juice">
+
+                    <div class="food-info">
+
+                        <h3>Orange Juice</h3>
+
+                        <p>
+                            Tabiiy apelsin sharbati
+                        </p>
+
+                        <strong>30 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 36 -->
+
+                <article class="food-card" data-category="drink">
+
+                    <img
+                        src="https://loremflickr.com/600/400/applejuice?lock=36"
+                        alt="Apple Juice">
+
+                    <div class="food-info">
+
+                        <h3>Apple Juice</h3>
+
+                        <p>
+                            Tabiiy olma sharbati
+                        </p>
+
+                        <strong>28 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 37 -->
+
+                <article class="food-card" data-category="drink">
+
+                    <img
+                        src="https://loremflickr.com/600/400/icedtea?lock=37"
+                        alt="Iced Tea">
+
+                    <div class="food-info">
+
+                        <h3>Iced Tea</h3>
+
+                        <p>
+                            Sovutilgan limonli choy
+                        </p>
+
+                        <strong>22 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 38 -->
+
+                <article class="food-card" data-category="drink">
+
+                    <img
+                        src="https://loremflickr.com/600/400/water?lock=38"
+                        alt="Mineral Water">
+
+                    <div class="food-info">
+
+                        <h3>Mineral Water</h3>
+
+                        <p>
+                            Sovutilgan mineral suv
+                        </p>
+
+                        <strong>8 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 39 -->
+
+                <article class="food-card" data-category="drink">
+
+                    <img
+                        src="https://loremflickr.com/600/400/milkshake?lock=39"
+                        alt="Milkshake">
+
+                    <div class="food-info">
+
+                        <h3>Milkshake</h3>
+
+                        <p>
+                            Qaymoqli shokoladli milkshake
+                        </p>
+
+                        <strong>35 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 40 -->
+
+                <article class="food-card" data-category="drink">
+
+                    <img
+                        src="https://loremflickr.com/600/400/mojito?lock=40"
+                        alt="Mojito">
+
+                    <div class="food-info">
+
+                        <h3>Mojito</h3>
+
+                        <p>
+                            Limon, yalpiz va muz
+                        </p>
+
+                        <strong>30 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 41 -->
+
+                <article class="food-card" data-category="dessert">
+
+                    <img
+                        src="https://loremflickr.com/600/400/cheesecake?lock=41"
+                        alt="Cheesecake">
+
+                    <div class="food-info">
+
+                        <h3>Cheesecake</h3>
+
+                        <p>
+                            Yumshoq qaymoqli cheesecake
+                        </p>
+
+                        <strong>35 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 42 -->
+
+                <article class="food-card" data-category="dessert">
+
+                    <img
+                        src="https://loremflickr.com/600/400/chocolatecake?lock=42"
+                        alt="Chocolate Cake">
+
+                    <div class="food-info">
+
+                        <h3>Chocolate Cake</h3>
+
+                        <p>
+                            Shokoladli yumshoq tort
+                        </p>
+
+                        <strong>32 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 43 -->
+
+                <article class="food-card" data-category="dessert">
+
+                    <img
+                        src="https://loremflickr.com/600/400/tiramisu?lock=43"
+                        alt="Tiramisu">
+
+                    <div class="food-info">
+
+                        <h3>Tiramisu</h3>
+
+                        <p>
+                            Italyancha klassik tiramisu
+                        </p>
+
+                        <strong>40 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 44 -->
+
+                <article class="food-card" data-category="dessert">
+
+                    <img
+                        src="https://loremflickr.com/600/400/icecream?lock=44"
+                        alt="Ice Cream">
+
+                    <div class="food-info">
+
+                        <h3>Ice Cream</h3>
+
+                        <p>
+                            Vanilli va shokoladli muzqaymoq
+                        </p>
+
+                        <strong>25 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 45 -->
+
+                <article class="food-card" data-category="dessert">
+
+                    <img
+                        src="https://loremflickr.com/600/400/pancake?lock=45"
+                        alt="Pancake">
+
+                    <div class="food-info">
+
+                        <h3>Pancake</h3>
+
+                        <p>
+                            Meva va shokolad bilan pancake
+                        </p>
+
+                        <strong>35 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 46 -->
+
+                <article class="food-card" data-category="dessert">
+
+                    <img
+                        src="https://loremflickr.com/600/400/brownie?lock=46"
+                        alt="Brownie">
+
+                    <div class="food-info">
+
+                        <h3>Chocolate Brownie</h3>
+
+                        <p>
+                            Issiq shokoladli brownie
+                        </p>
+
+                        <strong>38 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 47 -->
+
+                <article class="food-card" data-category="dessert">
+
+                    <img
+                        src="https://loremflickr.com/600/400/waffle?lock=47"
+                        alt="Waffle">
+
+                    <div class="food-info">
+
+                        <h3>Waffle</h3>
+
+                        <p>
+                            Mevali va shokoladli waffle
+                        </p>
+
+                        <strong>30 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 48 -->
+
+                <article class="food-card" data-category="dessert">
+
+                    <img
+                        src="https://loremflickr.com/600/400/donut?lock=48"
+                        alt="Donut">
+
+                    <div class="food-info">
+
+                        <h3>Donut</h3>
+
+                        <p>
+                            Shokoladli yumshoq donut
+                        </p>
+
+                        <strong>18 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 49 -->
+
+                <article class="food-card" data-category="dessert">
+
+                    <img
+                        src="https://loremflickr.com/600/400/cake?lock=49"
+                        alt="Fruit Cake">
+
+                    <div class="food-info">
+
+                        <h3>Fruit Cake</h3>
+
+                        <p>
+                            Mevali yumshoq tort
+                        </p>
+
+                        <strong>35 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+
+                <!-- 50 -->
+
+                <article class="food-card" data-category="dessert">
+
+                    <img
+                        src="https://loremflickr.com/600/400/chocolate?lock=50"
+                        alt="Chocolate Fondant">
+
+                    <div class="food-info">
+
+                        <h3>Chocolate Fondant</h3>
+
+                        <p>
+                            Issiq shokoladli fondant
+                        </p>
+
+                        <strong>45 000 so‘m</strong>
+
+                        <div class="food-controls">
+
+                            <button class="minus">−</button>
+
+                            <span class="quantity">0</span>
+
+                            <button class="plus">+</button>
+
+                        </div>
+
+                    </div>
+
+                </article>
+
+            </div>
+
+
+            <footer>
+                🍃 Yaxshi taom — yaxshi kayfiyat!
+            </footer>
+
+        </section>
+
+
+        <!-- CART -->
+
+        <aside class="cart">
+
+            <div class="cart-header">
+
+                <div class="cart-title">
+                    <span>🛒</span>
+                    <h2>Savat</h2>
+                    <b id="cart-count">0</b>
+                </div>
+
+            </div>
+
+
+            <div id="cart-list" class="cart-list">
+
+                <div class="empty-cart">
+
+                    <span>🛒</span>
+
+                    <h3>Savat bo‘sh</h3>
+
+                    <p>
+                        Menyudan taom tanlang
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="cart-bottom">
+
+                <div class="total">
+
+                    <span data-i18n="cart.total">Jami:</span>
+
+                    <strong>
+                        <span id="total">0</span>
+                        so‘m
+                    </strong>
+
+                </div>
+
+
+                <button id="order-btn" class="order-btn">
+                    Zakaz berish
+                    <span>→</span>
+                </button>
+
+
+                <div class="order-info" data-i18n="cart.orderInfo">
+                    ◷ Buyurtma oshxonaga yuboriladi
+                </div>
+
+            </div>
+
+        </aside>
+
+    </main>
+
+
+        <script src="/static/script.js"></script>
+
+</body>
+
+</html>
+
+
+
+

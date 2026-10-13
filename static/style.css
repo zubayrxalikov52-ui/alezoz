@@ -1,0 +1,1808 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --gold: #e8bb58;
+    --gold-light: #ffd978;
+    --dark: #071014;
+    --card: rgba(9, 17, 22, 0.92);
+    --border: rgba(255, 255, 255, 0.12);
+    --white: #ffffff;
+    --muted: #8e999f;
+}
+
+body {
+    min-height: 100vh;
+    color: var(--white);
+    background: #071014;
+    font-family: Arial, sans-serif;
+}
+
+.background {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+
+    background:
+        radial-gradient(
+            circle at 15% 20%,
+            rgba(232, 187, 88, 0.14),
+            transparent 30%
+        ),
+        radial-gradient(
+            circle at 85% 80%,
+            rgba(30, 110, 100, 0.13),
+            transparent 35%
+        ),
+        linear-gradient(
+            135deg,
+            #050b0e,
+            #101c20,
+            #061013
+        );
+}
+
+
+/* HEADER */
+
+.header {
+    height: 105px;
+
+    padding: 25px 40px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    position: relative;
+}
+
+.table-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 10px 16px;
+
+    border: 1px solid var(--border);
+    border-radius: 17px;
+
+    background: rgba(8, 15, 20, 0.75);
+    backdrop-filter: blur(15px);
+}
+
+.table-icon {
+    width: 40px;
+    height: 40px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 11px;
+
+    background: rgba(255, 255, 255, 0.07);
+
+    font-size: 22px;
+}
+
+.table-info strong {
+    display: block;
+    font-size: 15px;
+}
+
+.table-info small {
+    display: block;
+
+    margin-top: 4px;
+
+    color: var(--muted);
+}
+
+
+/* LOGO */
+
+.logo {
+    position: absolute;
+
+    left: 50%;
+    top: 14px;
+
+    transform: translateX(-50%);
+
+    text-align: center;
+
+    /* Prevent logo from blocking header button clicks */
+    pointer-events: none;
+}
+
+.logo span {
+    color: var(--gold);
+
+    font-family: Georgia, serif;
+
+    font-size: 42px;
+    font-style: italic;
+}
+
+.logo::before {
+    content: "";
+    display: block;
+    width: 40px;
+    height: 40px;
+    margin: 0 auto 2px;
+    background: url("/static/alezoz-logo.svg") center / cover no-repeat;
+    border-radius: 8px;
+}
+
+.logo small {
+    display: block;
+
+    margin-top: -3px;
+
+    font-size: 8px;
+
+    letter-spacing: 4px;
+}
+
+
+/* MENU BUTTON */
+
+.menu-control {
+    position: relative;
+    flex: 0 0 auto;
+}
+
+.menu-btn {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+
+    height: 46px;
+
+    padding: 0 19px;
+
+    border: 1px solid var(--border);
+    border-radius: 24px;
+
+    background: rgba(8, 15, 20, 0.85);
+
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 15px;
+
+    transition: 0.25s;
+}
+
+.menu-btn:hover {
+    border-color: var(--gold);
+
+    color: var(--gold);
+
+    transform: translateY(-2px);
+}
+
+
+/* RIGHT BUTTONS */
+
+.header-actions {
+    display: flex;
+    gap: 9px;
+}
+
+.round-btn,
+.language-btn {
+    border: 1px solid var(--border);
+
+    background: rgba(8, 15, 20, 0.75);
+
+    color: white;
+
+    cursor: pointer;
+}
+
+.round-btn {
+    width: 46px;
+    height: 46px;
+
+    border-radius: 50%;
+
+    font-size: 19px;
+}
+
+.language-btn {
+    height: 46px;
+
+    padding: 0 16px;
+
+    border-radius: 24px;
+}
+
+
+/* MENU */
+
+.menu-dropdown {
+    position: absolute;
+
+    top: calc(100% + 10px);
+    left: 0;
+
+    width: 210px;
+
+    padding: 9px;
+
+    z-index: 20;
+
+    border: 1px solid var(--border);
+
+    border-radius: 18px;
+
+    background: rgba(5, 12, 16, 0.98);
+
+    backdrop-filter: blur(25px);
+
+    opacity: 0;
+    visibility: hidden;
+
+    transform: translateY(-10px);
+
+    transition: 0.25s;
+}
+
+.menu-dropdown.show {
+    opacity: 1;
+    visibility: visible;
+
+    transform: translateY(0);
+}
+
+.category {
+    width: 100%;
+
+    padding: 12px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    border: none;
+    border-radius: 10px;
+
+    background: transparent;
+
+    color: white;
+
+    cursor: pointer;
+
+    text-align: left;
+
+    transition: 0.2s;
+}
+
+.category:hover,
+.category.active {
+    background: rgba(232, 187, 88, 0.13);
+
+    color: var(--gold);
+}
+
+
+/* MAIN */
+
+.main {
+    max-width: 1500px;
+
+    margin: auto;
+
+    padding: 35px 40px;
+
+    display: grid;
+
+    grid-template-columns: minmax(0, 1fr) 380px;
+
+    gap: 32px;
+}
+
+
+/* WELCOME */
+
+.welcome {
+    margin-bottom: 30px;
+}
+
+.welcome-small {
+    color: #c5a65e;
+
+    font-size: 12px;
+
+    letter-spacing: 3px;
+}
+
+.welcome h1 {
+    margin-top: 10px;
+
+    font-size: 48px;
+
+    line-height: 1.05;
+}
+
+.welcome h1 span {
+    color: var(--gold);
+}
+
+.logo {
+    position: static;
+    flex: 0 0 auto;
+    text-align: center;
+    transform: none;
+}
+
+.welcome p {
+    color: var(--muted);
+
+    font-size: 14px;
+}
+
+
+/* 50 TA CARD */
+
+.food-list {
+    display: grid;
+
+    grid-template-columns: repeat(4, 1fr);
+
+    gap: 18px;
+}
+
+.food-card {
+    overflow: hidden;
+
+    border: 1px solid var(--border);
+
+    border-radius: 17px;
+
+    background: var(--card);
+
+    backdrop-filter: blur(15px);
+
+    transition: 0.25s;
+}
+
+.food-card:hover {
+    transform: translateY(-5px);
+
+    border-color: rgba(232, 187, 88, 0.45);
+
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.35);
+}
+
+.food-card img {
+    width: 100%;
+
+    height: 160px;
+
+    object-fit: cover;
+
+    display: block;
+
+    background: #162026;
+}
+
+.food-info {
+    padding: 13px;
+}
+
+.food-info h3 {
+    margin-bottom: 6px;
+
+    font-size: 16px;
+}
+
+.food-info p {
+    min-height: 34px;
+
+    color: var(--muted);
+
+    font-size: 11px;
+
+    line-height: 1.5;
+}
+
+.food-info strong {
+    display: block;
+
+    margin: 12px 0;
+
+    color: var(--gold);
+
+    font-size: 16px;
+}
+
+
+/* QUANTITY */
+
+.food-controls {
+    height: 38px;
+
+    padding: 4px 5px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    border-radius: 22px;
+
+    background: rgba(255, 255, 255, 0.055);
+}
+
+.food-controls button {
+    width: 30px;
+    height: 30px;
+
+    border: none;
+
+    border-radius: 50%;
+
+    background: #18242b;
+
+    color: white;
+
+    cursor: pointer;
+
+    font-size: 17px;
+}
+
+.food-controls button:hover {
+    background: var(--gold);
+
+    color: #111;
+}
+
+.quantity {
+    min-width: 25px;
+
+    text-align: center;
+}
+
+
+/* CART */
+
+.cart {
+    position: sticky;
+    top: 20px;
+
+    height: fit-content;
+
+    padding: 24px;
+
+    border: 1px solid var(--border);
+
+    border-radius: 24px;
+
+    background: rgba(5, 12, 16, 0.95);
+
+    backdrop-filter: blur(20px);
+}
+
+.cart-title {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.cart-title h2 {
+    font-size: 23px;
+}
+
+.cart-title b {
+    width: 23px;
+    height: 23px;
+
+    display: grid;
+    place-items: center;
+
+    border-radius: 50%;
+
+    background: #e45b5b;
+
+    font-size: 11px;
+}
+
+.cart-header {
+    padding-bottom: 17px;
+
+    border-bottom: 1px solid var(--border);
+}
+
+.cart-list {
+    max-height: 480px;
+
+    overflow-y: auto;
+}
+
+.empty-cart {
+    padding: 65px 10px;
+
+    text-align: center;
+
+    color: var(--muted);
+}
+
+.empty-cart span {
+    display: block;
+
+    margin-bottom: 12px;
+
+    font-size: 38px;
+}
+
+.empty-cart h3 {
+    margin-bottom: 6px;
+
+    color: white;
+}
+
+.empty-cart p {
+    font-size: 12px;
+}
+
+.cart-bottom {
+    padding-top: 20px;
+}
+
+.total {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 17px;
+}
+
+.total strong {
+    color: var(--gold);
+
+    font-size: 19px;
+}
+
+.order-btn {
+    width: 100%;
+
+    padding: 16px;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    border: none;
+
+    border-radius: 14px;
+
+    background: linear-gradient(
+        135deg,
+        var(--gold),
+        #d9a936
+    );
+
+    color: #101010;
+
+    font-weight: bold;
+
+    cursor: pointer;
+
+    transition: 0.25s;
+}
+
+.order-btn:hover {
+    transform: translateY(-2px);
+}
+
+.order-info {
+    margin-top: 12px;
+
+    text-align: center;
+
+    color: #687177;
+
+    font-size: 10px;
+}
+
+
+/* FOOTER */
+
+footer {
+    margin-top: 30px;
+
+    padding: 15px 0;
+
+    border-top: 1px solid var(--border);
+
+    color: #687177;
+
+    font-size: 12px;
+}
+
+
+/* RESPONSIVE */
+
+@media (max-width: 1250px) {
+
+    .food-list {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+}
+
+@media (max-width: 950px) {
+
+    .main {
+        grid-template-columns: 1fr;
+    }
+
+    .cart {
+        position: static;
+    }
+
+    .food-list {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 600px) {
+
+    .header {
+        padding: 20px;
+    }
+
+    .logo {
+        display: none;
+    }
+
+    .header-actions {
+        display: none;
+    }
+
+    .menu-control {
+        position: relative;
+    }
+
+    .menu-dropdown {
+        right: 0;
+        left: auto;
+        transform: translateY(-10px);
+    }
+
+    .menu-dropdown.show {
+        transform: translateY(0);
+    }
+
+    .main {
+        padding: 25px 15px;
+    }
+
+    .food-list {
+        grid-template-columns: 1fr;
+    }
+
+    .welcome h1 {
+        font-size: 38px;
+    }
+}
+
+
+
+/* BO'LIM SARLAVHALARI VA HINT */
+
+.food-list.hidden {
+    display: none;
+}
+
+.category-title {
+    grid-column: 1 / -1;
+
+    margin-top: 14px;
+    padding-bottom: 10px;
+
+    border-bottom: 1px solid var(--border);
+
+    color: var(--gold);
+
+    font-size: 24px;
+}
+
+.menu-hint {
+    padding: 70px 20px;
+
+    border: 1px dashed var(--border);
+    border-radius: 17px;
+
+    text-align: center;
+
+    color: var(--muted);
+
+    font-size: 15px;
+}
+
+.menu-hint span {
+    display: block;
+
+    margin-bottom: 12px;
+
+    color: var(--gold);
+
+    font-size: 40px;
+}
+
+.menu-hint b {
+    color: var(--gold);
+}
+
+
+/* ===== DIZAYNLAR ===== */
+
+:root {
+    --page: #071014;
+    --bg: radial-gradient(circle at 15% 20%, rgba(232,187,88,.14), transparent 30%),
+          radial-gradient(circle at 85% 80%, rgba(30,110,100,.13), transparent 35%),
+          linear-gradient(135deg, #050b0e, #101c20, #061013);
+    --panel: rgba(8,15,20,.75);
+    --panel-solid: rgba(5,12,16,.98);
+    --btn: #18242b;
+    --soft: rgba(232,187,88,.13);
+    --on: #111;
+    --cta: linear-gradient(135deg, #e8bb58, #d9a936);
+    --cta-text: #101010;
+    --font-body: Arial, sans-serif;
+    --font-head: Arial, sans-serif;
+    --font-logo: Georgia, serif;
+    --radius: 17px;
+    --shadow: 0 18px 45px rgba(0,0,0,.35);
+}
+
+body { background: var(--page); color: var(--white); font-family: var(--font-body); }
+.background { background: var(--bg); }
+.table-info, .menu-btn, .round-btn, .language-btn { background: var(--panel); }
+.menu-dropdown, .cart, .theme-dropdown { background: var(--panel-solid); }
+.category, .menu-btn, .round-btn, .language-btn, .empty-cart h3 { color: var(--white); }
+.category:hover, .category.active { background: var(--soft); }
+.food-controls { background: var(--soft); }
+.food-controls button { background: var(--btn); color: var(--white); }
+.food-controls button:hover { background: var(--gold); color: var(--on); }
+.order-btn { background: var(--cta); color: var(--cta-text); }
+.welcome-small { color: var(--gold); }
+.order-info, footer { color: var(--muted); }
+.logo span { font-family: var(--font-logo); }
+.logo small { color: var(--white); }
+.welcome h1, .food-info h3, .category-title, .cart-title h2 { font-family: var(--font-head); }
+.food-card, .cart, .table-info { border-radius: var(--radius); }
+.food-card:hover { box-shadow: var(--shadow); }
+.food-card, .menu-btn, .round-btn, .language-btn, .table-info, .cart { transition: .25s; }
+
+/* dizayn tanlash oynasi */
+.theme-dropdown {
+    position: absolute; top: 78px; right: 40px; width: 270px; padding: 10px; z-index: 30;
+    border: 1px solid var(--border); border-radius: 18px; backdrop-filter: blur(25px);
+    opacity: 0; visibility: hidden; transform: translateY(-10px); transition: .25s;
+}
+.theme-dropdown.show { opacity: 1; visibility: visible; transform: translateY(0); }
+.theme-title { padding: 6px 10px 10px; color: var(--muted); font-size: 12px; letter-spacing: 2px; text-transform: uppercase; }
+.theme-item {
+    width: 100%; padding: 10px; display: flex; align-items: center; gap: 12px;
+    border: 1px solid transparent; border-radius: 12px; background: transparent;
+    color: var(--white); cursor: pointer; text-align: left; transition: .2s;
+}
+.theme-item:hover, .theme-item.active { background: var(--soft); border-color: var(--gold); }
+.theme-item b { display: block; font-size: 14px; }
+.theme-item small { display: block; margin-top: 3px; color: var(--muted); font-size: 11px; }
+.swatch { display: flex; flex-shrink: 0; }
+.swatch i { width: 18px; height: 34px; margin-right: -4px; border: 2px solid rgba(128,128,128,.5); border-radius: 9px; }
+
+/* 2. AURORA (harakatlanuvchi shimoliy nur) */
+body[data-theme="aurora"] {
+    --page: #030712; --gold: #7cffcb; --gold-light: #b8ffe6; --card: rgba(10,18,44,.55);
+    --border: rgba(124,255,203,.28); --white: #eef6ff; --muted: #9fb3d1;
+    --bg: radial-gradient(ellipse at 20% 0%, rgba(124,255,203,.4), transparent 45%),
+          radial-gradient(ellipse at 90% 25%, rgba(168,85,247,.45), transparent 45%),
+          radial-gradient(ellipse at 40% 100%, rgba(56,189,248,.35), transparent 50%),
+          linear-gradient(120deg, #030712, #0b3b3a, #2a0f5e, #0a2a5e, #030712);
+    --panel: rgba(10,18,44,.6); --panel-solid: rgba(8,14,36,.96); --btn: rgba(124,255,203,.14);
+    --soft: rgba(124,255,203,.14); --on: #03140f;
+    --cta: linear-gradient(135deg, #7cffcb, #a78bfa); --cta-text: #03140f;
+    --font-body: "Segoe UI", Tahoma, sans-serif; --font-head: "Segoe UI", Tahoma, sans-serif; --font-logo: "Segoe UI", sans-serif;
+    --radius: 24px; --shadow: 0 0 40px rgba(124,255,203,.3);
+}
+body[data-theme="aurora"] .background { background-size: 300% 300%; animation: aurora 16s ease-in-out infinite; }
+body[data-theme="aurora"] .food-card, body[data-theme="aurora"] .cart { backdrop-filter: blur(18px); box-shadow: 0 0 22px rgba(124,255,203,.1); }
+body[data-theme="aurora"] .welcome h1 span, body[data-theme="aurora"] .logo span {
+    background: linear-gradient(90deg, #7cffcb, #a78bfa, #38bdf8, #7cffcb); background-size: 200% 100%;
+    -webkit-background-clip: text; background-clip: text; color: transparent; animation: shine 6s linear infinite;
+}
+@keyframes aurora { 0%,100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+@keyframes shine { to { background-position: 200% 0; } }
+
+/* 3. CHALKBOARD (bo'r bilan yozilgan doska) */
+body[data-theme="chalk"] {
+    --page: #24312a; --gold: #ffe9a8; --gold-light: #fff3c9; --card: rgba(255,255,255,.04);
+    --border: rgba(255,255,255,.55); --white: #f4f1e8; --muted: #c4c4b2;
+    --bg: radial-gradient(ellipse at 30% 20%, rgba(255,255,255,.1), transparent 55%),
+          repeating-linear-gradient(90deg, rgba(255,255,255,.02) 0 2px, transparent 2px 7px), #24312a;
+    --panel: rgba(255,255,255,.05); --panel-solid: #2a3a31; --btn: rgba(255,255,255,.12);
+    --soft: rgba(255,233,168,.16); --on: #222;
+    --cta: #ffe9a8; --cta-text: #222;
+    --font-body: "Chalkboard SE", "Comic Sans MS", "Segoe Print", cursive; --font-head: "Chalkboard SE", "Comic Sans MS", "Segoe Print", cursive; --font-logo: "Chalkboard SE", "Comic Sans MS", cursive;
+    --radius: 30px 8px 26px 10px / 10px 28px 8px 30px; --shadow: none;
+}
+body[data-theme="chalk"] .background { box-shadow: inset 0 0 0 14px #7a4b25, inset 0 0 0 18px #4a2f17, inset 0 0 90px 30px rgba(0,0,0,.55); }
+body[data-theme="chalk"] .food-card, body[data-theme="chalk"] .cart, body[data-theme="chalk"] .table-info,
+body[data-theme="chalk"] .menu-dropdown, body[data-theme="chalk"] .theme-dropdown { border: 2px dashed rgba(255,255,255,.6); backdrop-filter: none; }
+body[data-theme="chalk"] .menu-btn, body[data-theme="chalk"] .language-btn, body[data-theme="chalk"] .order-btn { border: 2px dashed rgba(255,255,255,.7); border-radius: 22px 8px 20px 8px; }
+body[data-theme="chalk"] .food-card img, body[data-theme="chalk"] .menu-section img { filter: grayscale(1) contrast(1.25); opacity: .85; transition: .3s; }
+body[data-theme="chalk"] .food-card:hover img { filter: none; opacity: 1; }
+body[data-theme="chalk"] .food-card:hover { transform: rotate(-1.5deg) translateY(-4px); }
+body[data-theme="chalk"] .welcome h1 { text-shadow: 2px 2px 0 rgba(0,0,0,.35); }
+body[data-theme="chalk"] .category-title { border-bottom: 2px dashed rgba(255,255,255,.5); }
+
+/* 4. MATRIX (yashil terminal) */
+body[data-theme="matrix"] {
+    --page: #000; --gold: #00ff66; --gold-light: #8dffb5; --card: rgba(0,20,6,.88);
+    --border: rgba(0,255,102,.4); --white: #b9ffd0; --muted: #4fae75;
+    --bg: repeating-linear-gradient(0deg, rgba(0,255,102,.07) 0 1px, transparent 1px 3px),
+          radial-gradient(circle at 50% 0%, rgba(0,255,102,.2), transparent 60%), #000;
+    --panel: rgba(0,18,5,.9); --panel-solid: #020f06; --btn: #052a12;
+    --soft: rgba(0,255,102,.15); --on: #000;
+    --cta: #00ff66; --cta-text: #000;
+    --font-body: "Courier New", monospace; --font-head: "Courier New", monospace; --font-logo: "Courier New", monospace;
+    --radius: 0px; --shadow: 0 0 30px rgba(0,255,102,.45);
+}
+body[data-theme="matrix"] .food-card img { filter: grayscale(1) sepia(1) hue-rotate(70deg) saturate(4) brightness(.8) contrast(1.2); transition: .3s; }
+body[data-theme="matrix"] .food-card:hover img { filter: grayscale(1) sepia(1) hue-rotate(70deg) saturate(5) brightness(1.1); }
+body[data-theme="matrix"] .welcome h1, body[data-theme="matrix"] .logo span, body[data-theme="matrix"] .category-title,
+body[data-theme="matrix"] .food-info strong { text-shadow: 0 0 12px #00ff66; }
+body[data-theme="matrix"] .welcome h1 span::after { content: "_"; animation: blink 1s steps(1) infinite; }
+body[data-theme="matrix"] .logo span { font-style: normal; }
+body[data-theme="matrix"] .order-btn { box-shadow: 0 0 24px rgba(0,255,102,.6); }
+@keyframes blink { 50% { opacity: 0; } }
+
+/* 5. BUBBLEGUM 3D (shirin va yorqin) */
+body[data-theme="bubble"] {
+    --page: #080511;
+    --gold: #f6c85f;
+    --gold-light: #ffe8a3;
+
+    --card: linear-gradient(
+        145deg,
+        rgba(34, 24, 55, 0.95),
+        rgba(17, 12, 30, 0.98)
+    );
+
+    --border: rgba(246, 200, 95, 0.35);
+    --white: #ffffff;
+    --muted: #b9afc9;
+
+    --bg:
+        radial-gradient(
+            circle at 10% 10%,
+            rgba(127, 51, 255, 0.28) 0,
+            transparent 28%
+        ),
+        radial-gradient(
+            circle at 90% 15%,
+            rgba(246, 200, 95, 0.14) 0,
+            transparent 25%
+        ),
+        radial-gradient(
+            circle at 80% 90%,
+            rgba(95, 45, 180, 0.22) 0,
+            transparent 30%
+        ),
+        linear-gradient(135deg, #0b0712, #160b27 55%, #080511);
+
+    --panel: rgba(255, 255, 255, 0.055);
+    --panel-solid: #171022;
+
+    --btn: rgba(255, 255, 255, 0.07);
+    --soft: rgba(246, 200, 95, 0.1);
+
+    --on: #080511;
+
+    --cta: linear-gradient(135deg, #f6c85f, #ffe9a6);
+    --cta-text: #120c1b;
+
+    --font-body: "Inter", "Segoe UI", sans-serif;
+    --font-head: "Inter", "Segoe UI", sans-serif;
+    --font-logo: "Georgia", serif;
+
+    --radius: 22px;
+
+    --shadow:
+        0 25px 70px rgba(0, 0, 0, 0.55);
+}
+
+
+/* =========================
+   FOOD CARD
+========================= */
+
+body[data-theme="bubble"] .food-card {
+    position: relative;
+    overflow: hidden;
+
+    border: 1px solid rgba(246, 200, 95, 0.22);
+
+    border-radius: 22px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(38, 27, 58, 0.96),
+            rgba(14, 10, 24, 0.98)
+        );
+
+    box-shadow:
+        0 18px 45px rgba(0, 0, 0, 0.45),
+        inset 0 1px 0 rgba(255, 255, 255, 0.07);
+
+    backdrop-filter: blur(14px);
+
+    transition:
+        transform 0.35s ease,
+        box-shadow 0.35s ease,
+        border-color 0.35s ease;
+}
+
+
+/* Gold light effect */
+
+body[data-theme="bubble"] .food-card::before {
+    content: "";
+
+    position: absolute;
+
+    width: 180px;
+    height: 180px;
+
+    top: -100px;
+    right: -80px;
+
+    background: rgba(246, 200, 95, 0.13);
+
+    border-radius: 50%;
+
+    filter: blur(30px);
+
+    pointer-events: none;
+}
+
+
+/* Hover */
+
+body[data-theme="bubble"] .food-card:hover {
+    transform: translateY(-10px);
+
+    border-color: rgba(246, 200, 95, 0.7);
+
+    box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.6),
+        0 0 35px rgba(246, 200, 95, 0.12);
+}
+
+
+/* Food image */
+
+body[data-theme="bubble"] .food-card img {
+    width: 100%;
+
+    border-bottom: 1px solid rgba(246, 200, 95, 0.25);
+
+    transition:
+        transform 0.5s ease,
+        filter 0.5s ease;
+}
+
+
+body[data-theme="bubble"] .food-card:hover img {
+    transform: scale(1.06);
+
+    filter: brightness(1.08) saturate(1.08);
+}
+
+
+/* =========================
+   BUTTONS
+========================= */
+
+body[data-theme="bubble"] .menu-btn,
+body[data-theme="bubble"] .language-btn,
+body[data-theme="bubble"] .round-btn,
+body[data-theme="bubble"] .order-btn {
+
+    border: 1px solid rgba(246, 200, 95, 0.28);
+
+    border-radius: 14px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(255, 255, 255, 0.09),
+            rgba(255, 255, 255, 0.035)
+        );
+
+    color: #fff;
+
+    box-shadow:
+        0 8px 25px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.08);
+
+    backdrop-filter: blur(12px);
+
+    transition:
+        all 0.25s ease;
+}
+
+
+body[data-theme="bubble"] .menu-btn:hover,
+body[data-theme="bubble"] .language-btn:hover,
+body[data-theme="bubble"] .round-btn:hover,
+body[data-theme="bubble"] .order-btn:hover {
+
+    transform: translateY(-3px);
+
+    border-color: rgba(246, 200, 95, 0.8);
+
+    color: var(--gold-light);
+
+    box-shadow:
+        0 12px 30px rgba(0, 0, 0, 0.45),
+        0 0 20px rgba(246, 200, 95, 0.12);
+}
+
+
+/* =========================
+   CART
+========================= */
+
+body[data-theme="bubble"] .cart {
+
+    border: 1px solid rgba(246, 200, 95, 0.3);
+
+    border-radius: 24px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(36, 25, 54, 0.98),
+            rgba(13, 9, 22, 0.98)
+        );
+
+    box-shadow:
+        0 25px 60px rgba(0, 0, 0, 0.55),
+        inset 0 1px 0 rgba(255, 255, 255, 0.06);
+
+    backdrop-filter: blur(18px);
+}
+
+
+/* =========================
+   LOGO
+========================= */
+
+body[data-theme="bubble"] .logo span {
+
+    font-family: var(--font-logo);
+
+    font-style: italic;
+
+    color: var(--gold);
+
+    text-shadow:
+        0 0 15px rgba(246, 200, 95, 0.25);
+
+    letter-spacing: 1px;
+}
+
+
+/* =========================
+   WELCOME TITLE
+========================= */
+
+body[data-theme="bubble"] .welcome h1 {
+
+    color: #fff;
+
+    font-weight: 800;
+
+    letter-spacing: -1px;
+
+    text-shadow:
+        0 5px 30px rgba(0, 0, 0, 0.5);
+}
+
+
+/* Gold text */
+
+body[data-theme="bubble"] .welcome h1 span {
+    color: var(--gold);
+
+    text-shadow:
+        0 0 25px rgba(246, 200, 95, 0.25);
+}
+
+
+/* =========================
+   PRICE
+========================= */
+
+body[data-theme="bubble"] .food-card .price {
+
+    color: var(--gold);
+
+    font-weight: 800;
+
+    text-shadow:
+        0 0 15px rgba(246, 200, 95, 0.18);
+}
+
+
+/* =========================
+   ORDER BUTTON
+========================= */
+
+body[data-theme="bubble"] .order-btn {
+
+    background:
+        linear-gradient(
+            135deg,
+            #f6c85f,
+            #ffe8a3
+        );
+
+    color: #120c1b;
+
+    border: none;
+
+    font-weight: 800;
+
+    box-shadow:
+        0 8px 25px rgba(246, 200, 95, 0.18);
+
+    transition:
+        transform 0.25s ease,
+        box-shadow 0.25s ease;
+}
+
+
+body[data-theme="bubble"] .order-btn:hover {
+
+    color: #120c1b;
+
+    transform: translateY(-3px) scale(1.02);
+
+    box-shadow:
+        0 12px 35px rgba(246, 200, 95, 0.3);
+}
+
+
+/* =========================
+   SCROLLBAR
+========================= */
+
+body[data-theme="bubble"]::-webkit-scrollbar {
+    width: 8px;
+}
+
+body[data-theme="bubble"]::-webkit-scrollbar-track {
+    background: #080511;
+}
+
+body[data-theme="bubble"]::-webkit-scrollbar-thumb {
+
+    background:
+        linear-gradient(
+            #f6c85f,
+            #8b5cf6
+        );
+
+    border-radius: 20px;
+}
+
+
+/* =========================
+   SELECTION
+========================= */
+
+body[data-theme="bubble"] ::selection {
+    background: rgba(246, 200, 95, 0.3);
+    color: #fff;
+}
+/* 6. BLUEPRINT (muhandislik chizmasi) */
+body[data-theme="blueprint"] {
+
+    --page: #04111f;
+
+    --gold: #36e4ff;
+    --gold-light: #a9f5ff;
+
+    --card:
+        linear-gradient(
+            145deg,
+            rgba(10, 38, 65, 0.96),
+            rgba(3, 18, 32, 0.98)
+        );
+
+    --border: rgba(54, 228, 255, 0.35);
+
+    --white: #ecfcff;
+    --muted: #8db8c9;
+
+    --bg:
+        radial-gradient(
+            circle at 15% 15%,
+            rgba(0, 210, 255, 0.18),
+            transparent 28%
+        ),
+
+        radial-gradient(
+            circle at 85% 80%,
+            rgba(0, 120, 255, 0.15),
+            transparent 30%
+        ),
+
+        linear-gradient(
+            rgba(54, 228, 255, 0.08) 1px,
+            transparent 1px
+        ) 0 0 / 40px 40px,
+
+        linear-gradient(
+            90deg,
+            rgba(54, 228, 255, 0.08) 1px,
+            transparent 1px
+        ) 0 0 / 40px 40px,
+
+        linear-gradient(
+            135deg,
+            #061a2b,
+            #020a13
+        );
+
+    --panel:
+        rgba(7, 31, 51, 0.82);
+
+    --panel-solid: #071f33;
+
+    --btn:
+        rgba(54, 228, 255, 0.08);
+
+    --soft:
+        rgba(54, 228, 255, 0.08);
+
+    --on: #04111f;
+
+    --cta:
+        linear-gradient(
+            135deg,
+            #36e4ff,
+            #6af0ff
+        );
+
+    --cta-text: #021018;
+
+    --font-body:
+        "Inter",
+        "Segoe UI",
+        sans-serif;
+
+    --font-head:
+        "Inter",
+        "Segoe UI",
+        sans-serif;
+
+    --font-logo:
+        "Orbitron",
+        "Inter",
+        sans-serif;
+
+    --radius: 18px;
+
+    --shadow:
+        0 20px 60px rgba(0, 0, 0, 0.5);
+}
+
+
+/* =================================
+   FOOD CARD
+================================= */
+
+body[data-theme="blueprint"] .food-card {
+
+    position: relative;
+
+    overflow: hidden;
+
+    border:
+        1px solid
+        rgba(54, 228, 255, 0.25);
+
+    border-radius: 18px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(12, 46, 74, 0.95),
+            rgba(3, 19, 33, 0.98)
+        );
+
+    box-shadow:
+        0 15px 45px rgba(0, 0, 0, 0.45),
+        inset 0 1px 0 rgba(255,255,255,0.06);
+
+    backdrop-filter: blur(14px);
+
+    transition:
+        transform .35s ease,
+        border-color .35s ease,
+        box-shadow .35s ease;
+}
+
+
+/* cyan glow */
+
+body[data-theme="blueprint"] .food-card::before {
+
+    content: "";
+
+    position: absolute;
+
+    width: 180px;
+    height: 180px;
+
+    top: -110px;
+    right: -90px;
+
+    border-radius: 50%;
+
+    background:
+        rgba(54, 228, 255, 0.15);
+
+    filter: blur(35px);
+
+    pointer-events: none;
+}
+
+
+/* card corner */
+
+body[data-theme="blueprint"] .food-card::after {
+
+    content: "";
+
+    position: absolute;
+
+    width: 30px;
+    height: 30px;
+
+    right: 0;
+    bottom: 0;
+
+    border-right:
+        2px solid
+        rgba(54, 228, 255, .7);
+
+    border-bottom:
+        2px solid
+        rgba(54, 228, 255, .7);
+
+    pointer-events: none;
+}
+
+
+/* hover */
+
+body[data-theme="blueprint"] .food-card:hover {
+
+    transform:
+        translateY(-10px)
+        scale(1.015);
+
+    border-color:
+        rgba(54, 228, 255, .8);
+
+    box-shadow:
+
+        0 25px 65px
+        rgba(0, 0, 0, .6),
+
+        0 0 35px
+        rgba(54, 228, 255, .13);
+}
+
+
+/* =================================
+   FOOD IMAGE
+================================= */
+
+body[data-theme="blueprint"] .food-card img {
+
+    filter:
+        saturate(.75)
+        brightness(.8)
+        contrast(1.05);
+
+    border-bottom:
+        1px solid
+        rgba(54, 228, 255, .25);
+
+    transition:
+        filter .5s ease,
+        transform .5s ease;
+}
+
+
+body[data-theme="blueprint"] .food-card:hover img {
+
+    filter:
+        saturate(1.15)
+        brightness(1.05);
+
+    transform: scale(1.05);
+}
+
+
+/* =================================
+   HEADINGS
+================================= */
+
+body[data-theme="blueprint"] .welcome h1 {
+
+    color: #ecfcff;
+
+    font-weight: 800;
+
+    letter-spacing: -1px;
+
+    text-shadow:
+        0 0 25px
+        rgba(54, 228, 255, .18);
+}
+
+
+body[data-theme="blueprint"] .food-info h3,
+body[data-theme="blueprint"] .category-title {
+
+    color: #ecfcff;
+
+    font-weight: 750;
+
+    letter-spacing: 1px;
+}
+
+
+/* =================================
+   LOGO
+================================= */
+
+body[data-theme="blueprint"] .logo span {
+
+    font-family:
+        var(--font-logo);
+
+    font-style: normal;
+
+    color:
+        var(--gold);
+
+    letter-spacing: 3px;
+
+    text-shadow:
+        0 0 18px
+        rgba(54, 228, 255, .45);
+}
+
+
+/* =================================
+   BUTTONS
+================================= */
+
+body[data-theme="blueprint"] .menu-btn,
+body[data-theme="blueprint"] .language-btn,
+body[data-theme="blueprint"] .round-btn,
+body[data-theme="blueprint"] .order-btn {
+
+    border:
+        1px solid
+        rgba(54, 228, 255, .3);
+
+    border-radius: 12px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(54, 228, 255, .12),
+            rgba(255,255,255,.025)
+        );
+
+    color:
+        #e8fbff;
+
+    box-shadow:
+        0 8px 25px
+        rgba(0, 0, 0, .3),
+
+        inset 0 1px 0
+        rgba(255,255,255,.06);
+
+    backdrop-filter:
+        blur(12px);
+
+    transition:
+        all .25s ease;
+}
+
+
+body[data-theme="blueprint"] .menu-btn:hover,
+body[data-theme="blueprint"] .language-btn:hover,
+body[data-theme="blueprint"] .round-btn:hover {
+
+    transform:
+        translateY(-3px);
+
+    border-color:
+        #36e4ff;
+
+    color:
+        #6af0ff;
+
+    box-shadow:
+
+        0 12px 30px
+        rgba(0,0,0,.4),
+
+        0 0 22px
+        rgba(54,228,255,.18);
+}
+
+
+/* =================================
+   ORDER BUTTON
+================================= */
+
+body[data-theme="blueprint"] .order-btn {
+
+    background:
+        linear-gradient(
+            135deg,
+            #36e4ff,
+            #a9f5ff
+        );
+
+    color:
+        #03121c;
+
+    border:
+        none;
+
+    font-weight:
+        800;
+
+    box-shadow:
+        0 8px 25px
+        rgba(54, 228, 255, .18);
+
+    transition:
+        transform .25s ease,
+        box-shadow .25s ease;
+}
+
+
+body[data-theme="blueprint"] .order-btn:hover {
+
+    transform:
+        translateY(-3px)
+        scale(1.02);
+
+    box-shadow:
+        0 12px 35px
+        rgba(54, 228, 255, .35);
+}
+
+
+/* =================================
+   CART
+================================= */
+
+body[data-theme="blueprint"] .cart {
+
+    border:
+        1px solid
+        rgba(54, 228, 255, .3);
+
+    border-radius:
+        22px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(8, 38, 62, .97),
+            rgba(2, 15, 26, .98)
+        );
+
+    box-shadow:
+
+        0 25px 60px
+        rgba(0,0,0,.55),
+
+        inset 0 1px 0
+        rgba(255,255,255,.06);
+
+    backdrop-filter:
+        blur(18px);
+}
+
+
+/* =================================
+   PRICE
+================================= */
+
+body[data-theme="blueprint"] .food-card .price {
+
+    color:
+        #36e4ff;
+
+    font-weight:
+        800;
+
+    text-shadow:
+        0 0 15px
+        rgba(54,228,255,.3);
+}
+
+
+/* =================================
+   SMALL TECH LINE
+================================= */
+
+body[data-theme="blueprint"] .food-info {
+
+    position: relative;
+}
+
+
+/* =================================
+   SCROLLBAR
+================================= */
+
+body[data-theme="blueprint"]::-webkit-scrollbar {
+
+    width: 8px;
+}
+
+
+body[data-theme="blueprint"]::-webkit-scrollbar-track {
+
+    background:
+        #020a13;
+}
+
+
+body[data-theme="blueprint"]::-webkit-scrollbar-thumb {
+
+    background:
+        linear-gradient(
+            #36e4ff,
+            #087ea4
+        );
+
+    border-radius:
+        20px;
+}
+
+
+/* =================================
+   SELECTION
+================================= */
+
+body[data-theme="blueprint"] ::selection {
+
+    background:
+        rgba(54, 228, 255, .3);
+
+    color:
+        #ffffff;
+}
+/* Modern Language Switcher Button */
+.language-btn {
+    display: inline-flex !important;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: var(--panel, #182228);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: var(--white, #ffffff);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    user-select: none;
+    z-index: 10;
+}
+
+.language-btn:hover {
+    background: var(--accent, #e8bb58);
+    color: #071014;
+    border-color: var(--accent, #e8bb58);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(232, 187, 88, 0.25);
+}
+
+.language-btn .lang-flag {
+    font-size: 15px;
+    line-height: 1;
+}
+
+.language-btn .lang-code {
+    letter-spacing: 0.5px;
+}
+
+.language-btn .lang-arrow {
+    font-size: 10px;
+    opacity: 0.7;
+}
+
+/* Premium Segmented 2-Button Language Switcher */
+.lang-toggle-group {
+    display: inline-flex !important;
+    align-items: center;
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    padding: 3px;
+    border-radius: 24px;
+    border: 1px solid rgba(232, 187, 88, 0.35);
+    gap: 3px;
+    user-select: none;
+    z-index: 10;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+
+.lang-btn-item {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    padding: 6px 13px;
+    border-radius: 18px;
+    border: 1px solid transparent;
+    background: transparent;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    line-height: 1;
+}
+
+.lang-btn-item:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.lang-btn-item.active {
+    background: linear-gradient(135deg, #e8bb58 0%, #c4962c 100%) !important;
+    color: #071014 !important;
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow: 0 3px 12px rgba(232, 187, 88, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    font-weight: 800;
+    transform: scale(1.03);
+}
+
+@media (max-width: 600px) {
+    .header-actions { display: flex; gap: 6px; align-items: center; }
+    .lang-toggle-group { padding: 2px; gap: 2px; }
+    .lang-btn-item { padding: 4px 8px; font-size: 11px; }
+    .theme-dropdown { right: 15px; width: calc(100vw - 30px); max-width: 300px; }
+}

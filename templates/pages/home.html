@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Al Ezoz — Bosh sahifa</title>
+    <link rel="stylesheet" href="/static/style.css?v=20261010-alezoz">
+    <link rel="stylesheet" href="/static/common_extra.css?v=20261010-alezoz">
+    <script src="/static/app.js?v=202610101241" defer></script>
+</head>
+
+<body>
+
+    <div class="background"></div>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="table-info">
+            <div class="table-icon">♢</div>
+            <div>
+                <strong>Al Ezoz</strong>
+                <small>Premium Lounge</small>
+            </div>
+        </div>
+
+        <!-- DESKTOP NAVBAR -->
+        <nav class="main-nav">
+            <ul class="nav-links">
+                <li><a href="/" class="nav-link active" data-i18n="nav.home">Bosh sahifa</a></li>
+                <li><a href="/menu" class="nav-link" data-i18n="nav.menu">Menyu</a></li>
+                <li><a href="/about" class="nav-link" data-i18n="nav.about">Biz haqimizda</a></li>
+                <li><a href="/contact" class="nav-link" data-i18n="nav.contact">Aloqa</a></li>
+                <li>
+                    <a href="/cart" class="nav-link" data-i18n="nav.cart">
+                        Savat
+                        <span class="cart-nav-badge cart-count-badge">0</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="logo">
+            <span>Al Ezoz</span>
+            <small>MILLI CAFE</small>
+        </div>
+
+        <div class="header-actions">
+            <button class="mobile-nav-toggle" aria-label="Menyuni ochish">☰</button>
+            <button id="theme-btn" class="round-btn">🌿</button>
+            <div class="lang-toggle-group">
+                <button type="button" class="lang-btn-item active" data-lang="uz" title="O'zbekcha"><span>🇺🇿</span> UZ</button>
+                <button type="button" class="lang-btn-item" data-lang="ru" title="Русский"><span>🇷🇺</span> RU</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MOBILE DRAWER -->
+    <div class="drawer-backdrop"></div>
+    <aside class="mobile-drawer">
+        <div class="drawer-header">
+            <div class="logo" style="position:static; transform:none;">
+                <span style="font-size:30px;">Al Ezoz</span>
+                <small>MILLI CAFE</small>
+            </div>
+            <button class="drawer-close">✕</button>
+        </div>
+        <ul class="drawer-links">
+            <li><a href="/" class="nav-link active">🏠 Bosh sahifa</a></li>
+            <li><a href="/menu" class="nav-link">🍽 Menyu</a></li>
+            <li><a href="/about" class="nav-link">ℹ️ Biz haqimizda</a></li>
+            <li><a href="/contact" class="nav-link">☎ Aloqa</a></li>
+            <li><a href="/cart" class="nav-link">🛒 Savat (<span class="cart-count-badge">0</span>)</a></li>
+            <li style="margin-top:20px; border-top:1px solid rgba(255,255,255,0.1); padding-top:10px;">
+                <a href="/secure-admin/" class="nav-link" style="color:#e8bb58;">🔐 Admin Panel</a>
+            </li>
+            <li>
+                <a href="/chef-panel/" class="nav-link" style="color:#60a5fa;">👨‍🍳 Oshpaz Paneli</a>
+            </li>
+        </ul>
+    </aside>
+
+    <main>
+        <!-- HERO SECTION -->
+        <section class="hero-section">
+            <div class="hero-content">
+                <div class="hero-badge" data-i18n="hero.badge">⚡ PREMIYAL LAZZAT VA SHINAMLIK</div>
+                <h1 class="hero-title">
+                    <span data-i18n="hero.title">Mazali taomlar,</span><br>
+                    <span data-i18n="hero.titleAccent">unutilmas kayfiyat.</span>
+                </h1>
+                <p class="hero-desc" data-i18n="hero.description">
+                    Al Ezoz — eng saralangan tabiiy masalliqlar, mohir oshpazlar mahorati va o‘zgacha muhit uyg‘unligi. Biz bilan har bir daqiqangiz mazali xotiraga aylanadi.
+                </p>
+                <div class="hero-actions">
+                    <a href="/menu" class="btn-primary" data-i18n="hero.viewMenu">
+                        🍽 Menyuni ko‘rish
+                        <span></span>
+                    </a>
+                    <a href="/cart" class="btn-secondary" data-i18n="hero.viewCart">
+                        🛒 Savatni ko‘rish
+                    </a>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <img src="https://scontent.cdninstagram.com/v/t51.82787-19/788728747_18103557163952839_3060654739022904315_n.jpg?stp=dst-jpg_s150x150_tt6&_nc_cat=107&ccb=7-5&_nc_sid=f7ccc5&efg=eyJ2ZW5jb2RlX3RhZyI6InByb2ZpbGVfcGljLnd3dy4xMDI0LkMzIn0%3D&_nc_ohc=6CGIN6fd4HMQ7kNvwEdthvr&_nc_oc=AdqfxE5h-HZAt3t2BOlOq0aKHLpJamZpSw01UgjYEIQX_YVX62nPRFuKW9SyO_waVB0&_nc_zt=24&_nc_ht=scontent.cdninstagram.com&_nc_gid=vmPe_ASudLyQaiC2bWbD7Q&_nc_ss=7b689&oh=00_AQOcNd7X09z8PKBkMGmi1LLWnjOA1atVZBLxGCNv8hqndA&oe=6ACEEF07" alt="Al Ezoz restorani">
+                <div class="hero-card-floating">
+                    <div class="stat-item">
+                        <div class="stat-val">50+</div>
+                        <div class="stat-label" data-i18n="hero.stat1">Sara taomlar</div>
+                    </div>
+                    <div class="stat-item" style="border-left:1px solid rgba(255,255,255,0.1); border-right:1px solid rgba(255,255,255,0.1); padding: 0 16px;">
+                        <div class="stat-val">100%</div>
+                        <div class="stat-label" data-i18n="hero.stat2">Halol & Yangi</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-val">25 min</div>
+                        <div class="stat-label" data-i18n="hero.stat3">O‘rtacha tayyorlash</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CATEGORIES SECTION -->
+        <section style="margin-bottom:60px;">
+            <div class="section-header">
+                <span class="section-small" data-i18n="section.categoriesLabel">KATEGORIYALAR</span>
+                <h2 class="section-title"><span data-i18n="section.categoriesTitle">Oshxonamiz</span> <span data-i18n="section.categoriesTitleAccent">yo‘nalishlari</span></h2>
+                <p class="section-subtitle" data-i18n="section.categoriesSubtitle">O‘zingizga yoqqan taomlar bo‘limini tanlang va tezkor buyurtma bering</p>
+            </div>
+
+            <div class="cat-grid">
+                <a href="/menu" class="cat-card">
+                    <span class="icon">🍽</span>
+                    <h4 data-i18n="category.food">Taomlar</h4>
+                    <span data-i18n="category.foodDesc">Burgerlar & Issiq taomlar</span>
+                </a>
+                <a href="/menu" class="cat-card">
+                    <span class="icon">🥗</span>
+                    <h4 data-i18n="category.salad">Salatlar</h4>
+                    <span data-i18n="category.saladDesc">Yangi & Parhezbop</span>
+                </a>
+                <a href="/menu" class="cat-card">
+                    <span class="icon">🥨</span>
+                    <h4 data-i18n="category.snack">Snacklar</h4>
+                    <span data-i18n="category.snackDesc">Qarsildoq yeguliklar</span>
+                </a>
+                <a href="/menu" class="cat-card">
+                    <span class="icon">🍹</span>
+                    <h4 data-i18n="category.drink">Ichimliklar</h4>
+                    <span data-i18n="category.drinkDesc">Kokteyl & Qahvalar</span>
+                </a>
+                <a href="/menu" class="cat-card">
+                    <span class="icon">🍰</span>
+                    <h4 data-i18n="category.dessert">Desertlar</h4>
+                    <span data-i18n="category.dessertDesc">Shirinlik & Pirojniylar</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- SPECIAL OFFERS -->
+        <section class="offers-section">
+            <div class="offer-card">
+                <div class="offer-content">
+                    <span style="color:var(--gold); font-size:12px; font-weight:700; letter-spacing:2px;" data-i18n="offer.badge">MAXSUS TAKLIF</span>
+                    <h3 data-i18n="offer.title">Burger & Drink Combo Set</h3>
+                    <p data-i18n="offer.desc">Classic Burger, Frantsuz fri kartoshkasi va muzdek ichimlik maxsus narxda. Har kuni soat 12:00 dan 16:00 gacha 20% chegirma!</p>
+                    <a href="/menu" class="btn-primary" style="padding:12px 24px;"><span data-i18n="offer.btn">Buyurtma berish</span> →</a>
+                </div>
+                <div style="font-size:100px; opacity:0.85;"></div>
+            </div>
+        </section>
+
+        <!-- FEATURED DISHES -->
+        <section class="featured-section">
+            <div class="section-header">
+                <span class="section-small" data-i18n="section.popularLabel">ENG MASHHUR</span>
+                <h2 class="section-title"><span data-i18n="section.popularTitle">Mehmonlarimiz</span> <span data-i18n="section.popularTitleAccent">sevgan taomlar</span></h2>
+                <p class="section-subtitle">Har kuni eng ko‘p buyurtma qilinadigan sara lazzatlar</p>
+            </div>
+
+            <div class="food-list" id="featured-list" style="margin-top:20px;">
+                <!-- Card 1 -->
+                <article class="food-card" data-category="food">
+                    <img src="https://loremflickr.com/600/400/burger?lock=1" alt="Classic Burger">
+                    <div class="food-info">
+                        <h3>Classic Burger</h3>
+                        <p>Mol go‘shti, cheddar va maxsus sous</p>
+                        <strong>45 000 so‘m</strong>
+                        <div class="food-controls">
+                            <button class="minus" onclick="AllonApp.updateQuantity('classic-burger', -1); syncFeatured();">-</button>
+                            <span class="quantity" id="qty-classic-burger">0</span>
+                            <button class="plus" onclick="AllonApp.addToCart({name:'Classic Burger', price:45000, slug:'classic-burger', image:'https://loremflickr.com/600/400/burger?lock=1'}); syncFeatured();">+</button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 2 -->
+                <article class="food-card" data-category="food">
+                    <img src="https://loremflickr.com/600/400/burger?lock=2" alt="Double Burger">
+                    <div class="food-info">
+                        <h3>Double Burger</h3>
+                        <p>Ikki qavatli go‘sht va cheddar</p>
+                        <strong>65 000 so‘m</strong>
+                        <div class="food-controls">
+                            <button class="minus" onclick="AllonApp.updateQuantity('double-burger', -1); syncFeatured();">-</button>
+                            <span class="quantity" id="qty-double-burger">0</span>
+                            <button class="plus" onclick="AllonApp.addToCart({name:'Double Burger', price:65000, slug:'double-burger', image:'https://loremflickr.com/600/400/burger?lock=2'}); syncFeatured();">+</button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 3 -->
+                <article class="food-card" data-category="salad">
+                    <img src="https://loremflickr.com/600/400/salad?lock=11" alt="Caesar Salad">
+                    <div class="food-info">
+                        <h3>Caesar Salad</h3>
+                        <p>Tovuq filesi, parmezan va maxsus sezar sous</p>
+                        <strong>38 000 so‘m</strong>
+                        <div class="food-controls">
+                            <button class="minus" onclick="AllonApp.updateQuantity('caesar-salad', -1); syncFeatured();">-</button>
+                            <span class="quantity" id="qty-caesar-salad">0</span>
+                            <button class="plus" onclick="AllonApp.addToCart({name:'Caesar Salad', price:38000, slug:'caesar-salad', image:'https://loremflickr.com/600/400/salad?lock=11'}); syncFeatured();">+</button>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Card 4 -->
+                <article class="food-card" data-category="dessert">
+                    <img src="https://loremflickr.com/600/400/chocolate?lock=50" alt="Chocolate Fondant">
+                    <div class="food-info">
+                        <h3>Chocolate Fondant</h3>
+                        <p>Issiq shokoladli fondant va vanil muzqaymoq</p>
+                        <strong>45 000 so‘m</strong>
+                        <div class="food-controls">
+                            <button class="minus" onclick="AllonApp.updateQuantity('chocolate-fondant', -1); syncFeatured();">-</button>
+                            <span class="quantity" id="qty-chocolate-fondant">0</span>
+                            <button class="plus" onclick="AllonApp.addToCart({name:'Chocolate Fondant', price:45000, slug:'chocolate-fondant', image:'https://loremflickr.com/600/400/chocolate?lock=50'}); syncFeatured();">+</button>
+                        </div>
+                    </div>
+                </article>
+            </div>
+        </section>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="footer-brand">
+            <span class="logo-text">Al Ezoz</span>
+            <small>MILLI CAFE</small>
+            <p data-i18n="footer.desc">Toshkent markazidagi eng mazali taomlar, yuqori darajadagi xizmat va shinam muhit maskani.</p>
+        </div>
+        <div class="footer-col">
+            <h4 data-i18n="footer.pages">Sahifalar</h4>
+            <ul class="footer-links">
+                <li><a href="/" data-i18n="nav.home">Bosh sahifa</a></li>
+                <li><a href="/menu" data-i18n="nav.menu">Menyu</a></li>
+                <li><a href="/about" data-i18n="nav.about">Biz haqimizda</a></li>
+                <li><a href="/contact" data-i18n="nav.contact">Aloqa</a></li>
+                <li><a href="/cart" data-i18n="nav.cart">Savat</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4 data-i18n="footer.hoursTitle">Ish tartibi</h4>
+            <ul class="footer-links">
+                <li data-i18n="footer.hoursDays">Dushanba – Yakshanba</li>
+                <li style="color:var(--gold); font-weight:bold;">09:00 — 23:00</li>
+                <li data-i18n="footer.kitchenClose">Oshxona yopilishi: 22:30</li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Bog‘lanish</h4>
+            <ul class="footer-links">
+                <li><a href="tel:+998909115252" style="color:inherit; text-decoration:none;">📞 +998 90 911 52 52</a></li>
+                <li><a href="tel:+998901381823" style="color:inherit; text-decoration:none;">📞 +998 90 138 18 23</a></li>
+                <li>📍 Toshkent sh., Amir Temur shoh ko‘chasi, 42-uy</li>
+                <li><a href="https://t.me/asdqregefv_bot" target="_blank" style="color:inherit; text-decoration:none;" data-i18n="footer.bot">✈️ Telegram boti</a></li>
+                <li>📸 Instagram</li>
+            </ul>
+        </div>
+    </footer>
+    <div class="footer-bottom">
+        <div data-i18n="footer.copy">© 2026 Al Ezoz. Barcha huquqlar himoyalangan.</div>
+        <div data-i18n="footer.slogan">🍃 Yaxshi taom — yaxshi kayfiyat!</div>
+    </div>
+
+        <script>
+        function syncFeatured() {
+            const cart = AllonApp.getCart();
+            ['classic-burger', 'double-burger', 'caesar-salad', 'chocolate-fondant'].forEach(slug => {
+                const item = cart.find(i => i.slug === slug);
+                const el = document.getElementById('qty-' + slug);
+                if (el) el.textContent = item ? item.quantity : 0;
+            });
+        }
+        document.addEventListener('DOMContentLoaded', syncFeatured);
+    </script>
+</body>
+</html>
+
+
+

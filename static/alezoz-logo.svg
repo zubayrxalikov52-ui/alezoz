@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 150 150" role="img" aria-labelledby="title">
+  <title id="title">Alezoz restaurant logo</title>
+  <defs>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#f3d27c"/>
+      <stop offset="0.52" stop-color="#d6a94d"/>
+      <stop offset="1" stop-color="#b98531"/>
+    </linearGradient>
+    <linearGradient id="dome" x1="0" y1="0" x2="0.9" y2="1">
+      <stop offset="0" stop-color="#f6dc91"/>
+      <stop offset="1" stop-color="#c8963d"/>
+    </linearGradient>
+  </defs>
+  <rect width="150" height="150" rx="3" fill="#08281e"/>
+  <path d="M38 92a37 37 0 0 1 74 0z" fill="url(#dome)"/>
+  <path d="M38 92h74" fill="none" stroke="#f0d17b" stroke-width="3"/>
+  <circle cx="75" cy="53" r="4.5" fill="url(#gold)"/>
+  <path d="M75 57v5" stroke="#d6aa53" stroke-width="3" stroke-linecap="round"/>
+  <path d="M40 96h70" stroke="url(#gold)" stroke-width="5" stroke-linecap="round"/>
+  <path d="M130 129l1.6 3.4 3.4 1.6-3.4 1.6-1.6 3.4-1.6-3.4-3.4-1.6 3.4-1.6z" fill="#92a997" opacity=".72"/>
+</svg>

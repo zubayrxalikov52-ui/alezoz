@@ -1,0 +1,208 @@
+﻿<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Al Ezoz — Biz haqimizda</title>
+    <link rel="stylesheet" href="/static/style.css?v=20261010-alezoz">
+    <link rel="stylesheet" href="/static/common_extra.css?v=20261010-alezoz">
+    <script src="/static/app.js?v=202610101241" defer></script>
+</head>
+
+<body>
+
+    <div class="background"></div>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="table-info">
+            <div class="table-icon">♧</div>
+            <div>
+                <strong>Al Ezoz</strong>
+                <small data-i18n="about.teamSub">Hikoyamiz & Jamoa</small>
+            </div>
+        </div>
+
+        <nav class="main-nav">
+            <ul class="nav-links">
+                <li><a href="/" class="nav-link" data-i18n="nav.home">Bosh sahifa</a></li>
+                <li><a href="/menu" class="nav-link" data-i18n="nav.menu">Menyu</a></li>
+                <li><a href="/about" class="nav-link active" data-i18n="nav.about">Biz haqimizda</a></li>
+                <li><a href="/contact" class="nav-link" data-i18n="nav.contact">Aloqa</a></li>
+                <li>
+                    <a href="/cart" class="nav-link">
+                        <span data-i18n="nav.cart">Savat</span>
+                        <span class="cart-nav-badge cart-count-badge">0</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="logo">
+            <span>Al Ezoz</span>
+            <small>MILLI CAFE</small>
+        </div>
+
+        <div class="header-actions">
+            <button class="mobile-nav-toggle" aria-label="Menyuni ochish">☰</button>
+            <button id="theme-btn" class="round-btn">🎨</button>
+            <div class="lang-toggle-group">
+                <button type="button" class="lang-btn-item active" data-lang="uz" title="O'zbekcha"><span>🇺🇿</span>
+                    UZ</button>
+                <button type="button" class="lang-btn-item" data-lang="ru" title="Русский"><span>🇷🇺</span> RU</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MOBILE DRAWER -->
+    <div class="drawer-backdrop"></div>
+    <aside class="mobile-drawer">
+        <div class="drawer-header">
+            <div class="logo" style="position:static; transform:none;">
+                <span style="font-size:30px;">Al Ezoz</span>
+                <small>MILLI CAFE</small>
+            </div>
+            <button class="drawer-close">✕</button>
+        </div>
+        <ul class="drawer-links">
+            <li><a href="/" class="nav-link">🏠 <span data-i18n="nav.home">Bosh sahifa</span></a></li>
+            <li><a href="/menu" class="nav-link">🍽 <span data-i18n="nav.menu">Menyu</span></a></li>
+            <li><a href="/about" class="nav-link active">ℹ️ <span data-i18n="nav.about">Biz haqimizda</span></a></li>
+            <li><a href="/contact" class="nav-link">📞 <span data-i18n="nav.contact">Aloqa</span></a></li>
+            <li><a href="/cart" class="nav-link">🛒 <span data-i18n="nav.cart">Savat</span> (<span
+                        class="cart-count-badge">0</span>)</a></li>
+        </ul>
+    </aside>
+
+    <main>
+        <!-- ABOUT STORY SECTION -->
+        <section class="about-hero">
+            <div class="about-text">
+                <span class="welcome-small" data-i18n="about.welcome">BIZNING HIKOYAMIZ</span>
+                <h1 style="margin-top:10px;" data-i18n-html="about.heroTitle">
+                    Mazali taom — bu shunchaki yegulik emas, <br>
+                    <span style="color:var(--gold); font-family:Georgia, serif; font-style:italic;">bu san’at
+                        asari.</span>
+                </h1>
+                <div class="line"></div>
+                <p data-i18n="about.p1">
+                    Al Ezoz o‘z faoliyatini har bir mehmonga uy shinamligini va jahon andozalaridagi premium taomlar
+                    lazzatini tortiq etish maqsadi bilan boshlagan.
+                </p>
+                <p data-i18n="about.p2">
+                    Biz faqatgina saralangan, 100% tabiiy va yangi masalliqlardan foydalanamiz. Bizning oshxonamizda har
+                    bir sous qo‘lda tayyorlanadi, har bir go‘sht nozik did bilan tanlanadi va har bir taom mehr bilan
+                    taqdim etiladi.
+                </p>
+                <div style="display:flex; gap:20px; margin-top:30px;">
+                    <div>
+                        <strong style="color:var(--gold); font-size:32px; display:block;">7+</strong>
+                        <small style="color:var(--muted);" data-i18n="about.statYears">Yillik tajriba</small>
+                    </div>
+                    <div style="border-left:1px solid rgba(255,255,255,0.1); padding-left:20px;">
+                        <strong style="color:var(--gold); font-size:32px; display:block;">50,000+</strong>
+                        <small style="color:var(--muted);" data-i18n="about.statGuests">Mamnun mehmonlar</small>
+                    </div>
+                    <div style="border-left:1px solid rgba(255,255,255,0.1); padding-left:20px;">
+                        <strong style="color:var(--gold); font-size:32px; display:block;">100%</strong>
+                        <small style="color:var(--muted);" data-i18n="about.statHalal">Halol masalliqlar</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hero-visual">
+                <img src="/media/about-dish.png" alt="Al Ezoz taomlari — Shashlik va tandir non"
+                    style="object-position: center 35%;">
+            </div>
+        </section>
+
+        <!-- VALUES SECTION -->
+        <section style="max-width:1300px; margin:0 auto 70px auto; padding:0 40px;">
+            <div class="section-header">
+                <span class="section-small" data-i18n="about.valuesSmall">QADRIYATLARIMIZ</span>
+                <h2 class="section-title" data-i18n-html="about.valuesTitle">Biz nimaga <span>ishonamiz?</span></h2>
+            </div>
+
+            <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:24px;">
+                <div
+                    style="background:var(--card); border:1px solid var(--border); border-radius:20px; padding:30px; backdrop-filter:blur(15px);">
+                    <div style="font-size:36px; margin-bottom:12px;">🥩</div>
+                    <h3 style="margin-bottom:8px; font-size:18px;" data-i18n="about.val1Title">Sof & Yangi Go‘sht</h3>
+                    <p style="color:var(--muted); font-size:14px; line-height:1.6;" data-i18n="about.val1Desc">Hech
+                        qanday muzlatilgan yoki sun’iy qo‘shimchalar yo‘q. Faqat kunlik yangi, sara mol va tovuq
+                        go‘shti.</p>
+                </div>
+                <div
+                    style="background:var(--card); border:1px solid var(--border); border-radius:20px; padding:30px; backdrop-filter:blur(15px);">
+                    <div style="font-size:36px; margin-bottom:12px;">👨‍🍳</div>
+                    <h3 style="margin-bottom:8px; font-size:18px;" data-i18n="about.val2Title">Tajribali Oshpazlar</h3>
+                    <p style="color:var(--muted); font-size:14px; line-height:1.6;" data-i18n="about.val2Desc">Har bir
+                        taom o‘z sohasining ustalari tomonidan mualliflik retseptlari asosida tayyorlanadi.</p>
+                </div>
+                <div
+                    style="background:var(--card); border:1px solid var(--border); border-radius:20px; padding:30px; backdrop-filter:blur(15px);">
+                    <div style="font-size:36px; margin-bottom:12px;">⚡️</div>
+                    <h3 style="margin-bottom:8px; font-size:18px;" data-i18n="about.val3Title">Tezkor & Issiq Yetkazish
+                    </h3>
+                    <p style="color:var(--muted); font-size:14px; line-height:1.6;" data-i18n="about.val3Desc">Maxsus
+                        termobokslar orqali buyurtmangiz xuddi pechdan chiqqandek issiq va xushbo‘y yetib boradi.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- CHEF & TEAM SECTION -->
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="footer-brand">
+            <span class="logo-text">Al Ezoz</span>
+            <small>MILLI CAFE</small>
+            <p data-i18n="footer.desc">Toshkent markazidagi eng mazali taomlar, yuqori darajadagi xizmat va shinam muhit
+                maskani.</p>
+        </div>
+        <div class="footer-col">
+            <h4 data-i18n="footer.pages">Sahifalar</h4>
+            <ul class="footer-links">
+                <li><a href="/" data-i18n="nav.home">Bosh sahifa</a></li>
+                <li><a href="/menu" data-i18n="nav.menu">Menyu</a></li>
+                <li><a href="/about" data-i18n="nav.about">Biz haqimizda</a></li>
+                <li><a href="/contact" data-i18n="nav.contact">Aloqa</a></li>
+                <li><a href="/cart" data-i18n="nav.cart">Savat</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4 data-i18n="footer.hoursTitle">Ish tartibi</h4>
+            <ul class="footer-links">
+                <li data-i18n="footer.hoursDays">Dushanba – Yakshanba</li>
+                <li style="color:var(--gold); font-weight:bold;">09:00 — 23:00</li>
+                <li data-i18n="footer.kitchenClose">Oshxona yopilishi: 22:30</li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4 data-i18n="footer.contactTitle">Bog‘lanish</h4>
+            <ul class="footer-links">
+                <li><a href="tel:+998909115252" style="color:inherit; text-decoration:none;">📞 +998 90 911 52 52</a>
+                </li>
+                <li><a href="tel:+998901381823" style="color:inherit; text-decoration:none;">📞 +998 90 138 18 23</a>
+                </li>
+                <li data-i18n="footer.address">📍 Toshkent sh., Amir Temur shoh ko‘chasi, 42-uy</li>
+                <li><a href="https://t.me/asdqregefv_bot" target="_blank" style="color:inherit; text-decoration:none;"
+                        data-i18n="footer.bot">✈️ Telegram boti</a></li>
+            </ul>
+        </div>
+    </footer>
+    <div class="footer-bottom" style="flex-wrap:wrap; gap:12px;">
+        <div data-i18n="footer.copy">© 2026 Al Ezoz. Barcha huquqlar himoyalangan.</div>
+        <div style="font-size:12px; color:var(--muted); display:inline-flex; align-items:center; gap:5px;">
+            <span>Developer:</span>
+            <span style="color:var(--gold); font-weight:600; letter-spacing:0.3px;">Abdurahmon Erkinjonov</span>
+        </div>
+        <div data-i18n="footer.slogan">🍃 Yaxshi taom — yaxshi kayfiyat!</div>
+    </div>
+
+</body>
+
+</html>

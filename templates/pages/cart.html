@@ -1,0 +1,257 @@
+﻿<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Al Ezoz — Savat</title>
+    <link rel="stylesheet" href="/static/style.css?v=20261010-alezoz">
+    <link rel="stylesheet" href="/static/common_extra.css?v=20261010-alezoz">
+    <script src="/static/app.js?v=202610101241" defer></script>
+</head>
+
+<body>
+
+    <div class="background"></div>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="table-info">
+            <div class="table-icon">♧</div>
+            <div>
+                <strong>Al Ezoz</strong>
+                <small>Savat & Buyurtma</small>
+            </div>
+        </div>
+
+        <nav class="main-nav">
+            <ul class="nav-links">
+                <li><a href="/" class="nav-link" data-i18n="nav.home">Bosh sahifa</a></li>
+                <li><a href="/menu" class="nav-link" data-i18n="nav.menu">Menyu</a></li>
+                <li><a href="/about" class="nav-link" data-i18n="nav.about">Biz haqimizda</a></li>
+                <li><a href="/contact" class="nav-link" data-i18n="nav.contact">Aloqa</a></li>
+                <li>
+                    <a href="/cart" class="nav-link active">
+                        <span data-i18n="nav.cart">Savat</span>
+                        <span class="cart-nav-badge cart-count-badge">0</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="logo">
+            <span>Al Ezoz</span>
+            <small>MILLI CAFE</small>
+        </div>
+
+        <div class="header-actions">
+            <button class="mobile-nav-toggle" aria-label="Menyuni ochish">☰</button>
+            <button id="theme-btn" class="round-btn">🎨</button>
+            <div class="lang-toggle-group">
+                <button type="button" class="lang-btn-item active" data-lang="uz" title="O'zbekcha"><span>🇺🇿</span> UZ</button>
+                <button type="button" class="lang-btn-item" data-lang="ru" title="Русский"><span>🇷🇺</span> RU</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MOBILE DRAWER -->
+    <div class="drawer-backdrop"></div>
+    <aside class="mobile-drawer">
+        <div class="drawer-header">
+            <div class="logo" style="position:static; transform:none;">
+                <span style="font-size:30px;">Al Ezoz</span>
+                <small>MILLI CAFE</small>
+            </div>
+            <button class="drawer-close">✕</button>
+        </div>
+        <ul class="drawer-links">
+            <li><a href="/" class="nav-link">🏠 Bosh sahifa</a></li>
+            <li><a href="/menu" class="nav-link">🍽 Menyu</a></li>
+            <li><a href="/about" class="nav-link">ℹ️ <span data-i18n="nav.about">Biz haqimizda</span></a></li>
+            <li><a href="/contact" class="nav-link">📞 Aloqa</a></li>
+            <li><a href="/cart" class="nav-link active">🛒 Savat (<span class="cart-count-badge">0</span>)</a></li>
+        </ul>
+    </aside>
+
+    <main>
+        <section style="max-width:1200px; margin:20px auto 0 auto; padding:0 40px;">
+            <span class="welcome-small" data-i18n="cart.badge">XARIDLAR</span>
+            <h1 style="font-size:38px; margin-top:8px;">
+                <span data-i18n="cart.yourCart">Sizning</span> <span data-i18n="cart.yourCartAccent">Savatingiz</span>
+            </h1>
+            <div class="line"></div>
+        </section>
+
+        <!-- CART CONTENT -->
+        <div class="cart-page-layout" id="cart-container">
+            <!-- Table Wrapper -->
+            <div class="cart-table-wrapper" id="cart-items-box">
+                <!-- Dynamically filled -->
+            </div>
+
+            <!-- Summary Box -->
+            <div class="cart-summary-box">
+                <h3 style="font-size:20px; margin-bottom:20px; color:var(--white);" data-i18n="checkout.summaryTitle">Buyurtma xulosasi</h3>
+                
+                <div class="summary-row">
+                    <span data-i18n="cart.itemCount">Mahsulotlar soni:</span>
+                    <strong id="summary-count" style="color:var(--white);">0 ta</strong>
+                </div>
+                <div class="summary-row">
+                    <span data-i18n="cart.subtotal">Oraliq summa:</span>
+                    <strong id="summary-subtotal" style="color:var(--white);">0 so‘m</strong>
+                </div>
+                <div class="summary-row">
+                    <span data-i18n="cart.delivery">Yetkazib berish:</span>
+                    <span id="summary-delivery" style="color:#4ade80;">admin bilan kelishiladi (100k dan yuqori)</span>
+                </div>
+                <div class="summary-row total-row">
+                    <span>Jami to‘lov:</span>
+                    <strong id="summary-total">0 so‘m</strong>
+                </div>
+
+                <div style="margin-top:26px;">
+                    <a href="/checkout" id="checkout-link" class="btn-primary" style="width:100%; justify-content:center; padding:16px;">
+                        Buyurtma berishga o‘tish <span>→</span>
+                    </a>
+                    <a href="/menu" class="btn-secondary" style="width:100%; justify-content:center; padding:13px; margin-top:12px;">
+                        + Yana taom qo‘shish
+                    </a>
+                </div>
+
+                <div style="margin-top:18px; text-align:center; color:var(--muted); font-size:12px;">
+                    🍃 Buyurtmangiz to‘g‘ridan-to‘g‘ri oshxona monitoriga uzatiladi
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="footer-brand">
+            <span class="logo-text">Al Ezoz</span>
+            <small>MILLI CAFE</small>
+            <p data-i18n="footer.desc">Toshkent markazidagi eng mazali taomlar, yuqori darajadagi xizmat va shinam muhit maskani.</p>
+        </div>
+        <div class="footer-col">
+            <h4 data-i18n="footer.pages">Sahifalar</h4>
+            <ul class="footer-links">
+                <li><a href="/" data-i18n="nav.home">Bosh sahifa</a></li>
+                <li><a href="/menu" data-i18n="nav.menu">Menyu</a></li>
+                <li><a href="/about" data-i18n="nav.about">Biz haqimizda</a></li>
+                <li><a href="/contact" data-i18n="nav.contact">Aloqa</a></li>
+                <li><a href="/cart" data-i18n="nav.cart">Savat</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4 data-i18n="footer.hoursTitle">Ish tartibi</h4>
+            <ul class="footer-links">
+                <li data-i18n="footer.hoursDays">Har kuni: 09:00 — 23:00</li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Bog‘lanish</h4>
+            <ul class="footer-links">
+                <li><a href="tel:+998909115252" style="color:inherit; text-decoration:none;">📞 +998 90 911 52 52</a></li>
+                <li><a href="tel:+998901381823" style="color:inherit; text-decoration:none;">📞 +998 90 138 18 23</a></li>
+                <li><a href="https://t.me/asdqregefv_bot" target="_blank" style="color:inherit; text-decoration:none;" data-i18n="footer.bot">✈️ Telegram boti</a></li>
+            </ul>
+        </div>
+    </footer>
+    <div class="footer-bottom">
+        <div data-i18n="footer.copy">© 2026 Al Ezoz. Barcha huquqlar himoyalangan.</div>
+        <div data-i18n="footer.slogan">🍃 Yaxshi taom — yaxshi kayfiyat!</div>
+    </div>
+
+            <script>
+        function renderCartPage() {
+            const container = document.getElementById('cart-items-box');
+            if (!container) return;
+            const cart = AllonApp.getCart();
+            const total = AllonApp.getCartTotal();
+            const count = AllonApp.getCartCount();
+            const lang = AllonApp.getCurrentLanguage();
+            const isRu = (lang === 'ru');
+            const curr = isRu ? 'сум' : "so‘m";
+            const unit = isRu ? 'шт' : 'ta';
+
+            const summaryCount = document.getElementById('summary-count');
+            const summarySubtotal = document.getElementById('summary-subtotal');
+            const summaryTotal = document.getElementById('summary-total');
+
+            if (summaryCount) summaryCount.textContent = count + ' ' + unit;
+            if (summarySubtotal) summarySubtotal.textContent = total.toLocaleString('uz-UZ') + ' ' + curr;
+            if (summaryTotal) summaryTotal.textContent = total.toLocaleString('uz-UZ') + ' ' + curr;
+
+            const checkoutBtn = document.getElementById('checkout-link');
+
+            if (cart.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-cart" style="padding:60px 20px;">
+                        <span style="font-size:56px; display:block; margin-bottom:16px;">🛒</span>
+                        <h2 style="font-size:24px; margin-bottom:8px; color:var(--white);">${isRu ? 'Корзина пока пуста' : 'Savatingiz hozircha bo‘sh'}</h2>
+                        <p style="color:var(--muted); font-size:14px; margin-bottom:24px;">${isRu ? 'Ознакомьтесь с нашим вкусным меню и выберите то, что вам по душе!' : 'Bizning mazali taomlarimiz bilan tanishib, o‘zingizga yoqqanini tanlang!'}</p>
+                        <a href="/menu" class="btn-primary" style="display:inline-flex;">${isRu ? '🍽 В меню →' : '🍽 Menyuga o‘tish →'}</a>
+                    </div>
+                `;
+                if (checkoutBtn) {
+                    checkoutBtn.style.opacity = '0.5';
+                    checkoutBtn.style.pointerEvents = 'none';
+                }
+                return;
+            }
+
+            if (checkoutBtn) {
+                checkoutBtn.style.opacity = '1';
+                checkoutBtn.style.pointerEvents = 'auto';
+            }
+
+            const clearText = isRu ? '🗑 Очистить корзину' : '🗑 Savatni tozalash';
+            const selectedText = isRu ? `Выбранные блюда (${cart.length})` : `Tanlangan taomlar (${cart.length})`;
+            const perPiece = isRu ? 'сум / шт' : 'so‘m / dona';
+            const deleteTitle = isRu ? 'Удалить' : 'O‘chirish';
+
+            let html = `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; border-bottom:1px solid var(--border); padding-bottom:12px;">
+                    <strong style="color:var(--muted); font-size:13px; text-transform:uppercase;">${selectedText}</strong>
+                    <button onclick="AllonApp.clearCart(); renderCartPage();" style="background:transparent; border:none; color:#f87171; cursor:pointer; font-size:13px;">${clearText}</button>
+                </div>
+            `;
+
+            cart.forEach(item => {
+                const subtotal = item.price * item.quantity;
+                const displayName = AllonApp.translateItemName(item.name);
+                html += `
+                    <div class="cart-item-row">
+                        <img src="${item.image || 'https://loremflickr.com/200/200/food'}" alt="${displayName}">
+                        <div class="cart-item-info">
+                            <h4>${displayName}</h4>
+                            <span>${item.price.toLocaleString('uz-UZ')} ${perPiece}</span>
+                        </div>
+                        <div class="food-controls" style="width:105px;">
+                            <button class="minus" onclick="AllonApp.updateQuantity('${item.id}', -1); renderCartPage();">−</button>
+                            <span class="quantity">${item.quantity}</span>
+                            <button class="plus" onclick="AllonApp.updateQuantity('${item.id}', 1); renderCartPage();">+</button>
+                        </div>
+                        <div style="text-align:right;">
+                            <strong style="color:var(--gold); font-size:16px;">${subtotal.toLocaleString('uz-UZ')} ${curr}</strong>
+                        </div>
+                        <div style="text-align:center;">
+                            <button onclick="AllonApp.removeFromCart('${item.id}'); renderCartPage();" style="border:none; background:rgba(228,91,91,0.15); color:#e45b5b; width:30px; height:30px; border-radius:50%; cursor:pointer; font-size:14px; display:grid; place-items:center;" title="${deleteTitle}">✕</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        document.addEventListener('DOMContentLoaded', renderCartPage);
+        window.addEventListener('appLanguageChanged', renderCartPage);
+    </script>
+</body>
+</html>
+
+
+
+

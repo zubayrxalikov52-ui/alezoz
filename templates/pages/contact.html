@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Al Ezoz — Aloqa</title>
+    <link rel="stylesheet" href="/static/style.css?v=20261010-alezoz">
+    <link rel="stylesheet" href="/static/common_extra.css?v=20261010-alezoz">
+    <script src="/static/app.js?v=202610101241" defer></script>
+</head>
+
+<body>
+
+    <div class="background"></div>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="table-info">
+            <div class="table-icon">♧</div>
+            <div>
+                <strong>Al Ezoz</strong>
+                <small>Aloqa & Manzil</small>
+            </div>
+        </div>
+
+        <nav class="main-nav">
+            <ul class="nav-links">
+                <li><a href="/" class="nav-link" data-i18n="nav.home">Bosh sahifa</a></li>
+                <li><a href="/menu" class="nav-link" data-i18n="nav.menu">Menyu</a></li>
+                <li><a href="/about" class="nav-link" data-i18n="nav.about">Biz haqimizda</a></li>
+                <li><a href="/contact" class="nav-link active" data-i18n="nav.contact">Aloqa</a></li>
+                <li>
+                    <a href="/cart" class="nav-link">
+                        <span data-i18n="nav.cart">Savat</span>
+                        <span class="cart-nav-badge cart-count-badge">0</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="logo">
+            <span>Al Ezoz</span>
+            <small>MILLI CAFE</small>
+        </div>
+
+        <div class="header-actions">
+            <button class="mobile-nav-toggle" aria-label="Menyuni ochish">☰</button>
+            <button id="theme-btn" class="round-btn">🎨</button>
+            <div class="lang-toggle-group">
+                <button type="button" class="lang-btn-item active" data-lang="uz" title="O'zbekcha"><span>🇺🇿</span> UZ</button>
+                <button type="button" class="lang-btn-item" data-lang="ru" title="Русский"><span>🇷🇺</span> RU</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MOBILE DRAWER -->
+    <div class="drawer-backdrop"></div>
+    <aside class="mobile-drawer">
+        <div class="drawer-header">
+            <div class="logo" style="position:static; transform:none;">
+                <span style="font-size:30px;">Al Ezoz</span>
+                <small>MILLI CAFE</small>
+            </div>
+            <button class="drawer-close">✕</button>
+        </div>
+        <ul class="drawer-links">
+            <li><a href="/" class="nav-link">🏠 Bosh sahifa</a></li>
+            <li><a href="/menu" class="nav-link">🍽 Menyu</a></li>
+            <li><a href="/about" class="nav-link">ℹ️ <span data-i18n="nav.about">Biz haqimizda</span></a></li>
+            <li><a href="/contact" class="nav-link active">📞 Aloqa</a></li>
+            <li><a href="/cart" class="nav-link">🛒 Savat (<span class="cart-count-badge">0</span>)</a></li>
+        </ul>
+    </aside>
+
+    <main>
+        <section style="text-align:center; padding:30px 20px 10px 20px;">
+            <span class="welcome-small" data-i18n="contact.welcome">BIZ BILAN BOG‘LANING</span>
+            <h1 style="font-size:42px; margin-top:8px;" data-i18n-html="contact.title">
+                Savollaringiz bormi? <span style="color:var(--gold); font-family:Georgia,serif; font-style:italic;">Biz doimo yordamga tayyormiz!</span>
+            </h1>
+        </section>
+
+        <div class="contact-layout">
+            <!-- INFO CARD -->
+            <div class="contact-info-card">
+                <h3 style="font-size:22px; margin-bottom:24px; color:var(--white);">Aloqa ma’lumotlari</h3>
+
+                <div class="info-box">
+                    <div class="info-icon">📍</div>
+                    <div class="info-details">
+                        <h4 data-i18n="contact.addrLabel">Manzilimiz</h4>
+                        <p>Toshkent shahri, Shayxontohur Tumani, Qoratosh ko'chasi</p>
+                        <small style="color:var(--gold);">Mo‘ljal: Shahar klinik shifoxonasi#1</small>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-icon">📞</div>
+                    <div class="info-details">
+                        <h4 data-i18n="contact.phoneLabel">Telefon raqam</h4>
+                        <p><a href="tel:+998909115252">+998 90 911 52 52</a></p>
+                        <p><a href="tel:+998901381823">+998 90 138 18 23</a></p>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-icon">⏰</div>
+                    <div class="info-details">
+                        <h4 data-i18n="contact.workHours">Ish vaqti</h4>
+                        <p data-i18n-html="contact.workHoursLine">Dushanba – Yakshanba: <strong>09:00 — 23:00</strong></p>
+                        <p data-i18n="contact.deliveryHours">Yetkazib berish xizmati: 09:00 — 23:00</p>
+                    </div>
+                </div>
+
+                <div class="info-box">
+                    <div class="info-icon">✈️</div>
+                    <div class="info-details">
+                        <h4>Ijtimoiy tarmoqlar & Bot</h4>
+                        <p>Telegram: <a href="https://t.me/asdqregefv_bot" target="_blank">Al Ezoz boti</a></p>
+                        <p>Instagram: <a href="https://instagram.com" target="_blank">Instagram</a></p>
+                    </div>
+                </div>
+
+                <!-- Google Maps Frame -->
+                <div style="border-radius:16px; overflow:hidden; border:1px solid var(--border); margin-top:20px;">
+                    <iframe 
+                        src="https://maps.google.com/maps?q=41.32114573809359,69.22108906908464&hl=uz&z=16&output=embed" 
+                        width="100%" 
+                        height="220" 
+                        style="border:0; display:block;" 
+                        allowfullscreen="" 
+                        loading="lazy">
+                    </iframe>
+                </div>
+                <div style="margin-top:12px; display:flex; gap:10px; flex-wrap:wrap;">
+                    <a href="https://maps.google.com/?q=41.32114573809359,69.22108906908464" target="_blank" class="btn-secondary" style="font-size:12px; padding:6px 14px; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">🗺 Google Maps</a>
+                    <a href="https://yandex.ru/maps/?pt=69.22108906908464,41.32114573809359&z=16&l=map" target="_blank" class="btn-secondary" style="font-size:12px; padding:6px 14px; text-decoration:none; display:inline-flex; align-items:center; gap:6px;">📍 Yandex Xarita</a>
+                </div>
+            </div>
+
+            <!-- CONTACT FORM -->
+            <div class="contact-info-card">
+                <h3 style="font-size:22px; margin-bottom:8px; color:var(--white);" data-i18n="contact.formTitle">Bizga xabar qoldiring</h3>
+                <p style="color:var(--muted); font-size:14px; margin-bottom:24px;" data-i18n="contact.formSubtitle">Taklif, mulohaza yoki stol band qilish bo‘yicha xabar yuboring, administratorimiz tezda siz bilan bog‘lanadi.</p>
+
+                <form id="contact-form">
+                    <div class="form-group">
+                        <label class="form-label" for="contact-name" data-i18n="form.nameLabel">Ismingiz *</label>
+                        <input type="text" id="contact-name" class="form-input" data-i18n-placeholder="form.namePlaceholder" placeholder="Ismingizni kiriting" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="contact-phone" data-i18n="form.phoneLabel">Telefon raqamingiz *</label>
+                        <input type="tel" id="contact-phone" class="form-input" placeholder="+998 90 123 45 67" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="contact-subject" data-i18n="form.subjectLabel">Mavzu</label>
+                        <select id="contact-subject" class="form-select">
+                            <option value="Buyurtma">Buyurtma bo‘yicha savol</option>
+                            <option value="Stol band qilish">Stol band qilish</option>
+                            <option value="Fikr va taklif">Fikr va taklif</option>
+                            <option value="Hamkorlik">Hamkorlik</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="contact-message" data-i18n="form.messageLabel">Xabaringiz *</label>
+                        <textarea id="contact-message" class="form-textarea" data-i18n-placeholder="form.messagePlaceholder" placeholder="Xabaringizni bu yerga yozing..." required></textarea>
+                    </div>
+
+                    <button type="submit" id="submit-contact" class="btn-primary" style="width:100%; justify-content:center; padding:15px;">
+                        <span data-i18n="form.submit">Xabarni yuborish</span> <span>→</span>
+                    </button>
+                    <div id="contact-feedback" style="margin-top:14px; font-size:14px; text-align:center; display:none;"></div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="footer-brand">
+            <span class="logo-text">Al Ezoz</span>
+            <small>MILLI CAFE</small>
+            <p data-i18n="footer.desc">Toshkent markazidagi eng mazali taomlar, yuqori darajadagi xizmat va shinam muhit maskani.</p>
+        </div>
+        <div class="footer-col">
+            <h4 data-i18n="footer.pages">Sahifalar</h4>
+            <ul class="footer-links">
+                <li><a href="/" data-i18n="nav.home">Bosh sahifa</a></li>
+                <li><a href="/menu" data-i18n="nav.menu">Menyu</a></li>
+                <li><a href="/about" data-i18n="nav.about">Biz haqimizda</a></li>
+                <li><a href="/contact" data-i18n="nav.contact">Aloqa</a></li>
+                <li><a href="/cart" data-i18n="nav.cart">Savat</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4 data-i18n="footer.hoursTitle">Ish tartibi</h4>
+            <ul class="footer-links">
+                <li data-i18n="footer.hoursDays">Dushanba – Yakshanba</li>
+                <li style="color:var(--gold); font-weight:bold;">09:00 — 23:00</li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Bog‘lanish</h4>
+            <ul class="footer-links">
+                <li><a href="tel:+998909115252" style="color:inherit; text-decoration:none;">📞 +998 90 911 52 52</a></li>
+                <li><a href="tel:+998901381823" style="color:inherit; text-decoration:none;">📞 +998 90 138 18 23</a></li>
+                <li>📍 Toshkent sh., Amir Temur shoh ko‘chasi, 42</li>
+                <li><a href="https://t.me/asdqregefv_bot" target="_blank" style="color:inherit; text-decoration:none;" data-i18n="footer.bot">✈️ Telegram boti</a></li>
+            </ul>
+        </div>
+    </footer>
+    <div class="footer-bottom">
+        <div data-i18n="footer.copy">© 2026 Al Ezoz. Barcha huquqlar himoyalangan.</div>
+        <div data-i18n="footer.slogan">🍃 Yaxshi taom — yaxshi kayfiyat!</div>
+    </div>
+
+        <script>
+        const contactForm = document.getElementById('contact-form');
+        const feedback = document.getElementById('contact-feedback');
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submit-contact');
+            btn.disabled = true;
+            btn.textContent = "Yuborilmoqda...";
+
+            const payload = {
+                name: document.getElementById('contact-name').value,
+                phone: document.getElementById('contact-phone').value,
+                subject: document.getElementById('contact-subject').value,
+                message: document.getElementById('contact-message').value
+            };
+
+            try {
+                const res = await fetch('/api/contact', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+                if (res.ok) {
+                    feedback.style.display = 'block';
+                    feedback.style.color = '#4ade80';
+                    feedback.textContent = '✅ Xabaringiz muvaffaqiyatli qabul qilindi! Tez orada bog‘lanamiz.';
+                    contactForm.reset();
+                    AllonApp.showToast('Xabar yuborildi!');
+                } else {
+                    throw new Error();
+                }
+            } catch (err) {
+                feedback.style.display = 'block';
+                feedback.style.color = '#f87171';
+                feedback.textContent = '❌ Xatolik yuz berdi. Iltimos telefon orqali bog‘laning.';
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Xabarni yuborish <span>→</span>';
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+
+

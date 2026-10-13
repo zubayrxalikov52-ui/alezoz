@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Al Ezoz — Oshpaz Paneli (Chef KDS)</title>
+    <link rel="stylesheet" href="/static/style.css?v=20261010-alezoz">
+    <link rel="stylesheet" href="/static/common_extra.css">
+</head>
+
+<body>
+
+    <div class="background"></div>
+
+    <!-- CHEF 2FA LOGIN SCREEN -->
+    <div id="chef-auth-screen" style="display:block;">
+        <header class="header" style="justify-content:center;">
+            <div class="logo" style="position:static; transform:none;">
+                <span>Al Ezoz</span>
+                <small>OSHXONA TIZIMI (KDS)</small>
+            </div>
+        </header>
+
+        <div class="auth-container">
+            <div class="auth-icon" style="color:#60a5fa; border-color:rgba(96,165,250,0.3); background:rgba(96,165,250,0.12);">👨‍🍳</div>
+            <h2 id="chef-auth-title" style="font-size:24px; margin-bottom:8px; color:var(--white);">Oshpaz Kirish</h2>
+            <p style="color:var(--muted); font-size:13px; margin-bottom:24px;">Faqat oshxona xodimlari uchun: Parol va Telegram 2FA</p>
+
+            <!-- STEP 1 -->
+            <form id="chef-login-step1">
+                <div class="form-group" style="text-align:left;">
+                    <label class="form-label" for="chef-username-input">Oshpaz Logini</label>
+                    <input type="text" id="chef-username-input" class="form-input" placeholder="Alezozchef" value="Alezozchef" required autocomplete="username">
+                </div>
+                <div class="form-group" style="text-align:left;">
+                    <label class="form-label" for="chef-password-input">Parol</label>
+                    <input type="password" id="chef-password-input" class="form-input" placeholder="••••••••" value="Alezoztashkent" required autocomplete="current-password">
+                </div>
+                <button type="submit" id="btn-chef-step1" class="btn-primary" style="width:100%; justify-content:center; padding:15px; margin-top:10px;">
+                    Davom etish (Kodni olish) <span>→</span>
+                </button>
+            </form>
+
+            <!-- STEP 2 -->
+            <form id="chef-login-step2" style="display:none;">
+                <div style="background:rgba(96,165,250,0.1); border:1px solid rgba(96,165,250,0.3); border-radius:14px; padding:14px; margin-bottom:18px; font-size:13px; color:#e2e8f0; text-align:left;">
+                    ✈️ Oshpazning Telegram hisobiga <b>6 xonali tasdiqlash kodi</b> yuborildi. Kod 3 daqiqa amal qiladi.
+                    <div id="chef-demo-code-hint" style="margin-top:6px; color:#60a5fa; font-size:12px;"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="chef-2fa-code">6 xonali tasdiqlash kodi</label>
+                    <input type="text" id="chef-2fa-code" class="form-input auth-code-input" placeholder="000000" maxlength="6" pattern="[0-9]{6}" required autocomplete="one-time-code">
+                </div>
+
+                <button type="submit" id="btn-chef-step2" class="btn-primary" style="width:100%; justify-content:center; padding:15px; margin-top:10px;">
+                    Oshxona paneliga kirish <span>✓</span>
+                </button>
+
+                <button type="button" onclick="cancelChef2FA()" style="background:transparent; border:none; color:var(--muted); font-size:13px; margin-top:14px; cursor:pointer;">
+                    ← Orqaga qaytish
+                </button>
+            </form>
+
+            <div id="chef-auth-error" style="color:#f87171; font-size:13px; margin-top:14px; display:none;"></div>
+        </div>
+    </div>
+
+    <!-- CHEF KDS DASHBOARD -->
+    <div id="chef-dashboard" style="display:none;">
+        <header class="header">
+            <div class="table-info">
+                <div class="table-icon">👨‍🍳</div>
+                <div>
+                    <strong id="chef-display-name">Usta Oshpaz</strong>
+                    <small>Kitchen Display System (KDS)</small>
+                </div>
+            </div>
+
+            <div class="logo">
+                <span>Al Ezoz</span>
+                <small>CHEF KITCHEN</small>
+            </div>
+
+            <div class="header-actions">
+                <button id="theme-btn" class="round-btn">🌿</button>
+                <button onclick="chefLogout()" class="round-btn" title="Chiqish" style="color:#f87171; border-color:rgba(239,68,68,0.3);">🚪</button>
+            </div>
+        </header>
+
+        <main class="dashboard-layout">
+            <!-- STATUS SUMMARY TABS -->
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:16px;">
+                <div class="dash-tabs" style="margin-bottom:0;">
+                    <button class="dash-tab active" onclick="setChefFilter('active')">🔥 Faol buyurtmalar (<span id="chef-count-active">0</span>)</button>
+                    <button class="dash-tab" onclick="setChefFilter('New')">📋 Yangi (<span id="chef-count-new">0</span>)</button>
+                    <button class="dash-tab" onclick="setChefFilter('Preparing')">⏳ Tayyorlanmoqda (<span id="chef-count-prep">0</span>)</button>
+                    <button class="dash-tab" onclick="setChefFilter('Ready')">✅ Tayyor bo‘lganlar (<span id="chef-count-ready">0</span>)</button>
+                </div>
+
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <span style="font-size:12px; color:var(--muted);">Avto-yangilanish: <b>5 soniya</b></span>
+                    <button onclick="loadChefOrders()" class="btn-secondary" style="padding:8px 16px;">🔄 Yangilash</button>
+                </div>
+            </div>
+
+            <!-- KDS ORDERS GRID -->
+            <div class="kds-grid" id="chef-orders-container">
+                <!-- Filled dynamically -->
+            </div>
+        </main>
+    </div>
+
+    <script src="/static/app.js"></script>
+    <script>
+        let chefToken = localStorage.getItem('chef_jwt_token') || '';
+        let currentFilter = 'active';
+
+        // AUTH FLOW
+        document.getElementById('chef-login-step1').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-chef-step1');
+            const errBox = document.getElementById('chef-auth-error');
+            errBox.style.display = 'none';
+            btn.disabled = true;
+            btn.textContent = 'Tekshirilmoqda...';
+
+            const payload = {
+                username: document.getElementById('chef-username-input').value,
+                password: document.getElementById('chef-password-input').value
+            };
+
+            try {
+                const res = await fetch('/api/auth/chef/send-code', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    document.getElementById('chef-login-step1').style.display = 'none';
+                    document.getElementById('chef-login-step2').style.display = 'block';
+                    document.getElementById('chef-2fa-code').focus();
+
+                    if (data.dev_code) {
+                        document.getElementById('chef-demo-code-hint').textContent = `[Dev rejimi]: Kodingiz: ${data.dev_code}`;
+                    }
+                } else {
+                    errBox.textContent = data.detail || 'Oshpaz logini yoki paroli noto‘g‘ri';
+                    errBox.style.display = 'block';
+                }
+            } catch (err) {
+                errBox.textContent = 'Server bilan ulanishda xatolik';
+                errBox.style.display = 'block';
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Davom etish (Kodni olish) <span>→</span>';
+            }
+        });
+
+        document.getElementById('chef-login-step2').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-chef-step2');
+            const errBox = document.getElementById('chef-auth-error');
+            errBox.style.display = 'none';
+            btn.disabled = true;
+            btn.textContent = 'Tasdiqlanmoqda...';
+
+            const payload = {
+                username: document.getElementById('chef-username-input').value,
+                code: document.getElementById('chef-2fa-code').value
+            };
+
+            try {
+                const res = await fetch('/api/auth/chef/verify-code', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if (res.ok && data.token) {
+                    chefToken = data.token;
+                    localStorage.setItem('chef_jwt_token', chefToken);
+                    initChefDashboard(data.user);
+                } else {
+                    errBox.textContent = data.detail || 'Kod noto‘g‘ri yoki muddati tugagan';
+                    errBox.style.display = 'block';
+                }
+            } catch (err) {
+                errBox.textContent = 'Tasdiqlashda xatolik yuz berdi';
+                errBox.style.display = 'block';
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Oshxona paneliga kirish <span>✓</span>';
+            }
+        });
+
+        function cancelChef2FA() {
+            document.getElementById('chef-login-step2').style.display = 'none';
+            document.getElementById('chef-login-step1').style.display = 'block';
+            document.getElementById('chef-auth-error').style.display = 'none';
+        }
+
+        async function verifyChefToken() {
+            if (!chefToken) return false;
+            try {
+                const res = await fetch('/api/auth/me', {
+                    headers: {'Authorization': 'Bearer ' + chefToken}
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.role === 'chef') {
+                        document.getElementById('chef-display-name').textContent = data.full_name || 'Oshpaz';
+                        return true;
+                    }
+                }
+            } catch (e) {}
+            return false;
+        }
+
+        function initChefDashboard(user) {
+            if (user) document.getElementById('chef-display-name').textContent = user.full_name || 'Oshpaz';
+            document.getElementById('chef-auth-screen').style.display = 'none';
+            document.getElementById('chef-dashboard').style.display = 'block';
+            loadChefOrders();
+            setInterval(loadChefOrders, 5000); // 5 sec auto-refresh for kitchen
+        }
+
+        function chefLogout() {
+            localStorage.removeItem('chef_jwt_token');
+            chefToken = '';
+            location.reload();
+        }
+
+        function setChefFilter(f) {
+            currentFilter = f;
+            document.querySelectorAll('.dash-tabs .dash-tab').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+            loadChefOrders();
+        }
+
+        async function loadChefOrders() {
+            try {
+                const res = await fetch('/api/chef/orders', {
+                    headers: {'Authorization': 'Bearer ' + chefToken}
+                });
+                if (!res.ok) return;
+                const orders = await res.json();
+
+                const normalizeChefStatus = (status) => {
+                    if (!status) return 'New';
+                    const map = {
+                        pending: 'New',
+                        confirmed: 'Accepted',
+                        preparing: 'Preparing',
+                        ready: 'Ready',
+                        delivered: 'Delivered',
+                        cancelled: 'Cancelled'
+                    };
+                    return map[status] || status;
+                };
+
+                // Counts
+                let cNew = 0, cPrep = 0, cReady = 0;
+                orders.forEach(o => {
+                    const st = o.chef_status || normalizeChefStatus(o.status);
+                    if (['New', 'Accepted'].includes(st)) cNew++;
+                    if (st === 'Preparing') cPrep++;
+                    if (st === 'Ready') cReady++;
+                });
+
+                document.getElementById('chef-count-active').textContent = cNew + cPrep;
+                document.getElementById('chef-count-new').textContent = cNew;
+                document.getElementById('chef-count-prep').textContent = cPrep;
+                document.getElementById('chef-count-ready').textContent = cReady;
+
+                // Filter
+                let filtered = orders;
+                if (currentFilter === 'active') {
+                    filtered = orders.filter(o => ['New', 'Accepted', 'Preparing'].includes(o.chef_status || normalizeChefStatus(o.status)));
+                } else if (currentFilter === 'New') {
+                    filtered = orders.filter(o => ['New', 'Accepted'].includes(o.chef_status || normalizeChefStatus(o.status)));
+                } else if (currentFilter) {
+                    filtered = orders.filter(o => (o.chef_status || normalizeChefStatus(o.status)) === currentFilter);
+                }
+
+                const container = document.getElementById('chef-orders-container');
+                if (filtered.length === 0) {
+                    container.innerHTML = `
+                        <div style="grid-column:1/-1; text-align:center; padding:60px 20px; background:var(--card); border:1px solid var(--border); border-radius:20px;">
+                            <span style="font-size:48px; display:block; margin-bottom:12px;">👨‍🍳</span>
+                            <h3 style="color:var(--white); font-size:20px; margin-bottom:6px;">Hozircha buyurtmalar yo‘q</h3>
+                            <p style="color:var(--muted); font-size:14px;">Yangi buyurtma kelganda ushbu ekranda avtomatik aks etadi.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                let html = '';
+                filtered.forEach(o => {
+                    const st = o.chef_status || normalizeChefStatus(o.status);
+                    let statusClass = 'status-new';
+                    if (st === 'Preparing') statusClass = 'status-preparing';
+                    if (st === 'Ready') statusClass = 'status-ready';
+
+                    let actionButtons = '';
+                    if (st === 'New') {
+                        actionButtons = `
+                            <button onclick="chefUpdateStatus(${o.id}, 'Accepted')" class="btn-primary" style="width:100%; justify-content:center; padding:12px;">
+                                ✅ Qabul qilish (Accept)
+                            </button>
+                        `;
+                    } else if (st === 'Accepted') {
+                        actionButtons = `
+                            <button onclick="chefUpdateStatus(${o.id}, 'Preparing')" class="btn-primary" style="width:100%; justify-content:center; padding:12px; background:linear-gradient(135deg, #facc15, #eab308); color:#000;">
+                                🔥 Tayyorlashni boshlash (Start)
+                            </button>
+                        `;
+                    } else if (st === 'Preparing') {
+                        actionButtons = `
+                            <button onclick="chefUpdateStatus(${o.id}, 'Ready')" class="btn-primary" style="width:100%; justify-content:center; padding:12px; background:linear-gradient(135deg, #4ade80, #22c55e); color:#000;">
+                                🎉 Tayyor bo‘ldi! (Ready)
+                            </button>
+                        `;
+                    } else if (st === 'Ready') {
+                        actionButtons = `
+                            <div style="text-align:center; color:#4ade80; font-weight:bold; font-size:14px; padding:8px; border:1px dashed rgba(74,222,128,0.4); border-radius:12px;">
+                                ✨ Oshxonadan chiqdi (Tayyor)
+                            </div>
+                        `;
+                    }
+
+                    let itemsHtml = '';
+                    (o.items || []).forEach(it => {
+                        const productName = it.product_name || it.name || 'Mahsulot';
+                        itemsHtml += `
+                            <li class="kds-item-row">
+                                <span>${productName}</span>
+                                <strong>x${it.quantity}</strong>
+                            </li>
+                        `;
+                    });
+
+                    const note = o.customer_notes || o.comment || '';
+                    html += `
+                        <div class="kds-card ${statusClass}">
+                            <div>
+                                <div class="kds-card-header">
+                                    <div class="kds-order-num">#${o.order_number}</div>
+                                    <span class="badge badge-${st.toLowerCase()}">${st}</span>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--muted); margin-bottom:12px;">
+                                    <span>🕒 ${o.created_at.substring(11, 16)}</span>
+                                    <span>${o.order_type === 'delivery' ? '🛵 Yetkazish' : (o.table_number ? '🍽 Stol ' + o.table_number : '🛍 Olib ketish')}</span>
+                                </div>
+                                ${note ? `<div style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.3); border-radius:10px; padding:8px 12px; font-size:12px; color:#fca5a5; margin-bottom:12px;">⚠️ Izoh: <i>${note}</i></div>` : ''}
+                                
+                                <ul class="kds-items-list">
+                                    ${itemsHtml}
+                                </ul>
+                            </div>
+
+                            <div style="margin-top:16px;">
+                                ${actionButtons}
+                            </div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        async function chefUpdateStatus(orderId, newStatus) {
+            try {
+                const res = await fetch(`/api/chef/orders/${orderId}/status`, {
+                    method: 'PATCH',
+                    headers: {'Authorization': 'Bearer ' + chefToken, 'Content-Type': 'application/json'},
+                    body: JSON.stringify({status: newStatus})
+                });
+                if (res.ok) {
+                    AllonApp.showToast(`Buyurtma holati: ${newStatus}`);
+                    loadChefOrders();
+                } else {
+                    alert('Statusni o‘zgartirishda xatolik yuz berdi');
+                }
+            } catch (e) {
+                alert('Server xatosi');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const isValid = await verifyChefToken();
+            if (isValid) {
+                initChefDashboard();
+            } else {
+                document.getElementById('chef-auth-screen').style.display = 'block';
+                document.getElementById('chef-dashboard').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
+

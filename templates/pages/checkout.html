@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Al Ezoz — Buyurtmani rasmiylashtirish</title>
+    <link rel="stylesheet" href="/static/style.css?v=20261010-alezoz">
+    <link rel="stylesheet" href="/static/common_extra.css?v=20261010-alezoz">
+    <script src="/static/app.js?v=202610101241" defer></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+</head>
+
+<body>
+
+    <div class="background"></div>
+
+    <!-- HEADER -->
+    <header class="header">
+        <div class="table-info">
+            <div class="table-icon">♧</div>
+            <div>
+                <strong>Al Ezoz</strong>
+                <small>Buyurtma & To‘lov</small>
+            </div>
+        </div>
+
+        <nav class="main-nav">
+            <ul class="nav-links">
+                <li><a href="/" class="nav-link" data-i18n="nav.home">Bosh sahifa</a></li>
+                <li><a href="/menu" class="nav-link" data-i18n="nav.menu">Menyu</a></li>
+                <li><a href="/about" class="nav-link" data-i18n="nav.about">Biz haqimizda</a></li>
+                <li><a href="/contact" class="nav-link" data-i18n="nav.contact">Aloqa</a></li>
+                <li>
+                    <a href="/cart" class="nav-link active">
+                        <span data-i18n="nav.cart">Savat</span>
+                        <span class="cart-nav-badge cart-count-badge">0</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="logo">
+            <span>Al Ezoz</span>
+            <small>MILLI CAFE</small>
+        </div>
+
+        <div class="header-actions">
+            <button class="mobile-nav-toggle" aria-label="Menyuni ochish">☰</button>
+            <button id="theme-btn" class="round-btn">🎨</button>
+            <div class="lang-toggle-group">
+                <button type="button" class="lang-btn-item active" data-lang="uz" title="O'zbekcha"><span>🇺🇿</span> UZ</button>
+                <button type="button" class="lang-btn-item" data-lang="ru" title="Русский"><span>🇷🇺</span> RU</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MOBILE DRAWER -->
+    <div class="drawer-backdrop"></div>
+    <aside class="mobile-drawer">
+        <div class="drawer-header">
+            <div class="logo" style="position:static; transform:none;">
+                <span style="font-size:30px;">Al Ezoz</span>
+                <small>MILLI CAFE</small>
+            </div>
+            <button class="drawer-close">✕</button>
+        </div>
+        <ul class="drawer-links">
+            <li><a href="/" class="nav-link">🏠 Bosh sahifa</a></li>
+            <li><a href="/menu" class="nav-link">🍽 Menyu</a></li>
+            <li><a href="/about" class="nav-link">ℹ️ <span data-i18n="nav.about">Biz haqimizda</span></a></li>
+            <li><a href="/contact" class="nav-link">📞 Aloqa</a></li>
+            <li><a href="/cart" class="nav-link">🛒 Savat (<span class="cart-count-badge">0</span>)</a></li>
+        </ul>
+    </aside>
+
+    <main>
+        <section style="max-width:1200px; margin:20px auto 0 auto; padding:0 40px;">
+            <span class="welcome-small" data-i18n="checkout.badge">RASMIYLASHTIRISH</span>
+            <h1 style="font-size:38px; margin-top:8px;">
+                <span data-i18n="checkout.pageTitle">Buyurtma</span> <span data-i18n="checkout.pageTitleAccent">Berish</span>
+            </h1>
+            <div class="line"></div>
+        </section>
+
+        <div class="checkout-layout">
+            <!-- FORM SECTION -->
+            <div class="cart-table-wrapper">
+                <h3 style="font-size:20px; margin-bottom:20px; color:var(--white);" data-i18n="checkout.step1">Yetkazib berish usuli</h3>
+
+                <div class="type-selector">
+                    <button type="button" class="type-btn active" id="btn-type-delivery" onclick="setOrderType('delivery')">
+                        <span>🛵</span> Yetkazib berish (Delivery)
+                    </button>
+                    <button type="button" class="type-btn" id="btn-type-pickup" onclick="setOrderType('pickup')">
+                        <span>🛍</span> Olib ketish (Pickup)
+                    </button>
+                </div>
+
+                <form id="checkout-form">
+                    <input type="hidden" id="order-type-val" value="delivery">
+
+                    <h4 style="font-size:16px; margin:24px 0 16px 0; color:var(--gold);">Mijoz ma’lumotlari</h4>
+
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                        <div class="form-group">
+                            <label class="form-label" for="cust-name" data-i18n="checkout.nameLabel">Ism va familiyangiz *</label>
+                            <input type="text" id="cust-name" class="form-input" placeholder="Ali Valiyev" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="cust-phone" data-i18n="checkout.phoneLabel">Telefon raqamingiz *</label>
+                            <input type="tel" id="cust-phone" class="form-input" placeholder="+998 90 123 45 67" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="background:rgba(41,182,246,0.07); border:1px solid rgba(41,182,246,0.25); border-radius:14px; padding:16px; margin-bottom:4px;">
+                        <label class="form-label" for="cust-telegram" style="color:#7dd3fc;">
+                            ✈️ Telegram username <span style="color:var(--muted); font-weight:400;">(tasdiqlash kodi uchun)</span>
+                        </label>
+                        <div style="display:flex; align-items:center; gap:0;">
+                            <span style="background:rgba(41,182,246,0.15); border:1px solid rgba(41,182,246,0.3); border-right:none; border-radius:10px 0 0 10px; padding:12px 14px; color:#7dd3fc; font-weight:600; font-size:15px;">@</span>
+                            <input type="text" id="cust-telegram" class="form-input" placeholder="username" style="border-radius:0 10px 10px 0; border-left:none;">
+                        </div>
+                        <p style="font-size:12px; color:var(--muted); margin-top:8px; line-height:1.5;">
+                            Buyurtma yuborilgach, Telegram botimizga <b>/start</b> yuboring — 6 xonali tasdiqlash kodi keladi.
+                        </p>
+                    </div>
+
+                    <div class="form-group" id="address-group">
+                        <label class="form-label" for="cust-address" data-i18n="checkout.addrLabel">Yetkazib berish manzili *</label>
+                        <input type="text" id="cust-address" class="form-input" placeholder="Toshkent sh., Yunusobod tumani, 12-uy..." required oninput="this.dataset.autoFilled='false'">
+                        
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top: 10px; margin-bottom: 6px;">
+                            <label class="form-label" style="margin:0;" data-i18n="checkout.mapLabel">Xaritadan joyingizni tanlang (kuryer uchun)</label>
+                            <button type="button" id="btn-detect-location" class="btn-secondary" style="padding:5px 12px; font-size:12px; border-radius:8px; cursor:pointer; background:rgba(232,187,88,0.15); border:1px solid var(--gold); color:var(--gold);" onclick="locateUser()">📍 Mening joylashuvim</button>
+                        </div>
+
+                        <div id="map" style="height: 280px; width: 100%; border-radius: 12px; z-index: 1; border: 1px solid var(--border); box-shadow: 0 4px 16px rgba(0,0,0,0.3);"></div>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:8px; font-size:12px; color:var(--muted); flex-wrap:wrap; gap:4px;">
+                            <span id="coords-display">📍 Belgilangan nuqta: 41.321146, 69.221089</span>
+                            <span style="font-size:11px; color:#e8bb58;">(Xaritani bosib yoki pinni surib aniq joyingizni belgilang)</span>
+                        </div>
+                        <input type="hidden" id="latitude" value="41.32114573809359">
+                        <input type="hidden" id="longitude" value="69.22108906908464">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="cust-comment" data-i18n="checkout.commentLabel">Oshxona va kuryer uchun izoh (ixtiyoriy)</label>
+                        <textarea id="cust-comment" class="form-textarea" placeholder="Piyozsiz bo‘lsin, domofon kodi 45, eshik oldida qoldiring va h.k."></textarea>
+                    </div>
+
+                    <div class="form-group" style="background:rgba(255,255,255,0.03); border:1px solid var(--border); border-radius:14px; padding:16px; margin-top:20px;">
+                        <label style="display:flex; align-items:center; gap:10px; cursor:pointer;">
+                            <input type="checkbox" id="at-table-checkbox" onchange="toggleTableMode(this)">
+                            <span style="font-size:14px; color:#e2e8f0;">Men restoranning o‘zida stolda o‘tiribman</span>
+                        </label>
+                        <div id="table-input-box" style="display:none; margin-top:12px;">
+                            <label class="form-label" for="table-num" data-i18n="checkout.tableLabel">Stol raqami</label>
+                            <input type="text" id="table-num" class="form-input" placeholder="Masalan: Stol №7">
+                        </div>
+                    </div>
+
+                    <button type="submit" id="submit-order-btn" class="btn-primary" style="width:100%; justify-content:center; padding:18px; font-size:16px; margin-top:24px;">
+                        <span data-i18n="checkout.confirmBtn">Buyurtmani tasdiqlash</span> <span>→</span>
+                    </button>
+                </form>
+            </div>
+
+            <!-- ORDER SUMMARY -->
+            <div class="cart-summary-box">
+                <h3 style="font-size:20px; margin-bottom:16px; color:var(--white);" data-i18n="checkout.summaryTitle">Buyurtma tarkibi</h3>
+                
+                <div id="checkout-items-list" style="max-height:300px; overflow-y:auto; margin-bottom:18px; border-bottom:1px solid var(--border); padding-bottom:14px;">
+                    <!-- Filled by JS -->
+                </div>
+
+                <div class="summary-row">
+                    <span data-i18n="checkout.subtotal">Oraliq summa:</span>
+                    <strong id="ch-subtotal" style="color:var(--white);">0 so‘m</strong>
+                </div>
+                <div class="summary-row">
+                    <span data-i18n="checkout.deliveryService">Yetkazib berish xizmati:</span>
+                    <span id="ch-delivery" style="color:#4ade80;" data-i18n="checkout.deliveryFree">admin bilan kelishiladi</span>
+                </div>
+                <div class="summary-row total-row">
+                    <span data-i18n="checkout.totalLabel">Jami summa:</span>
+                    <strong id="ch-total">0 so‘m</strong>
+                </div>
+
+                <div style="background:rgba(232,187,88,0.1); border:1px solid rgba(232,187,88,0.25); border-radius:14px; padding:14px; margin-top:20px; font-size:12px; line-height:1.6; color:#e2e8f0;">
+                    🛡 Buyurtma yuborilgach, darhol administrator va oshxona KDS ekraniga uzatiladi hamda Telegram bot orqali bildirishnoma boradi.
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="site-footer">
+        <div class="footer-brand">
+            <span class="logo-text">Al Ezoz</span>
+            <small>MILLI CAFE</small>
+            <p data-i18n="footer.desc">Toshkent markazidagi eng mazali taomlar, yuqori darajadagi xizmat va shinam muhit maskani.</p>
+        </div>
+        <div class="footer-col">
+            <h4 data-i18n="footer.pages">Sahifalar</h4>
+            <ul class="footer-links">
+                <li><a href="/" data-i18n="nav.home">Bosh sahifa</a></li>
+                <li><a href="/menu" data-i18n="nav.menu">Menyu</a></li>
+                <li><a href="/about" data-i18n="nav.about">Biz haqimizda</a></li>
+                <li><a href="/contact" data-i18n="nav.contact">Aloqa</a></li>
+                <li><a href="/cart" data-i18n="nav.cart">Savat</a></li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4 data-i18n="footer.hoursTitle">Ish tartibi</h4>
+            <ul class="footer-links">
+                <li data-i18n="footer.hoursDays">Har kuni: 09:00 — 23:00</li>
+            </ul>
+        </div>
+        <div class="footer-col">
+            <h4>Bog‘lanish</h4>
+            <ul class="footer-links">
+                <li><a href="tel:+998909115252" style="color:inherit; text-decoration:none;">📞 +998 90 911 52 52</a></li>
+                <li><a href="tel:+998901381823" style="color:inherit; text-decoration:none;">📞 +998 90 138 18 23</a></li>
+                <li><a href="https://t.me/asdqregefv_bot" target="_blank" style="color:inherit; text-decoration:none;" data-i18n="footer.bot">✈️ Telegram boti</a></li>
+            </ul>
+        </div>
+    </footer>
+    <div class="footer-bottom">
+        <div data-i18n="footer.copy">© 2026 Al Ezoz. Barcha huquqlar himoyalangan.</div>
+        <div data-i18n="footer.slogan">🍃 Yaxshi taom — yaxshi kayfiyat!</div>
+    </div>
+
+        <script>
+        let currentType = 'delivery';
+
+        function setOrderType(type) {
+            currentType = type;
+            document.getElementById('order-type-val').value = type;
+            document.getElementById('btn-type-delivery').classList.toggle('active', type === 'delivery');
+            document.getElementById('btn-type-pickup').classList.toggle('active', type === 'pickup');
+
+            const addrGroup = document.getElementById('address-group');
+            const addrInput = document.getElementById('cust-address');
+            if (type === 'pickup') {
+                addrGroup.style.display = 'none';
+                addrInput.removeAttribute('required');
+                addrInput.value = 'Restorandan olib ketish';
+            } else {
+                addrGroup.style.display = 'block';
+                addrInput.setAttribute('required', 'required');
+                if (addrInput.value === 'Restorandan olib ketish') addrInput.value = '';
+            }
+        }
+
+        function toggleTableMode(checkbox) {
+            const box = document.getElementById('table-input-box');
+            box.style.display = checkbox.checked ? 'block' : 'none';
+            if (checkbox.checked) {
+                setOrderType('table');
+            } else {
+                setOrderType('delivery');
+            }
+        }
+
+        function renderCheckoutSummary() {
+            const cart = AllonApp.getCart();
+            const list = document.getElementById('checkout-items-list');
+            const total = AllonApp.getCartTotal();
+            const lang = AllonApp.getCurrentLanguage();
+            const isRu = (lang === 'ru');
+            const curr = isRu ? 'сум' : "so‘m";
+
+            if (cart.length === 0) {
+                alert(isRu ? 'Корзина пуста! Пожалуйста, выберите блюда из меню.' : 'Savatingiz bo‘sh! Iltimos menyudan taom tanlang.');
+                window.location.href = '/menu';
+                return;
+            }
+
+            document.getElementById('ch-subtotal').textContent = total.toLocaleString('uz-UZ') + ' ' + curr;
+            document.getElementById('ch-total').textContent = total.toLocaleString('uz-UZ') + ' ' + curr;
+
+            let html = '';
+            cart.forEach(item => {
+                const displayName = AllonApp.translateItemName(item.name);
+                html += `
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; font-size:14px;">
+                        <div>
+                            <strong>${displayName}</strong>
+                            <small style="display:block; color:var(--muted);">${item.quantity} x ${item.price.toLocaleString('uz-UZ')} ${curr}</small>
+                        </div>
+                        <span style="color:var(--gold); font-weight:600;">${(item.quantity * item.price).toLocaleString('uz-UZ')} ${curr}</span>
+                    </div>
+                `;
+            });
+            list.innerHTML = html;
+        }
+
+        window.addEventListener('appLanguageChanged', renderCheckoutSummary);
+
+        document.getElementById('checkout-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('submit-order-btn');
+            const isRu = (AllonApp.getCurrentLanguage() === 'ru');
+            btn.disabled = true;
+            btn.textContent = isRu ? 'Отправка заказа...' : 'Buyurtma yuborilmoqda...';
+
+            const cart = AllonApp.getCart();
+            const telegramUsername = document.getElementById('cust-telegram').value.trim().replace(/^@/, '');
+            const payload = {
+                customer_name: document.getElementById('cust-name').value,
+                customer_phone: document.getElementById('cust-phone').value,
+                delivery_address: document.getElementById('cust-address').value || 'Restoranda',
+                comment: document.getElementById('cust-comment').value,
+                order_type: currentType,
+                table_number: document.getElementById('table-num').value || '',
+                latitude: document.getElementById('latitude').value || null,
+                longitude: document.getElementById('longitude').value || null,
+                telegram_username: telegramUsername,
+                items: cart
+            };
+
+            try {
+                const res = await fetch('/api/orders', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if (res.ok && data.order_number) {
+                    AllonApp.clearCart();
+                    window.location.href = `/order-status?num=${data.order_number}&tc=${data.tracking_code}`;
+                } else {
+                    alert(data.detail || 'Buyurtma berishda xatolik yuz berdi');
+                }
+            } catch (err) {
+                alert('Server bilan bog‘lanishda xatolik. Qaytadan urinib ko‘ring.');
+            } finally {
+                const isRu = (AllonApp.getCurrentLanguage() === 'ru');
+                btn.disabled = false;
+                btn.innerHTML = (isRu ? 'Подтвердить заказ' : 'Buyurtmani tasdiqlash') + ' <span>→</span>';
+            }
+        });
+
+        const DEFAULT_LAT = 41.32114573809359;
+        const DEFAULT_LNG = 69.22108906908464;
+        let map, marker;
+
+        async function fetchAddressForCoords(lat, lng) {
+            try {
+                const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&accept-language=uz`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data && data.display_name) {
+                        const addrInput = document.getElementById('cust-address');
+                        if (addrInput && (!addrInput.value || addrInput.dataset.autoFilled === 'true')) {
+                            addrInput.value = data.display_name;
+                            addrInput.dataset.autoFilled = 'true';
+                        }
+                    }
+                }
+            } catch (err) {}
+        }
+
+        function setLocation(lat, lng, fetchAddress = false) {
+            const numLat = Number(lat);
+            const numLng = Number(lng);
+            document.getElementById('latitude').value = numLat.toFixed(6);
+            document.getElementById('longitude').value = numLng.toFixed(6);
+
+            const coordsDisplay = document.getElementById('coords-display');
+            if (coordsDisplay) {
+                coordsDisplay.textContent = `📍 Belgilangan nuqta: ${numLat.toFixed(6)}, ${numLng.toFixed(6)}`;
+            }
+
+            if (marker) {
+                marker.setLatLng([numLat, numLng]);
+            } else if (map) {
+                marker = L.marker([numLat, numLng], { draggable: true }).addTo(map);
+                marker.bindPopup("📍 Siz belgilagan joylashuv (Pinni surishingiz mumkin)").openPopup();
+                marker.on('dragend', function(e) {
+                    const pos = e.target.getLatLng();
+                    setLocation(pos.lat, pos.lng, true);
+                });
+            }
+
+            if (fetchAddress) {
+                fetchAddressForCoords(numLat, numLng);
+            }
+        }
+
+        function locateUser() {
+            const isRu = (typeof AllonApp !== 'undefined' && AllonApp.getCurrentLanguage() === 'ru');
+            if (!navigator.geolocation) {
+                alert(isRu ? "Ваш браузер не поддерживает геолокацию." : "Brauzeringiz geolokatsiyani qo‘llab-quvvatlamaydi.");
+                return;
+            }
+            const btn = document.getElementById('btn-detect-location');
+            if (btn) {
+                btn.innerHTML = isRu ? '⏳ Определение...' : '⏳ Aniqlanmoqda...';
+            }
+            navigator.geolocation.getCurrentPosition(
+                (pos) => {
+                    const lat = pos.coords.latitude;
+                    const lng = pos.coords.longitude;
+                    if (map) {
+                        map.setView([lat, lng], 17);
+                        setLocation(lat, lng, true);
+                    }
+                    if (btn) {
+                        btn.innerHTML = isRu ? '📍 Моё местоположение' : '📍 Mening joylashuvim';
+                    }
+                },
+                (err) => {
+                    alert(isRu 
+                        ? 'Не удалось определить местоположение (возможно, нет разрешения). Вы можете сами выбрать точку на карте.' 
+                        : 'Joylashuvingizni avtomatik aniqlab bo‘lmadi (ruxsat berilmagan bo‘lishi mumkin). Xaritadan o‘zingiz bosib bemalol belgilashingiz mumkin.');
+                    if (btn) {
+                        btn.innerHTML = isRu ? '📍 Моё местоположение' : '📍 Mening joylashuvim';
+                    }
+                },
+                { enableHighAccuracy: true, timeout: 10000 }
+            );
+        }
+
+
+
+        function initMap() {
+            const mapEl = document.getElementById('map');
+            if (!mapEl || map) return;
+
+            map = L.map('map', {
+                scrollWheelZoom: false
+            }).setView([DEFAULT_LAT, DEFAULT_LNG], 16);
+
+            // Google Maps Roadmap tiles - No API key watermark, crystal clear Tashkent street/house details
+            const googleLayer = L.tileLayer('https://mt{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+                subdomains: ['0', '1', '2', '3'],
+                maxZoom: 20,
+                attribution: '&copy; Google Xarita'
+            });
+
+            googleLayer.addTo(map);
+
+            // Fallback to ESRI World Street Map if Google tile fails
+            googleLayer.on('tileerror', function() {
+                if (!map._hasEsriFallback) {
+                    map._hasEsriFallback = true;
+                    L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}', {
+                        maxZoom: 19,
+                        attribution: '&copy; Esri World Street Map'
+                    }).addTo(map);
+                }
+            });
+
+            setLocation(DEFAULT_LAT, DEFAULT_LNG, false);
+
+            map.on('click', function(e) {
+                setLocation(e.latlng.lat, e.latlng.lng, true);
+            });
+
+            setTimeout(() => {
+                if (map) map.invalidateSize();
+            }, 300);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCheckoutSummary();
+            setTimeout(initMap, 500);
+        });
+    </script>
+</body>
+</html>
+
+
+
+

@@ -1,0 +1,1202 @@
+<!DOCTYPE html>
+<html lang="uz">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Al Ezoz — Xavfsiz Boshqaruv Paneli (Secure Admin)</title>
+    <link rel="stylesheet" href="/static/style.css?v=20261010-alezoz">
+    <link rel="stylesheet" href="/static/common_extra.css">
+    <!-- Chart.js for analytics -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+    <div class="background"></div>
+
+    <!-- 2FA LOGIN MODAL / SCREEN -->
+    <div id="auth-screen" style="display:block;">
+        <header class="header" style="justify-content:center;">
+            <div class="logo" style="position:static; transform:none;">
+                <span>Al Ezoz</span>
+                <small>MILLI CAFE</small>
+            </div>
+        </header>
+
+        <div class="auth-container">
+            <div class="auth-icon">🔐</div>
+            <h2 id="auth-title" style="font-size:24px; margin-bottom:8px; color:var(--white);">Admin Kirish</h2>
+            <p id="auth-subtitle" style="color:var(--muted); font-size:13px; margin-bottom:24px;">Xavfsizlik tizimi: Parol va Telegram 2FA talab etiladi</p>
+
+            <!-- STEP 1: CREDENTIALS -->
+            <form id="login-step1-form">
+                <div class="form-group" style="text-align:left;">
+                    <label class="form-label" for="login-username">Admin Logini</label>
+                    <input type="text" id="login-username" class="form-input" placeholder="Alezozadmin" value="Alezozadmin" required autocomplete="username">
+                </div>
+                <div class="form-group" style="text-align:left;">
+                    <label class="form-label" for="login-password">Parol</label>
+                    <input type="password" id="login-password" class="form-input" placeholder="••••••••" value="Alezoztashkent" required autocomplete="current-password">
+                </div>
+                <button type="submit" id="btn-login-step1" class="btn-primary" style="width:100%; justify-content:center; padding:15px; margin-top:10px;">
+                    Davom etish (Kodni olish) <span>→</span>
+                </button>
+            </form>
+
+            <!-- STEP 2: TELEGRAM 2FA CODE -->
+            <form id="login-step2-form" style="display:none;">
+                <div style="background:rgba(232,187,88,0.1); border:1px solid rgba(232,187,88,0.3); border-radius:14px; padding:14px; margin-bottom:18px; font-size:13px; color:#e2e8f0; text-align:left;">
+                    ✈️ Sizning Telegram hisobingizga <b>6 xonali tasdiqlash kodi</b> yuborildi. Kod 3 daqiqa amal qiladi.
+                    <div id="demo-code-hint" style="margin-top:6px; color:var(--gold); font-size:12px;"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="login-2fa-code">6 xonali tasdiqlash kodi</label>
+                    <input type="text" id="login-2fa-code" class="form-input auth-code-input" placeholder="000000" maxlength="6" pattern="[0-9]{6}" required autocomplete="one-time-code">
+                </div>
+
+                <button type="submit" id="btn-login-step2" class="btn-primary" style="width:100%; justify-content:center; padding:15px; margin-top:10px;">
+                    Tizimga kirish <span>✓</span>
+                </button>
+
+                <button type="button" onclick="cancel2FA()" style="background:transparent; border:none; color:var(--muted); font-size:13px; margin-top:14px; cursor:pointer;">
+                    ← Orqaga qaytish
+                </button>
+            </form>
+
+            <div id="auth-error" style="color:#f87171; font-size:13px; margin-top:14px; display:none;"></div>
+        </div>
+    </div>
+
+    <!-- MAIN ADMIN DASHBOARD -->
+    <div id="admin-dashboard" style="display:none;">
+        <header class="header">
+            <div class="table-info">
+                <div class="table-icon">🛡</div>
+                <div>
+                    <strong>Boshqaruv Paneli</strong>
+                    <small id="admin-user-badge">Admin: Administrator</small>
+                </div>
+            </div>
+
+            <div class="logo">
+                <span>Al Ezoz</span>
+                <small>ADMIN PANEL</small>
+            </div>
+
+            <div class="header-actions">
+                <a href="/" target="_blank" class="round-btn" title="Saytni ko‘rish" style="text-decoration:none; display:grid; place-items:center;">🌐</a>
+                <button id="theme-btn" class="round-btn">🌿</button>
+                <button onclick="adminLogout()" class="round-btn" title="Chiqish" style="color:#f87171; border-color:rgba(239,68,68,0.3);">🚪</button>
+            </div>
+        </header>
+
+        <main class="dashboard-layout">
+            <!-- TABS -->
+            <div class="dash-tabs">
+                <button class="dash-tab active" onclick="switchAdminTab('tab-overview')">📊 Analitika & Umumiy</button>
+                <button class="dash-tab" onclick="switchAdminTab('tab-orders')">📦 Buyurtmalar (<span id="orders-badge-count">0</span>)</button>
+                <button class="dash-tab" onclick="switchAdminTab('tab-kds')">🔥 KDS Oshxona</button>
+                <button class="dash-tab" onclick="switchAdminTab('tab-products')">🍽 Mahsulotlar</button>
+                <button class="dash-tab" onclick="switchAdminTab('tab-categories')">📁 Kategoriyalar</button>
+                <button class="dash-tab" onclick="switchAdminTab('tab-chefs')">👨‍🍳 Oshpazlar</button>
+                <button class="dash-tab" onclick="switchAdminTab('tab-messages')">✉️ Xabarlar</button>
+            </div>
+
+            <!-- TAB 1: OVERVIEW & STATS -->
+            <section id="tab-overview" class="admin-tab-content">
+                <div class="stat-cards-grid">
+                    <div class="dash-stat-card">
+                        <div class="dash-stat-icon">💰</div>
+                        <div class="dash-stat-info">
+                            <h5>Bugungi tushum</h5>
+                            <strong id="stat-revenue">0 so‘m</strong>
+                        </div>
+                    </div>
+                    <div class="dash-stat-card">
+                        <div class="dash-stat-icon">📋</div>
+                        <div class="dash-stat-info">
+                            <h5>Bugungi buyurtmalar</h5>
+                            <strong id="stat-today-orders">0 ta</strong>
+                        </div>
+                    </div>
+                    <div class="dash-stat-card">
+                        <div class="dash-stat-icon" style="color:#facc15;">👨‍🍳</div>
+                        <div class="dash-stat-info">
+                            <h5>Tayyorlanmoqda / Yangi</h5>
+                            <strong id="stat-pending">0 ta</strong>
+                        </div>
+                    </div>
+                    <div class="dash-stat-card">
+                        <div class="dash-stat-icon" style="color:#4ade80;">✅</div>
+                        <div class="dash-stat-info">
+                            <h5>Yetkazilgan buyurtmalar</h5>
+                            <strong id="stat-completed">0 ta</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CHARTS -->
+                <div style="display:grid; grid-template-columns:1.5fr 1fr; gap:24px; margin-bottom:30px;">
+                    <div class="custom-table-card">
+                        <h4 style="font-size:16px; margin-bottom:16px; color:var(--white);">📈 Oxirgi 7 kunlik savdo dinamikasi</h4>
+                        <div style="height:260px;">
+                            <canvas id="salesChart"></canvas>
+                        </div>
+                    </div>
+                    <div class="custom-table-card">
+                        <h4 style="font-size:16px; margin-bottom:16px; color:var(--white);">🍰 Bo‘limlar bo‘yicha ulush</h4>
+                        <div style="height:260px; display:flex; justify-content:center;">
+                            <canvas id="categoryChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TAB 2: ORDERS -->
+            <section id="tab-orders" class="admin-tab-content" style="display:none;">
+                <div class="custom-table-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+                        <h3 style="font-size:18px; color:var(--white);">Barcha buyurtmalar</h3>
+                        <div style="display:flex; gap:10px;">
+                            <select id="filter-order-status" class="form-select" onchange="loadAdminOrders()" style="width:160px; padding:8px 12px;">
+                                <option value="all">Barcha holatlar</option>
+                                <option value="New">Yangi (New)</option>
+                                <option value="Accepted">Qabul qilindi</option>
+                                <option value="Preparing">Tayyorlanmoqda</option>
+                                <option value="Ready">Tayyor</option>
+                                <option value="Delivered">Yetkazildi</option>
+                                <option value="Cancelled">Bekor qilingan</option>
+                            </select>
+                            <button onclick="loadAdminOrders()" class="btn-secondary" style="padding:8px 16px;">Yangilash 🔄</button>
+                        </div>
+                    </div>
+
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Buyurtma #</th>
+                                <th>Vaqt</th>
+                                <th>Mijoz</th>
+                                <th>Telefon</th>
+                                <th>Turi / Manzil</th>
+                                <th>Summa</th>
+                                <th>Holat</th>
+                                <th>Amallar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-tbody">
+                            <!-- Orders dynamic -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- TAB 3: PRODUCTS -->
+            <section id="tab-products" class="admin-tab-content" style="display:none;">
+                <div class="custom-table-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+                        <div style="display:flex; gap:12px; align-items:center;">
+                            <h3 style="font-size:18px; color:var(--white);">Mahsulotlar katalogi</h3>
+                            <input type="text" id="prod-search" class="form-input" placeholder="Taom nomi..." onkeyup="filterProductsTable()" style="width:200px; padding:8px 12px;">
+                        </div>
+                        <button onclick="openProductModal()" class="btn-primary" style="padding:10px 18px;">+ Yangi taom qo‘shish</button>
+                    </div>
+
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Rasm</th>
+                                <th>Nomi</th>
+                                <th>Kategoriya</th>
+                                <th>Narxi</th>
+                                <th>Mavjudligi</th>
+                                <th>Saralangan</th>
+                                <th>Amallar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="products-tbody">
+                            <!-- Products dynamic -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- TAB 4: CATEGORIES -->
+            <section id="tab-categories" class="admin-tab-content" style="display:none;">
+                <div class="custom-table-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                        <h3 style="font-size:18px; color:var(--white);">Kategoriyalar</h3>
+                        <button onclick="openCategoryModal()" class="btn-primary" style="padding:10px 18px;">+ Yangi toifa</button>
+                    </div>
+
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Ikonka</th>
+                                <th>Nomi</th>
+                                <th>Slug</th>
+                                <th>Tavsif</th>
+                                <th>Holati</th>
+                                <th>Amallar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="categories-tbody">
+                            <!-- Categories dynamic -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- TAB 5: CHEFS -->
+            <section id="tab-chefs" class="admin-tab-content" style="display:none;">
+                <div class="custom-table-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                        <div>
+                            <h3 style="font-size:18px; color:var(--white);">Oshpazlar (Chefs) hisoblari</h3>
+                            <small style="color:var(--muted);">Oshpazlar /chef-panel/ manziliga o‘z logini va Telegram 2FA orqali kiradilar</small>
+                        </div>
+                        <button onclick="openChefModal()" class="btn-primary" style="padding:10px 18px;">+ Oshpaz qo‘shish</button>
+                    </div>
+
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>F.I.SH</th>
+                                <th>Username</th>
+                                <th>Telegram ID</th>
+                                <th>Holati</th>
+                                <th>Yaratilgan sana</th>
+                                <th>Amallar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="chefs-tbody">
+                            <!-- Chefs dynamic -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- TAB KDS: KITCHEN DISPLAY SYSTEM -->
+            <section id="tab-kds" class="admin-tab-content" style="display:none;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; flex-wrap:wrap; gap:16px;">
+                    <div class="dash-tabs" style="margin-bottom:0;" id="kds-filter-tabs">
+                        <button class="dash-tab active" onclick="adminSetKdsFilter('active', this)">🔥 Faol (<span id="admin-kds-count-active">0</span>)</button>
+                        <button class="dash-tab" onclick="adminSetKdsFilter('New', this)">📋 Yangi (<span id="admin-kds-count-new">0</span>)</button>
+                        <button class="dash-tab" onclick="adminSetKdsFilter('Preparing', this)">⏳ Tayyorlanmoqda (<span id="admin-kds-count-prep">0</span>)</button>
+                        <button class="dash-tab" onclick="adminSetKdsFilter('Ready', this)">✅ Tayyor (<span id="admin-kds-count-ready">0</span>)</button>
+                        <button class="dash-tab" onclick="adminSetKdsFilter('all', this)">📋 Barchasi</button>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:12px;">
+                        <span style="font-size:12px; color:var(--muted);">Avto-yangilanish: <b>10 soniya</b></span>
+                        <button onclick="adminLoadKdsOrders()" class="btn-secondary" style="padding:8px 16px;">🔄 Yangilash</button>
+                    </div>
+                </div>
+                <div class="kds-grid" id="admin-kds-container">
+                    <!-- Filled dynamically -->
+                </div>
+            </section>
+
+            <!-- TAB 6: MESSAGES -->
+            <section id="tab-messages" class="admin-tab-content" style="display:none;">
+                <div class="custom-table-card">
+                    <h3 style="font-size:18px; color:var(--white); margin-bottom:20px;">Foydalanuvchilar xabarlari (Aloqa)</h3>
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Ism</th>
+                                <th>Telefon</th>
+                                <th>Mavzu</th>
+                                <th>Xabar</th>
+                                <th>Sana</th>
+                            </tr>
+                        </thead>
+                        <tbody id="messages-tbody">
+                            <!-- Messages dynamic -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- MODAL: PRODUCT (ADD / EDIT) -->
+    <div id="modal-product" class="modal-backdrop">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('modal-product')">✕</button>
+            <h3 id="modal-product-title" style="font-size:20px; margin-bottom:18px; color:var(--white);">Taom qo‘shish</h3>
+            <form id="form-product">
+                <input type="hidden" id="prod-id">
+                <div class="form-group">
+                    <label class="form-label" for="prod-name">Nomi *</label>
+                    <input type="text" id="prod-name" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="prod-cat">Kategoriya *</label>
+                    <select id="prod-cat" class="form-select" required></select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="prod-price">Narxi (so‘mda) *</label>
+                    <input type="number" id="prod-price" class="form-input" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="prod-file">📸 Taom rasmini yuklang (Kompyuterdan fayl tanlang)</label>
+                    <input type="file" id="prod-file" class="form-input" accept="image/*" style="padding:8px;" onchange="previewSelectedImage(this)">
+                    <div id="image-preview-container" style="display:none; margin-top:10px; align-items:center; gap:12px;">
+                        <img id="image-preview-img" src="" style="width:70px; height:70px; border-radius:10px; object-fit:cover; border:1px solid var(--gold);">
+                        <span id="image-preview-status" style="color:var(--gold); font-size:13px; font-weight:600;">✅ Rasm tanlandi</span>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top:6px;">
+                    <label class="form-label" for="prod-img" style="color:var(--muted); font-size:12px;">Yoki Rasm URL manzili (Ixtiyoriy)</label>
+                    <input type="url" id="prod-img" class="form-input" placeholder="https://...">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="prod-desc">Tavsifi</label>
+                    <textarea id="prod-desc" class="form-textarea" placeholder="Tarkibi va masalliqlar..."></textarea>
+                </div>
+                <div style="display:flex; gap:20px; margin-bottom:20px;">
+                    <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                        <input type="checkbox" id="prod-available" checked>
+                        <span>Mavjud (Available)</span>
+                    </label>
+                    <label style="display:flex; align-items:center; gap:8px; cursor:pointer;">
+                        <input type="checkbox" id="prod-featured">
+                        <span>Saralangan (Featured)</span>
+                    </label>
+                </div>
+                <button type="submit" class="btn-primary" style="width:100%; justify-content:center; padding:14px;">Saqlash</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: CATEGORY -->
+    <div id="modal-category" class="modal-backdrop">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('modal-category')">✕</button>
+            <h3 style="font-size:20px; margin-bottom:18px; color:var(--white);">Kategoriya qo‘shish</h3>
+            <form id="form-category">
+                <div class="form-group">
+                    <label class="form-label" for="cat-name">Toifa nomi *</label>
+                    <input type="text" id="cat-name" class="form-input" placeholder="Masalan: Pitsalar" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="cat-slug">Slug (identifikator) *</label>
+                    <input type="text" id="cat-slug" class="form-input" placeholder="pizza" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="cat-icon">Ikonka (emoji)</label>
+                    <input type="text" id="cat-icon" class="form-input" value="🍕" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="cat-desc">Tavsif</label>
+                    <input type="text" id="cat-desc" class="form-input" placeholder="Qisqa tavsif...">
+                </div>
+                <button type="submit" class="btn-primary" style="width:100%; justify-content:center; padding:14px;">Qo‘shish</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: CHEF (ADD / EDIT) -->
+    <div id="modal-chef" class="modal-backdrop">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('modal-chef')">✕</button>
+            <h3 style="font-size:20px; margin-bottom:18px; color:var(--white);">Oshpaz (Chef) hisobini yaratish</h3>
+            <form id="form-chef">
+                <div class="form-group">
+                    <label class="form-label" for="chef-name">Oshpaz ismi va familiyasi *</label>
+                    <input type="text" id="chef-name" class="form-input" placeholder="Dilshod Karimov" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="chef-username">Username *</label>
+                    <input type="text" id="chef-username" class="form-input" placeholder="chef_dilshod" required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="chef-password">Vaqtinchalik parol *</label>
+                    <input type="password" id="chef-password" class="form-input" placeholder="••••••••" required autocomplete="new-password">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="chef-tg">Telegram Chat ID (2FA kod boradigan ID) *</label>
+                    <input type="text" id="chef-tg" class="form-input" placeholder="743453896" required>
+                    <small style="color:var(--muted); font-size:11px;">Telegram botimiz orqali /start bosganida beriladigan ID raqami</small>
+                </div>
+                <button type="submit" class="btn-primary" style="width:100%; justify-content:center; padding:14px;">Oshpazni saqlash</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: ORDER DETAILS -->
+    <div id="modal-order" class="modal-backdrop">
+        <div class="modal-content" style="max-width:620px;">
+            <button class="modal-close" onclick="closeModal('modal-order')">✕</button>
+            <h3 id="modal-order-title" style="font-size:20px; margin-bottom:16px; color:var(--gold);">Buyurtma #---</h3>
+            <div id="modal-order-content"></div>
+        </div>
+    </div>
+
+    <script src="/static/app.js"></script>
+    <script>
+        let adminToken = localStorage.getItem('admin_jwt_token') || '';
+        let salesChartInst = null;
+        let catChartInst = null;
+
+        // AUTHENTICATION FLOW
+        document.getElementById('login-step1-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-login-step1');
+            const errBox = document.getElementById('auth-error');
+            errBox.style.display = 'none';
+            btn.disabled = true;
+            btn.textContent = 'Tekshirilmoqda...';
+
+            const payload = {
+                username: document.getElementById('login-username').value,
+                password: document.getElementById('login-password').value
+            };
+
+            try {
+                const res = await fetch('/api/auth/admin/send-code', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if (res.ok) {
+                    document.getElementById('login-step1-form').style.display = 'none';
+                    document.getElementById('login-step2-form').style.display = 'block';
+                    document.getElementById('login-2fa-code').focus();
+
+                    // If mock/demo code returned in development mode, show hint
+                    if (data.dev_code) {
+                        document.getElementById('demo-code-hint').textContent = `[Dev rejimi]: Kodingiz: ${data.dev_code}`;
+                    }
+                } else {
+                    errBox.textContent = data.detail || 'Login yoki parol noto‘g‘ri';
+                    errBox.style.display = 'block';
+                }
+            } catch (err) {
+                errBox.textContent = 'Server bilan ulanishda xatolik';
+                errBox.style.display = 'block';
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Davom etish (Kodni olish) <span>→</span>';
+            }
+        });
+
+        document.getElementById('login-step2-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-login-step2');
+            const errBox = document.getElementById('auth-error');
+            errBox.style.display = 'none';
+            btn.disabled = true;
+            btn.textContent = 'Tasdiqlanmoqda...';
+
+            const payload = {
+                username: document.getElementById('login-username').value,
+                code: document.getElementById('login-2fa-code').value
+            };
+
+            try {
+                const res = await fetch('/api/auth/admin/verify-code', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if (res.ok && data.token) {
+                    adminToken = data.token;
+                    localStorage.setItem('admin_jwt_token', adminToken);
+                    initAdminDashboard();
+                } else {
+                    errBox.textContent = data.detail || 'Kod noto‘g‘ri yoki muddati tugagan';
+                    errBox.style.display = 'block';
+                }
+            } catch (err) {
+                errBox.textContent = 'Tasdiqlashda xatolik yuz berdi';
+                errBox.style.display = 'block';
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = 'Tizimga kirish <span>✓</span>';
+            }
+        });
+
+        function cancel2FA() {
+            document.getElementById('login-step2-form').style.display = 'none';
+            document.getElementById('login-step1-form').style.display = 'block';
+            document.getElementById('auth-error').style.display = 'none';
+        }
+
+        async function verifyExistingToken() {
+            if (!adminToken) return false;
+            try {
+                const res = await fetch('/api/auth/me', {
+                    headers: {'Authorization': 'Bearer ' + adminToken}
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.role === 'admin') return true;
+                }
+            } catch (e) {}
+            return false;
+        }
+
+        async function initAdminDashboard() {
+            document.getElementById('auth-screen').style.display = 'none';
+            document.getElementById('admin-dashboard').style.display = 'block';
+            loadAdminStats();
+            loadAdminOrders();
+            loadAdminProducts();
+            loadAdminCategories();
+            loadAdminChefs();
+            loadAdminMessages();
+            adminLoadKdsOrders();
+            // KDS auto-refresh every 10 seconds
+            setInterval(adminLoadKdsOrders, 10000);
+        }
+
+        function adminLogout() {
+            localStorage.removeItem('admin_jwt_token');
+            adminToken = '';
+            location.reload();
+        }
+
+        function switchAdminTab(tabId) {
+            document.querySelectorAll('.admin-tab-content').forEach(el => el.style.display = 'none');
+            document.querySelectorAll('.dash-tab').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).style.display = 'block';
+            event.target.classList.add('active');
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('open');
+        }
+
+        // LOAD STATS & CHARTS
+        async function loadAdminStats() {
+            try {
+                const res = await fetch('/api/admin/stats', {
+                    headers: {'Authorization': 'Bearer ' + adminToken}
+                });
+                if (!res.ok) return;
+                const d = await res.json();
+
+                document.getElementById('stat-revenue').textContent = (d.today_revenue || 0).toLocaleString('uz-UZ') + ' so‘m';
+                document.getElementById('stat-today-orders').textContent = (d.today_orders || 0) + ' ta';
+                document.getElementById('stat-pending').textContent = (d.pending_orders || 0) + ' ta';
+                document.getElementById('stat-completed').textContent = (d.completed_orders || 0) + ' ta';
+
+                // Chart 1: Sales
+                const ctx1 = document.getElementById('salesChart').getContext('2d');
+                if (salesChartInst) salesChartInst.destroy();
+                salesChartInst = new Chart(ctx1, {
+                    type: 'line',
+                    data: {
+                        labels: d.chart_labels || ['Dush', 'Sesh', 'Chor', 'Pay', 'Jum', 'Shan', 'Yak'],
+                        datasets: [{
+                            label: 'Tushum (so‘m)',
+                            data: d.chart_sales || [350000, 480000, 520000, 610000, 780000, 950000, 1100000],
+                            borderColor: '#e8bb58',
+                            backgroundColor: 'rgba(232, 187, 88, 0.1)',
+                            fill: true,
+                            tension: 0.3
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { display: false } },
+                        scales: {
+                            x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#8e999f' } },
+                            y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#8e999f' } }
+                        }
+                    }
+                });
+
+                // Chart 2: Categories
+                const ctx2 = document.getElementById('categoryChart').getContext('2d');
+                if (catChartInst) catChartInst.destroy();
+                catChartInst = new Chart(ctx2, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Taomlar', 'Salatlar', 'Snacklar', 'Ichimliklar', 'Desertlar'],
+                        datasets: [{
+                            data: d.category_counts || [40, 20, 15, 15, 10],
+                            backgroundColor: ['#e8bb58', '#4ade80', '#facc15', '#60a5fa', '#f472b6']
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: { legend: { position: 'bottom', labels: { color: '#fff' } } }
+                    }
+                });
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        // ORDERS MANAGEMENT
+        async function loadAdminOrders() {
+            const statusFilter = document.getElementById('filter-order-status').value;
+            try {
+                const res = await fetch(`/api/admin/orders?status=${statusFilter}`, {
+                    headers: {'Authorization': 'Bearer ' + adminToken}
+                });
+                if (!res.ok) return;
+                const orders = await res.json();
+                document.getElementById('orders-badge-count').textContent = orders.length;
+
+                const tbody = document.getElementById('orders-tbody');
+                if (orders.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; color:var(--muted); padding:30px;">Buyurtmalar mavjud emas</td></tr>';
+                    return;
+                }
+
+                let html = '';
+                orders.forEach(o => {
+                    const st = o.status;
+                    const badgeClass = 'badge-' + st.toLowerCase();
+                    html += `
+                        <tr>
+                            <td><strong>#${o.order_number}</strong></td>
+                            <td style="color:var(--muted); font-size:12px;">${o.created_at.substring(5, 16)}</td>
+                            <td>${o.customer_name}</td>
+                            <td><a href="tel:${o.customer_phone}" style="color:var(--gold); text-decoration:none;">${o.customer_phone}</a></td>
+                            <td>${o.order_type === 'delivery' ? '🛵 Yetkazish' : (o.table_number ? '🍽 Stol ' + o.table_number : '🛍 Olib ketish')}</td>
+                            <td><strong style="color:var(--gold);">${o.total_price.toLocaleString('uz-UZ')} so‘m</strong></td>
+                            <td><span class="badge ${badgeClass}">${st}</span></td>
+                            <td>
+                                <select onchange="updateOrderStatus('${o.id}', this.value)" style="background:#111a20; color:#fff; border:1px solid var(--border); border-radius:8px; padding:4px 8px; font-size:12px;">
+                                    <option value="" disabled selected>Statusni o‘zgartirish</option>
+                                    <option value="New">New</option>
+                                    <option value="Accepted">Accepted</option>
+                                    <option value="Preparing">Preparing</option>
+                                    <option value="Ready">Ready</option>
+                                    <option value="Delivered">Delivered</option>
+                                    <option value="Cancelled">Cancelled</option>
+                                </select>
+                                <button onclick="viewOrderDetail('${o.id}')" style="background:transparent; border:none; color:var(--gold); cursor:pointer; font-size:14px; margin-left:6px;" title="Tafsilot">👁</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                tbody.innerHTML = html;
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        async function updateOrderStatus(orderId, newStatus) {
+            if (!confirm(`Buyurtma holatini "${newStatus}" ga o‘zgartirishni tasdiqlaysizmi?`)) return;
+            try {
+                const res = await fetch(`/api/admin/orders/${orderId}/status`, {
+                    method: 'PATCH',
+                    headers: {'Authorization': 'Bearer ' + adminToken, 'Content-Type': 'application/json'},
+                    body: JSON.stringify({status: newStatus})
+                });
+                if (res.ok) {
+                    AllonApp.showToast(`Buyurtma holati "${newStatus}" ga o‘zgardi`);
+                    loadAdminOrders();
+                    loadAdminStats();
+                }
+            } catch (e) {
+                alert('Xatolik yuz berdi');
+            }
+        }
+
+        async function viewOrderDetail(orderId) {
+            try {
+                const res = await fetch(`/api/admin/orders/${orderId}`, {
+                    headers: {'Authorization': 'Bearer ' + adminToken}
+                });
+                const o = await res.json();
+                document.getElementById('modal-order-title').textContent = `Buyurtma #${o.order_number}`;
+
+                let itemsHtml = '';
+                (o.items || []).forEach(it => {
+                    itemsHtml += `<div style="display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.06);">
+                        <span>${it.product_name} x ${it.quantity}</span>
+                        <strong style="color:var(--gold);">${it.subtotal.toLocaleString('uz-UZ')} so‘m</strong>
+                    </div>`;
+                });
+
+                document.getElementById('modal-order-content').innerHTML = `
+                    <div style="margin-bottom:14px; font-size:14px;">
+                        <div><b>Mijoz:</b> ${o.customer_name} (${o.customer_phone})</div>
+                        <div><b>Manzil / Stol:</b> ${o.delivery_address || 'Restoran'} ${o.table_number ? '(Stol: ' + o.table_number + ')' : ''} ${o.latitude && o.longitude ? `<a href="https://yandex.ru/maps/?pt=${o.longitude},${o.latitude}&z=16&l=map" target="_blank" style="color:var(--gold); margin-left:8px; text-decoration:none;">📍 Xarita</a>` : ''}</div>
+                        <div><b>Izoh:</b> ${o.comment || 'Yo‘q'}</div>
+                        <div><b>Vaqti:</b> ${o.created_at}</div>
+                    </div>
+                    <h4 style="margin:16px 0 10px 0; color:var(--white);">Mahsulotlar:</h4>
+                    ${itemsHtml}
+                    <div style="display:flex; justify-content:space-between; margin-top:16px; font-size:18px;">
+                        <span>Jami:</span>
+                        <strong style="color:var(--gold);">${o.total_price.toLocaleString('uz-UZ')} so‘m</strong>
+                    </div>
+                `;
+                document.getElementById('modal-order').classList.add('open');
+            } catch (e) {}
+        }
+
+        // PRODUCTS MANAGEMENT
+        async function loadAdminProducts() {
+            try {
+                const res = await fetch('/api/admin/products', {
+                    headers: {'Authorization': 'Bearer ' + adminToken}
+                });
+                const prods = await res.json();
+                const tbody = document.getElementById('products-tbody');
+                let html = '';
+                prods.forEach(p => {
+                    html += `
+                        <tr class="prod-row" data-name="${p.name.toLowerCase()}">
+                            <td><img src="${p.image || 'https://loremflickr.com/100/100/food'}" style="width:44px; height:44px; border-radius:10px; object-fit:cover;"></td>
+                            <td><strong>${p.name}</strong></td>
+                            <td><span style="text-transform:uppercase; font-size:12px; color:var(--muted);">${p.category_slug}</span></td>
+                            <td><strong style="color:var(--gold);">${p.price.toLocaleString('uz-UZ')} so‘m</strong></td>
+                            <td>
+                                <input type="checkbox" ${p.is_available ? 'checked' : ''} onchange="toggleProductField(${p.id}, 'is_available', this.checked)">
+                            </td>
+                            <td>
+                                <input type="checkbox" ${p.is_featured ? 'checked' : ''} onchange="toggleProductField(${p.id}, 'is_featured', this.checked)">
+                            </td>
+                            <td>
+                                <button onclick="editProduct(${JSON.stringify(p).replace(/"/g, '&quot;')})" style="border:none; background:transparent; color:var(--gold); cursor:pointer; font-size:16px;">✏️</button>
+                                <button onclick="deleteProduct(${p.id})" style="border:none; background:transparent; color:#f87171; cursor:pointer; font-size:16px; margin-left:8px;">🗑</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                tbody.innerHTML = html;
+            } catch (e) {}
+        }
+
+        function filterProductsTable() {
+            const q = document.getElementById('prod-search').value.toLowerCase();
+            document.querySelectorAll('.prod-row').forEach(r => {
+                r.style.display = r.dataset.name.includes(q) ? '' : 'none';
+            });
+        }
+
+        async function toggleProductField(id, field, value) {
+            await fetch(`/api/admin/products/${id}/toggle`, {
+                method: 'PATCH',
+                headers: {'Authorization': 'Bearer ' + adminToken, 'Content-Type': 'application/json'},
+                body: JSON.stringify({field: field, value: value ? 1 : 0})
+            });
+            AllonApp.showToast('Mahsulot yangilandi');
+        }
+
+        function previewSelectedImage(input) {
+            const container = document.getElementById('image-preview-container');
+            const img = document.getElementById('image-preview-img');
+            const status = document.getElementById('image-preview-status');
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    img.src = e.target.result;
+                    status.textContent = '✅ Rasm tanlandi';
+                    container.style.display = 'flex';
+                }
+                reader.readAsDataURL(input.files[0]);
+            } else {
+                container.style.display = 'none';
+            }
+        }
+
+        async function openProductModal() {
+            document.getElementById('modal-product-title').textContent = 'Yangi taom qo‘shish';
+            document.getElementById('form-product').reset();
+            document.getElementById('prod-id').value = '';
+            document.getElementById('image-preview-container').style.display = 'none';
+            await populateCategorySelect();
+            document.getElementById('modal-product').classList.add('open');
+        }
+
+        async function populateCategorySelect() {
+            const res = await fetch('/api/categories');
+            const cats = await res.json();
+            const sel = document.getElementById('prod-cat');
+            sel.innerHTML = cats.filter(c => c.slug !== 'all').map(c => `<option value="${c.slug}">${c.name}</option>`).join('');
+        }
+
+        function editProduct(p) {
+            populateCategorySelect().then(() => {
+                document.getElementById('modal-product-title').textContent = 'Taomni tahrirlash';
+                document.getElementById('prod-id').value = p.id;
+                document.getElementById('prod-name').value = p.name;
+                document.getElementById('prod-cat').value = p.category_slug;
+                document.getElementById('prod-price').value = p.price;
+                document.getElementById('prod-img').value = p.image || '';
+                document.getElementById('prod-desc').value = p.description || '';
+                document.getElementById('prod-available').checked = !!p.is_available;
+                document.getElementById('prod-featured').checked = !!p.is_featured;
+
+                const previewCont = document.getElementById('image-preview-container');
+                const previewImg = document.getElementById('image-preview-img');
+                const status = document.getElementById('image-preview-status');
+                if (p.image) {
+                    previewImg.src = p.image;
+                    status.textContent = '🖼 Hozirgi rasm';
+                    previewCont.style.display = 'flex';
+                } else {
+                    previewCont.style.display = 'none';
+                }
+
+                document.getElementById('modal-product').classList.add('open');
+            });
+        }
+
+        document.getElementById('form-product').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('prod-id').value;
+            const fileInput = document.getElementById('prod-file');
+
+            const formData = new FormData();
+            formData.append('name', document.getElementById('prod-name').value);
+            formData.append('category_slug', document.getElementById('prod-cat').value);
+            formData.append('price', document.getElementById('prod-price').value);
+            formData.append('description', document.getElementById('prod-desc').value);
+            formData.append('image_url', document.getElementById('prod-img').value);
+            formData.append('is_available', document.getElementById('prod-available').checked ? '1' : '0');
+            formData.append('is_featured', document.getElementById('prod-featured').checked ? '1' : '0');
+
+            if (fileInput.files && fileInput.files[0]) {
+                formData.append('image_file', fileInput.files[0]);
+            }
+
+            const url = id ? `/api/admin/products/${id}` : '/api/admin/products';
+
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: {'Authorization': 'Bearer ' + adminToken},
+                body: formData
+            });
+            if (res.ok) {
+                closeModal('modal-product');
+                loadAdminProducts();
+                AllonApp.showToast('Mahsulot saqlandi');
+            } else {
+                const err = await res.json();
+                alert(err.detail || 'Xatolik yuz berdi');
+            }
+        });
+
+        async function deleteProduct(id) {
+            if (!confirm('Ushbu mahsulotni o‘chirmoqchimisiz?')) return;
+            const res = await fetch(`/api/admin/products/${id}`, {
+                method: 'DELETE',
+                headers: {'Authorization': 'Bearer ' + adminToken}
+            });
+            if (res.ok) {
+                loadAdminProducts();
+                AllonApp.showToast('Mahsulot o‘chirildi');
+            }
+        }
+
+        // CATEGORIES
+        async function loadAdminCategories() {
+            const res = await fetch('/api/categories');
+            const cats = await res.json();
+            const tbody = document.getElementById('categories-tbody');
+            tbody.innerHTML = cats.map(c => `
+                <tr>
+                    <td style="font-size:22px;">${c.icon || '🍽'}</td>
+                    <td><strong>${c.name}</strong></td>
+                    <td style="color:var(--muted);">${c.slug}</td>
+                    <td style="color:var(--muted); font-size:13px;">${c.description || '-'}</td>
+                    <td><span class="badge badge-ready">Faol</span></td>
+                    <td>
+                        <button onclick="deleteCategory(${c.id})" style="border:none; background:transparent; color:#f87171; cursor:pointer;" title="O‘chirish">🗑</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function openCategoryModal() {
+            document.getElementById('modal-category').classList.add('open');
+        }
+
+        document.getElementById('form-category').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = {
+                name: document.getElementById('cat-name').value,
+                slug: document.getElementById('cat-slug').value,
+                icon: document.getElementById('cat-icon').value,
+                description: document.getElementById('cat-desc').value
+            };
+            const res = await fetch('/api/admin/categories', {
+                method: 'POST',
+                headers: {'Authorization': 'Bearer ' + adminToken, 'Content-Type': 'application/json'},
+                body: JSON.stringify(payload)
+            });
+            if (res.ok) {
+                closeModal('modal-category');
+                loadAdminCategories();
+                AllonApp.showToast('Kategoriya qo‘shildi');
+            }
+        });
+
+        async function deleteCategory(id) {
+            if (!confirm('Kategoriyani o‘chirmoqchimisiz?')) return;
+            await fetch(`/api/admin/categories/${id}`, {
+                method: 'DELETE',
+                headers: {'Authorization': 'Bearer ' + adminToken}
+            });
+            loadAdminCategories();
+            AllonApp.showToast('Kategoriya o‘chirildi');
+        }
+
+        // CHEFS
+        async function loadAdminChefs() {
+            const res = await fetch('/api/admin/chefs', {
+                headers: {'Authorization': 'Bearer ' + adminToken}
+            });
+            if (!res.ok) return;
+            const chefs = await res.json();
+            const tbody = document.getElementById('chefs-tbody');
+            tbody.innerHTML = chefs.map(ch => `
+                <tr>
+                    <td><strong>${ch.full_name}</strong></td>
+                    <td style="color:var(--gold);">${ch.username}</td>
+                    <td><code>${ch.telegram_id || 'Ulanmagan'}</code></td>
+                    <td>
+                        <span class="badge ${ch.is_active ? 'badge-ready' : 'badge-cancelled'}">${ch.is_active ? 'Faol' : 'To‘xtatilgan'}</span>
+                    </td>
+                    <td style="color:var(--muted); font-size:12px;">${ch.created_at.substring(0, 10)}</td>
+                    <td>
+                        <button onclick="toggleChefStatus(${ch.id}, ${ch.is_active ? 0 : 1})" style="background:transparent; border:none; color:var(--white); cursor:pointer; font-size:13px;">${ch.is_active ? 'To‘xtatish' : 'Faollashtirish'}</button>
+                        <button onclick="deleteChef(${ch.id})" style="background:transparent; border:none; color:#f87171; cursor:pointer; font-size:15px; margin-left:8px;">🗑</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function openChefModal() {
+            document.getElementById('modal-chef').classList.add('open');
+        }
+
+        document.getElementById('form-chef').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const payload = {
+                full_name: document.getElementById('chef-name').value,
+                username: document.getElementById('chef-username').value,
+                password: document.getElementById('chef-password').value,
+                telegram_id: document.getElementById('chef-tg').value
+            };
+            const res = await fetch('/api/admin/chefs', {
+                method: 'POST',
+                headers: {'Authorization': 'Bearer ' + adminToken, 'Content-Type': 'application/json'},
+                body: JSON.stringify(payload)
+            });
+            if (res.ok) {
+                closeModal('modal-chef');
+                loadAdminChefs();
+                AllonApp.showToast('Oshpaz hisobi yaratildi');
+            } else {
+                alert('Oshpaz yaratishda xatolik (username band bo‘lishi mumkin)');
+            }
+        });
+
+        async function toggleChefStatus(id, newStatus) {
+            await fetch(`/api/admin/chefs/${id}/toggle`, {
+                method: 'PATCH',
+                headers: {'Authorization': 'Bearer ' + adminToken, 'Content-Type': 'application/json'},
+                body: JSON.stringify({is_active: newStatus})
+            });
+            loadAdminChefs();
+        }
+
+        async function deleteChef(id) {
+            if (!confirm('Ushbu oshpaz hisobini o‘chirmoqchimisiz?')) return;
+            await fetch(`/api/admin/chefs/${id}`, {
+                method: 'DELETE',
+                headers: {'Authorization': 'Bearer ' + adminToken}
+            });
+            loadAdminChefs();
+            AllonApp.showToast('Oshpaz o‘chirildi');
+        }
+
+        // ============================================================
+        // KDS (Kitchen Display System) — Admin panel uchun
+        // ============================================================
+        let adminKdsFilter = 'active';
+
+        function adminSetKdsFilter(f, btn) {
+            adminKdsFilter = f;
+            document.querySelectorAll('#kds-filter-tabs .dash-tab').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            adminLoadKdsOrders();
+        }
+
+        async function adminLoadKdsOrders() {
+            try {
+                // Admin tokeni bilan chef API dan buyurtmalarni olamiz
+                const res = await fetch('/api/chef/orders', {
+                    headers: {'Authorization': 'Bearer ' + adminToken}
+                });
+                if (!res.ok) return;
+                const orders = await res.json();
+
+                const normalizeStatus = (status) => {
+                    if (!status) return 'New';
+                    const map = { pending: 'New', confirmed: 'Accepted', preparing: 'Preparing', ready: 'Ready', delivered: 'Delivered', cancelled: 'Cancelled' };
+                    return map[status] || status;
+                };
+
+                // Countlar
+                let cNew = 0, cPrep = 0, cReady = 0;
+                orders.forEach(o => {
+                    const st = o.chef_status || normalizeStatus(o.status);
+                    if (['New', 'Accepted'].includes(st)) cNew++;
+                    if (st === 'Preparing') cPrep++;
+                    if (st === 'Ready') cReady++;
+                });
+                document.getElementById('admin-kds-count-active').textContent = cNew + cPrep;
+                document.getElementById('admin-kds-count-new').textContent = cNew;
+                document.getElementById('admin-kds-count-prep').textContent = cPrep;
+                document.getElementById('admin-kds-count-ready').textContent = cReady;
+
+                // Filter
+                let filtered = orders;
+                if (adminKdsFilter === 'active') {
+                    filtered = orders.filter(o => ['New', 'Accepted', 'Preparing'].includes(o.chef_status || normalizeStatus(o.status)));
+                } else if (adminKdsFilter === 'New') {
+                    filtered = orders.filter(o => ['New', 'Accepted'].includes(o.chef_status || normalizeStatus(o.status)));
+                } else if (adminKdsFilter !== 'all') {
+                    filtered = orders.filter(o => (o.chef_status || normalizeStatus(o.status)) === adminKdsFilter);
+                }
+
+                const container = document.getElementById('admin-kds-container');
+                if (!container) return;
+
+                if (filtered.length === 0) {
+                    container.innerHTML = `
+                        <div style="grid-column:1/-1; text-align:center; padding:60px 20px; background:var(--card); border:1px solid var(--border); border-radius:20px;">
+                            <span style="font-size:48px; display:block; margin-bottom:12px;">👨‍🍳</span>
+                            <h3 style="color:var(--white); font-size:20px; margin-bottom:6px;">Hozircha buyurtmalar yo'q</h3>
+                            <p style="color:var(--muted); font-size:14px;">Yangi buyurtma kelganda ushbu ekranda avtomatik aks etadi.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                let html = '';
+                filtered.forEach(o => {
+                    const st = o.chef_status || normalizeStatus(o.status);
+                    let statusClass = 'status-new';
+                    if (st === 'Preparing') statusClass = 'status-preparing';
+                    if (st === 'Ready') statusClass = 'status-ready';
+
+                    let actionButtons = '';
+                    if (st === 'New') {
+                        actionButtons = `<button onclick="adminKdsUpdateStatus(${o.id}, 'Accepted')" class="btn-primary" style="width:100%; justify-content:center; padding:12px;">✅ Qabul qilish (Accept)</button>`;
+                    } else if (st === 'Accepted') {
+                        actionButtons = `<button onclick="adminKdsUpdateStatus(${o.id}, 'Preparing')" class="btn-primary" style="width:100%; justify-content:center; padding:12px; background:linear-gradient(135deg,#facc15,#eab308); color:#000;">🔥 Tayyorlashni boshlash</button>`;
+                    } else if (st === 'Preparing') {
+                        actionButtons = `<button onclick="adminKdsUpdateStatus(${o.id}, 'Ready')" class="btn-primary" style="width:100%; justify-content:center; padding:12px; background:linear-gradient(135deg,#4ade80,#22c55e); color:#000;">🎉 Tayyor bo'ldi!</button>`;
+                    } else if (st === 'Ready') {
+                        actionButtons = `<div style="text-align:center; color:#4ade80; font-weight:bold; font-size:14px; padding:8px; border:1px dashed rgba(74,222,128,0.4); border-radius:12px;">✨ Oshxonadan chiqdi (Tayyor)</div>`;
+                    } else if (st === 'Delivered') {
+                        actionButtons = `<div style="text-align:center; color:var(--muted); font-size:13px; padding:8px;">🎉 Yetkazildi</div>`;
+                    }
+
+                    let itemsHtml = '';
+                    (o.items || []).forEach(it => {
+                        itemsHtml += `<li class="kds-item-row"><span>${it.product_name || it.name || 'Mahsulot'}</span><strong>x${it.quantity}</strong></li>`;
+                    });
+
+                    const note = o.customer_notes || o.comment || '';
+                    html += `
+                        <div class="kds-card ${statusClass}">
+                            <div>
+                                <div class="kds-card-header">
+                                    <div class="kds-order-num">#${o.order_number}</div>
+                                    <span class="badge badge-${st.toLowerCase()}">${st}</span>
+                                </div>
+                                <div style="display:flex; justify-content:space-between; font-size:12px; color:var(--muted); margin-bottom:12px;">
+                                    <span>🕒 ${o.created_at.substring(11, 16)}</span>
+                                    <span>${o.order_type === 'delivery' ? '🛵 Yetkazish' : (o.table_number ? '🍽 Stol ' + o.table_number : '🛍 Olib ketish')}</span>
+                                </div>
+                                <div style="font-size:12px; color:var(--muted); margin-bottom:8px;">👤 ${o.customer_name} &nbsp; 📞 ${o.customer_phone}</div>
+                                ${note ? `<div style="background:rgba(239,68,68,0.15); border:1px solid rgba(239,68,68,0.3); border-radius:10px; padding:8px 12px; font-size:12px; color:#fca5a5; margin-bottom:12px;">⚠️ Izoh: <i>${note}</i></div>` : ''}
+                                <ul class="kds-items-list">${itemsHtml}</ul>
+                            </div>
+                            <div style="margin-top:16px;">${actionButtons}</div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            } catch (e) {
+                console.error('KDS load error:', e);
+            }
+        }
+
+        async function adminKdsUpdateStatus(orderId, newStatus) {
+            try {
+                // Admin token bilan chef status endpoint ni ishlatamiz
+                const res = await fetch(`/api/chef/orders/${orderId}/status`, {
+                    method: 'PATCH',
+                    headers: {'Authorization': 'Bearer ' + adminToken, 'Content-Type': 'application/json'},
+                    body: JSON.stringify({status: newStatus})
+                });
+                if (res.ok) {
+                    AllonApp.showToast(`Buyurtma holati: ${newStatus}`);
+                    adminLoadKdsOrders();
+                    loadAdminOrders(); // orders tabini ham yangilaymiz
+                    loadAdminStats();
+                } else {
+                    // Agar chef endpoint admin token ni rad etsa, admin orders endpoint ishlatamiz
+                    const res2 = await fetch(`/api/admin/orders/${orderId}/status`, {
+                        method: 'PATCH',
+                        headers: {'Authorization': 'Bearer ' + adminToken, 'Content-Type': 'application/json'},
+                        body: JSON.stringify({status: newStatus})
+                    });
+                    if (res2.ok) {
+                        AllonApp.showToast(`Buyurtma holati: ${newStatus}`);
+                        adminLoadKdsOrders();
+                        loadAdminOrders();
+                        loadAdminStats();
+                    } else {
+                        alert('Statusni o\'zgartirishda xatolik');
+                    }
+                }
+            } catch (e) {
+                alert('Server xatosi');
+            }
+        }
+
+        // MESSAGES
+        async function loadAdminMessages() {
+            const res = await fetch('/api/admin/messages', {
+                headers: {'Authorization': 'Bearer ' + adminToken}
+            });
+            if (!res.ok) return;
+            const msgs = await res.json();
+            const tbody = document.getElementById('messages-tbody');
+            tbody.innerHTML = msgs.map(m => `
+                <tr>
+                    <td><strong>${m.name}</strong></td>
+                    <td><a href="tel:${m.phone}" style="color:var(--gold); text-decoration:none;">${m.phone}</a></td>
+                    <td>${m.subject || '-'}</td>
+                    <td style="color:#d1d5db;">${m.message}</td>
+                    <td style="color:var(--muted); font-size:12px;">${m.created_at.substring(0, 16)}</td>
+                </tr>
+            `).join('');
+        }
+
+        // On Load Check Authentication
+        document.addEventListener('DOMContentLoaded', async () => {
+            const isValid = await verifyExistingToken();
+            if (isValid) {
+                initAdminDashboard();
+            } else {
+                document.getElementById('auth-screen').style.display = 'block';
+                document.getElementById('admin-dashboard').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
+
