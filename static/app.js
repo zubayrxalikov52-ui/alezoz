@@ -960,3 +960,50 @@ const AllonApp = (function() {
         },
     };
 })();
+
+// ==========================================================================
+// UNIVERSAL LUXURY SPLASH / PRELOADER INTRO (AL EZOZ LOGO ANIMATION)
+// ==========================================================================
+(function initSitePreloader() {
+    function showIntro() {
+        let preloader = document.getElementById('site-preloader');
+        if (!preloader && document.body) {
+            preloader = document.createElement('div');
+            preloader.id = 'site-preloader';
+            preloader.className = 'site-preloader';
+            preloader.innerHTML = `
+                <div class="preloader-content">
+                    <div class="preloader-logo-ring">
+                        <div class="preloader-spinner-ring"></div>
+                        <img src="/static/alezoz-logo.jpg" alt="Al Ezoz Logo" class="preloader-logo-img">
+                    </div>
+                    <div class="preloader-brand">
+                        <span class="preloader-title">Al Ezoz</span>
+                        <span class="preloader-sub">MILLIY CAFE</span>
+                    </div>
+                    <div class="preloader-bar-wrap">
+                        <div class="preloader-bar-line"></div>
+                    </div>
+                </div>
+            `;
+            document.body.prepend(preloader);
+        }
+
+        if (preloader) {
+            setTimeout(() => {
+                preloader.classList.add('hide-preloader');
+                setTimeout(() => {
+                    if (preloader && preloader.parentNode) {
+                        preloader.style.display = 'none';
+                    }
+                }, 650);
+            }, 1350);
+        }
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', showIntro);
+    } else {
+        showIntro();
+    }
+})();

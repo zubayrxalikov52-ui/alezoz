@@ -687,59 +687,103 @@ footer {
 
     .food-list {
         grid-template-columns: repeat(2, 1fr) !important;
-        gap: 10px !important;
+        gap: 12px !important;
     }
 
     .food-card {
-        border-radius: 14px;
+        border-radius: 18px !important;
+        background: rgba(14, 23, 29, 0.9) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25) !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: space-between !important;
+        overflow: hidden !important;
     }
 
     .food-card img {
-        height: 125px;
+        height: 135px !important;
+        width: 100% !important;
+        object-fit: cover !important;
+        border-radius: 18px 18px 0 0 !important;
     }
 
     .food-info {
-        padding: 10px 8px;
+        padding: 10px 10px 12px 10px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        flex: 1 !important;
     }
 
+    /* Narx tepada - Feed Up stilida */
+    .food-info strong {
+        order: 1 !important;
+        font-size: 15px !important;
+        font-weight: 800 !important;
+        color: var(--gold) !important;
+        margin: 0 0 3px 0 !important;
+        display: block !important;
+    }
+
+    /* Nomi narxning ostida - bosh harflarda */
     .food-info h3 {
-        font-size: 13.5px;
-        line-height: 1.3;
-        margin-bottom: 4px;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
+        order: 2 !important;
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.3px !important;
+        color: var(--white) !important;
+        margin: 0 0 4px 0 !important;
+        line-height: 1.3 !important;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        -webkit-box-orient: vertical !important;
+        overflow: hidden !important;
     }
 
     .food-info p {
-        font-size: 10.5px;
-        line-height: 1.3;
-        min-height: 28px;
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        overflow: hidden;
-    }
-
-    .food-info strong {
-        font-size: 13.5px;
-        margin: 6px 0;
+        order: 3 !important;
+        font-size: 10.5px !important;
+        line-height: 1.3 !important;
+        min-height: unset !important;
+        margin-bottom: 8px !important;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        -webkit-box-orient: vertical !important;
+        overflow: hidden !important;
+        color: var(--muted) !important;
     }
 
     .food-controls {
-        height: 34px;
-        padding: 3px 4px;
+        order: 4 !important;
+        margin-top: auto !important;
+        height: 36px !important;
+        padding: 3px 5px !important;
+        border-radius: 20px !important;
+        background: rgba(255, 255, 255, 0.08) !important;
+        border: 1px solid rgba(255, 255, 255, 0.12) !important;
     }
 
     .food-controls button {
-        width: 26px;
-        height: 26px;
-        font-size: 14px;
+        width: 28px !important;
+        height: 28px !important;
+        font-size: 16px !important;
+        font-weight: 700 !important;
+        border-radius: 50% !important;
+        background: #ffffff !important;
+        color: #071014 !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+        border: none !important;
+        cursor: pointer !important;
+        display: grid !important;
+        place-items: center !important;
     }
 
     .quantity {
-        min-width: 20px;
-        font-size: 13px;
+        min-width: 20px !important;
+        font-size: 14px !important;
+        font-weight: 800 !important;
+        color: var(--white) !important;
     }
 
     .welcome h1 {
