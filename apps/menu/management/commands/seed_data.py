@@ -115,4 +115,15 @@ class Command(BaseCommand):
             else:
                 self.stdout.write(self.style.SUCCESS(f"MenuItems already exist ({MenuItem.objects.count()} items)."))
 
+        # 4. Default Banner
+        from apps.menu.models import Banner
+        if Banner.objects.count() == 0:
+            Banner.objects.create(
+                title="Maxsus Kombo & Aksiya",
+                image_url="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=1200&q=80",
+                sort_order=0,
+                is_active=True
+            )
+            self.stdout.write(self.style.SUCCESS("Default banner created!"))
+
         self.stdout.write(self.style.SUCCESS("Database seeding completed successfully!"))
