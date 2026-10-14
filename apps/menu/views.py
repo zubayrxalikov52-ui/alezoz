@@ -1,10 +1,10 @@
 import json
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
-from .models import Category, MenuItem, ContactMessage
+from .models import Category, MenuItem, ContactMessage, Banner
 
 
 def _json(data, status=200):
@@ -12,24 +12,20 @@ def _json(data, status=200):
 
 
 class HomeView(View):
+    """Bosh sahifa — to'g'ridan-to'g'ri menyuga yo'naltiradi."""
     def get(self, request):
-        popular_items = MenuItem.objects.filter(
-            is_available=True, is_popular=True
-        ).select_related('category')[:8]
-        categories = Category.objects.filter(is_active=True)
-        return render(request, 'pages/home.html', {
-            'popular_items': popular_items,
-            'categories': categories,
-        })
+        return redirect('menu')
 
 
 class MenuView(View):
     def get(self, request):
         categories = Category.objects.filter(is_active=True).prefetch_related('items')
         all_items = MenuItem.objects.filter(is_available=True).select_related('category')
+        banners = Banner.objects.filter(is_active=True)
         return render(request, 'pages/menu.html', {
             'categories': categories,
             'all_items': all_items,
+            'banners': banners,
         })
 
 
@@ -107,6 +103,12 @@ class MenuItemDetailApiView(View):
             return _json({'item': item.to_dict()})
         except MenuItem.DoesNotExist:
             return _json({'error': 'Topilmadi'}, status=404)
+
+
+class BannersApiView(View):
+    def get(self, request):
+        banners = Banner.objects.filter(is_active=True)
+        return _json([b.to_dict() for b in banners])
 
 
 @method_decorator(csrf_exempt, name='dispatch')

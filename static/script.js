@@ -5,11 +5,71 @@
 document.addEventListener("DOMContentLoaded", () => {
     const menuBtn = document.querySelector("#menu-btn");
     const menuDropdown = document.querySelector("#menu-dropdown");
-    const categories = document.querySelectorAll(".category");
+    const categories = document.querySelectorAll(".category, .cat-pill");
     const foodList = document.querySelector("#food-list");
     const foodCards = Array.from(document.querySelectorAll(".food-card"));
     const plusButtons = document.querySelectorAll(".plus");
     const minusButtons = document.querySelectorAll(".minus");
+
+    /* BANNER SLIDER */
+    const bannerTrack = document.querySelector("#banner-track");
+    const bannerSlides = document.querySelectorAll(".banner-slide");
+    const bannerDots = document.querySelectorAll(".banner-dot");
+    let currentBannerIndex = 0;
+    let bannerInterval = null;
+
+    function goToBanner(index) {
+        if (!bannerTrack || bannerSlides.length <= 1) return;
+        currentBannerIndex = (index + bannerSlides.length) % bannerSlides.length;
+        bannerTrack.style.transform = `translateX(-${currentBannerIndex * 100}%)`;
+        bannerDots.forEach((dot, idx) => {
+            dot.classList.toggle("active", idx === currentBannerIndex);
+        });
+    }
+
+    if (bannerTrack && bannerSlides.length > 1) {
+        bannerDots.forEach((dot, idx) => {
+            dot.addEventListener("click", () => {
+                goToBanner(idx);
+                resetBannerTimer();
+            });
+        });
+
+        function startBannerTimer() {
+            bannerInterval = setInterval(() => {
+                goToBanner(currentBannerIndex + 1);
+            }, 4500);
+        }
+
+        function resetBannerTimer() {
+            clearInterval(bannerInterval);
+            startBannerTimer();
+        }
+
+        startBannerTimer();
+
+        // Touch Swipe
+        let startX = 0;
+        let isSwiping = false;
+        bannerTrack.addEventListener("touchstart", (e) => {
+            startX = e.touches[0].clientX;
+            isSwiping = true;
+        }, { passive: true });
+
+        bannerTrack.addEventListener("touchend", (e) => {
+            if (!isSwiping) return;
+            isSwiping = false;
+            const diffX = e.changedTouches[0].clientX - startX;
+            if (Math.abs(diffX) > 40) {
+                if (diffX < 0) {
+                    goToBanner(currentBannerIndex + 1);
+                } else {
+                    goToBanner(currentBannerIndex - 1);
+                }
+                resetBannerTimer();
+            }
+        });
+    }
 
     if (foodList && foodCards.length > 0) {
         /* BO'LIMLAR */
@@ -42,10 +102,14 @@ document.addEventListener("DOMContentLoaded", () => {
         /* KATEGORIYA TANLASH */
         categories.forEach((category) => {
             category.addEventListener("click", () => {
-                categories.forEach((item) => item.classList.remove("active"));
-                category.classList.add("active");
-
                 const selected = category.dataset.category;
+                categories.forEach((item) => {
+                    if (item.dataset.category === selected) {
+                        item.classList.add("active");
+                    } else {
+                        item.classList.remove("active");
+                    }
+                });
 
                 // Sarlavhalar
                 titles.forEach((title) => {
@@ -60,7 +124,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
 
                 if (menuDropdown) menuDropdown.classList.remove("show");
-                foodList.scrollIntoView({ behavior: "smooth", block: "start" });
             });
         });
     }

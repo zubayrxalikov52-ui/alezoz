@@ -1650,3 +1650,376 @@ body {
     50% { transform: scaleX(0.65); }
     100% { transform: scaleX(1); }
 }
+
+/* ==========================================================================
+   AL EZOZ - STICKY HEADER & LOGO ALWAYS ON TOP (MOBILE & DESKTOP)
+   ========================================================================== */
+.header,
+.header.header-sticky {
+    position: -webkit-sticky !important;
+    position: sticky !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    width: 100% !important;
+    z-index: 1000 !important;
+    background: rgba(10, 16, 21, 0.95) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border-bottom: 1px solid rgba(232, 187, 88, 0.2) !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.45) !important;
+    transition: background 0.3s ease, box-shadow 0.3s ease;
+}
+
+@media (max-width: 600px) {
+    .header,
+    .header.header-sticky {
+        height: auto !important;
+        min-height: 58px !important;
+        padding: 8px 12px !important;
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+    }
+    .table-info {
+        padding: 4px 8px !important;
+        gap: 8px !important;
+        border-radius: 12px !important;
+        background: rgba(17, 26, 32, 0.75) !important;
+    }
+    .table-info img {
+        width: 36px !important;
+        height: 36px !important;
+        border: 1px solid var(--gold) !important;
+    }
+    .table-info strong {
+        font-size: 14px !important;
+        line-height: 1.1 !important;
+        color: #fff !important;
+    }
+    .table-info small {
+        font-size: 10px !important;
+        color: var(--gold) !important;
+        font-weight: 600 !important;
+    }
+}
+
+/* ==========================================================================
+   BANNER SLIDER (PREMIUM PROMOTIONAL BANNER)
+   ========================================================================== */
+.banner-slider {
+    position: relative;
+    width: 100%;
+    margin: 0 0 20px 0;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+    background: #111a20;
+    touch-action: pan-y;
+}
+
+.banner-track {
+    display: flex;
+    width: 100%;
+    transition: transform 0.45s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.banner-slide {
+    flex: 0 0 100%;
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 16 / 7;
+    max-height: 320px;
+    background: #0d1419;
+}
+
+.banner-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.banner-default-card {
+    width: 100%;
+    height: 100%;
+    padding: 24px 32px;
+    background: linear-gradient(135deg, #1d2833 0%, #111a20 60%, #1f1b13 100%);
+    border: 1px solid rgba(232, 187, 88, 0.25);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.banner-default-content {
+    flex: 1;
+}
+
+.banner-tag {
+    display: inline-block;
+    background: linear-gradient(135deg, #e8bb58 0%, #caa043 100%);
+    color: #0b1115;
+    font-size: 11px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+}
+
+.banner-default-content h2 {
+    font-size: 22px;
+    color: #fff;
+    font-weight: 700;
+    margin-bottom: 8px;
+    line-height: 1.25;
+}
+
+.banner-default-content p {
+    font-size: 13px;
+    color: #94a3b8;
+    line-height: 1.4;
+}
+
+.banner-default-img {
+    width: 140px;
+    height: 140px;
+    object-fit: contain;
+    filter: drop-shadow(0 8px 16px rgba(0,0,0,0.5));
+}
+
+@media (max-width: 600px) {
+    .banner-slider {
+        margin: 0 0 14px 0;
+        border-radius: 14px;
+    }
+    .banner-slide {
+        aspect-ratio: 16 / 8.5;
+        max-height: 190px;
+    }
+    .banner-default-card {
+        padding: 14px;
+        gap: 10px;
+    }
+    .banner-tag {
+        font-size: 9.5px;
+        padding: 3px 8px;
+        margin-bottom: 6px;
+    }
+    .banner-default-content h2 {
+        font-size: 15px;
+        margin-bottom: 4px;
+    }
+    .banner-default-content p {
+        font-size: 11px;
+        line-height: 1.3;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+    .banner-default-img {
+        width: 75px;
+        height: 75px;
+    }
+}
+
+.banner-dots {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 7px;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.45);
+    padding: 4px 9px;
+    border-radius: 20px;
+    backdrop-filter: blur(8px);
+}
+
+.banner-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.45);
+    border: none;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    padding: 0;
+}
+
+.banner-dot.active {
+    width: 22px;
+    border-radius: 10px;
+    background: #e8bb58;
+}
+
+/* ==========================================================================
+   CATEGORY BAR (HORIZONTAL SCROLL PILLS DIRECTLY ABOVE PRODUCTS)
+   ========================================================================== */
+.category-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    padding: 8px 2px 14px 2px;
+    margin-bottom: 18px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+}
+
+.category-bar::-webkit-scrollbar {
+    display: none;
+}
+
+.cat-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 18px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    background: rgba(17, 26, 32, 0.85);
+    color: #cbd5e1;
+    font-size: 14px;
+    font-weight: 600;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.22s cubic-bezier(0.25, 1, 0.5, 1);
+    user-select: none;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.cat-pill span {
+    font-size: 15px;
+    display: inline-flex;
+}
+
+.cat-pill:hover {
+    border-color: rgba(232, 187, 88, 0.45);
+    background: rgba(26, 38, 48, 0.95);
+    color: #fff;
+    transform: translateY(-2px);
+}
+
+.cat-pill.active {
+    background: linear-gradient(135deg, #e8bb58 0%, #caa043 100%) !important;
+    color: #0c1216 !important;
+    border-color: #ffd978 !important;
+    font-weight: 700 !important;
+    box-shadow: 0 4px 14px rgba(232, 187, 88, 0.4) !important;
+    transform: scale(1.03);
+}
+
+@media (max-width: 600px) {
+    .category-bar {
+        gap: 8px;
+        padding: 4px 2px 10px 2px;
+        margin-bottom: 12px;
+    }
+    .cat-pill {
+        padding: 7px 13px;
+        font-size: 12px;
+        gap: 5px;
+    }
+    .cat-pill span {
+        font-size: 13px;
+    }
+}
+
+/* ==========================================================================
+   MOBILE FOOD CARDS - EXACT TWO COLUMNS COMPACT VIEW
+   ========================================================================== */
+@media (max-width: 600px) {
+    .main {
+        padding: 12px !important;
+    }
+    .food-list {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+    }
+    .food-card {
+        padding: 10px !important;
+        border-radius: 16px !important;
+        display: flex !important;
+        flex-direction: column !important;
+        margin: 0 !important;
+        background: rgba(17, 26, 32, 0.8) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    }
+    .food-card img {
+        width: 100% !important;
+        height: 110px !important;
+        object-fit: cover !important;
+        border-radius: 12px !important;
+    }
+    .food-info {
+        display: flex !important;
+        flex-direction: column !important;
+        flex: 1 !important;
+        padding-top: 8px !important;
+    }
+    .food-card h3 {
+        font-size: 13px !important;
+        font-weight: 700 !important;
+        margin: 0 0 4px 0 !important;
+        color: #fff !important;
+        line-height: 1.25 !important;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        -webkit-box-orient: vertical !important;
+        overflow: hidden !important;
+    }
+    .food-card p {
+        font-size: 11px !important;
+        color: #94a3b8 !important;
+        margin: 0 0 6px 0 !important;
+        line-height: 1.3 !important;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 2 !important;
+        -webkit-box-orient: vertical !important;
+        overflow: hidden !important;
+    }
+    .food-card strong {
+        font-size: 13px !important;
+        color: var(--gold) !important;
+        font-weight: 700 !important;
+        margin-top: auto !important;
+        margin-bottom: 6px !important;
+        display: block !important;
+    }
+    .food-controls {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: flex-end !important;
+        gap: 4px !important;
+        margin-top: 2px !important;
+    }
+    .food-controls button {
+        width: 28px !important;
+        height: 28px !important;
+        border-radius: 8px !important;
+        font-size: 14px !important;
+        padding: 0 !important;
+    }
+    .food-controls .quantity {
+        font-size: 13px !important;
+        min-width: 18px !important;
+        text-align: center !important;
+    }
+    .category-title {
+        grid-column: 1 / -1 !important;
+        font-size: 17px !important;
+        margin: 14px 0 6px 0 !important;
+        color: #fff !important;
+        border-bottom: 1px solid rgba(232, 187, 88, 0.2) !important;
+        padding-bottom: 4px !important;
+    }
+}

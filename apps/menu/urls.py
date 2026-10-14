@@ -1,7 +1,8 @@
 from django.urls import path
 from .views import (
     HomeView, MenuView, AboutView, ContactView, CartView,
-    CategoriesApiView, ProductsApiView, MenuItemDetailApiView, ContactApiView
+    CategoriesApiView, ProductsApiView, MenuItemDetailApiView, ContactApiView,
+    BannersApiView
 )
 
 urlpatterns = [
@@ -20,6 +21,7 @@ urlpatterns = [
     path('api/categories', CategoriesApiView.as_view(), name='api_categories'),
     path('api/products', ProductsApiView.as_view(), name='api_products'),
     path('api/contact', ContactApiView.as_view(), name='api_contact'),
+    path('api/banners', BannersApiView.as_view(), name='api_banners'),
 
     # Menu items API aliases
     path('api/menu/categories', CategoriesApiView.as_view(), name='api_menu_categories'),
@@ -28,3 +30,4 @@ urlpatterns = [
     path('api/menu/items/', ProductsApiView.as_view(), name='api_menu_items_slash'),
     path('api/menu/items/<int:pk>/', MenuItemDetailApiView.as_view(), name='api_menu_item_detail'),
 ]
+

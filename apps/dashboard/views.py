@@ -11,7 +11,7 @@ from django.utils import timezone
 from django.utils.text import slugify
 
 from apps.orders.models import Order, OrderItem
-from apps.menu.models import Category, MenuItem, ContactMessage
+from apps.menu.models import Category, MenuItem, ContactMessage, Banner
 from apps.accounts.models import CustomUser
 from apps.accounts.auth import get_authenticated_user
 from apps.telegram_bot.sender import notify_order_status_change
@@ -298,6 +298,66 @@ class AdminCategoriesApiView(View):
     def delete(self, request, cat_id=None):
         cat = get_object_or_404(Category, pk=cat_id)
         cat.delete()
+        return _json({'status': 'deleted'})
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class AdminBannersApiView(View):
+    @method_decorator(require_admin)
+    def get(self, request):
+        banners = Banner.objects.all().order_by('sort_order', '-created_at')
+        return _json([b.to_dict() for b in banners])
+
+    @method_decorator(require_admin)
+    def post(self, request):
+        if request.content_type and 'multipart/form-data' in request.content_type:
+            title = request.POST.get('title', '').strip()
+            image_url = request.POST.get('image_url', '').strip()
+            uploaded_file = request.FILES.get('image')
+            sort_order = int(request.POST.get('sort_order', 0) or 0)
+        else:
+            try:
+                data = json.loads(request.body)
+            except (json.JSONDecodeError, ValueError):
+                data = {}
+            title = data.get('title', '').strip()
+            image_url = data.get('image_url', '').strip()
+            uploaded_file = None
+            sort_order = int(data.get('sort_order', 0) or 0)
+
+        if not uploaded_file and not image_url:
+            return _json({'status': 'error', 'detail': 'Rasm fayli yoki rasm havolasi (URL) kiritilishi shart'}, 400)
+
+        banner = Banner.objects.create(
+            title=title,
+            image=uploaded_file,
+            image_url=image_url,
+            sort_order=sort_order,
+            is_active=True
+        )
+        return _json({'status': 'created', 'banner': banner.to_dict()}, 201)
+
+    @method_decorator(require_admin)
+    def patch(self, request, banner_id=None):
+        banner = get_object_or_404(Banner, pk=banner_id)
+        try:
+            data = json.loads(request.body)
+        except json.JSONDecodeError:
+            return _json({'status': 'error', 'detail': 'Bad request'}, 400)
+
+        if 'is_active' in data:
+            banner.is_active = bool(data['is_active'])
+        if 'sort_order' in data:
+            banner.sort_order = int(data['sort_order'])
+        if 'title' in data:
+            banner.title = data['title']
+        banner.save()
+        return _json({'status': 'updated', 'banner': banner.to_dict()})
+
+    @method_decorator(require_admin)
+    def delete(self, request, banner_id=None):
+        banner = get_object_or_404(Banner, pk=banner_id)
+        banner.delete()
         return _json({'status': 'deleted'})
 
 

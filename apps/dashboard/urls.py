@@ -3,7 +3,7 @@ from .views import (
     AdminPageView, AdminStatsApiView, AdminOrdersApiView,
     AdminProductsApiView, AdminProductToggleApiView,
     AdminCategoriesApiView, AdminChefsApiView, AdminChefToggleApiView,
-    AdminMessagesApiView
+    AdminMessagesApiView, AdminBannersApiView
 )
 
 app_name = 'dashboard'
@@ -28,6 +28,10 @@ urlpatterns = [
     path('categories/', AdminCategoriesApiView.as_view(), name='admin_categories_direct_slash'),
     path('categories/<int:cat_id>', AdminCategoriesApiView.as_view(), name='admin_category_delete_direct'),
 
+    path('banners', AdminBannersApiView.as_view(), name='admin_banners_direct'),
+    path('banners/', AdminBannersApiView.as_view(), name='admin_banners_direct_slash'),
+    path('banners/<int:banner_id>', AdminBannersApiView.as_view(), name='admin_banner_detail_direct'),
+
     path('chefs', AdminChefsApiView.as_view(), name='admin_chefs_direct'),
     path('chefs/', AdminChefsApiView.as_view(), name='admin_chefs_direct_slash'),
     path('chefs/<int:chef_id>', AdminChefsApiView.as_view(), name='admin_chef_delete_direct'),
@@ -51,6 +55,10 @@ urlpatterns = [
     path('api/categories', AdminCategoriesApiView.as_view(), name='admin_categories'),
     path('api/categories/', AdminCategoriesApiView.as_view(), name='admin_categories_slash'),
     path('api/categories/<int:cat_id>', AdminCategoriesApiView.as_view(), name='admin_category_delete'),
+
+    path('api/banners', AdminBannersApiView.as_view(), name='admin_banners'),
+    path('api/banners/', AdminBannersApiView.as_view(), name='admin_banners_slash'),
+    path('api/banners/<int:banner_id>', AdminBannersApiView.as_view(), name='admin_banner_detail'),
 
     path('api/chefs', AdminChefsApiView.as_view(), name='admin_chefs'),
     path('api/chefs/', AdminChefsApiView.as_view(), name='admin_chefs_slash'),

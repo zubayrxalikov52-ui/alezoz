@@ -87,6 +87,39 @@ class MenuItem(models.Model):
         }
 
 
+class Banner(models.Model):
+    """Admin tomonidan qo'shiladigan banner rasmlari — menyu tepasida ko'rinadi."""
+    title = models.CharField(max_length=200, blank=True, verbose_name="Nomi (ixtiyoriy)")
+    image = models.ImageField(upload_to='banners/', blank=True, null=True, verbose_name="Banner rasmi")
+    image_url = models.URLField(blank=True, verbose_name="Rasm URL (ixtiyoriy)")
+    sort_order = models.PositiveSmallIntegerField(default=0)
+    is_active = models.BooleanField(default=True, verbose_name="Faol")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = 'Banner'
+        verbose_name_plural = 'Bannerlar'
+        ordering = ['sort_order', '-created_at']
+
+    def __str__(self):
+        return self.title or f"Banner #{self.pk}"
+
+    @property
+    def display_image(self):
+        if self.image:
+            return self.image.url
+        return self.image_url or ''
+
+    def to_dict(self):
+        return {
+            'id': self.pk,
+            'title': self.title,
+            'image': self.display_image,
+            'sort_order': self.sort_order,
+            'is_active': self.is_active,
+        }
+
+
 class ContactMessage(models.Model):
     name = models.CharField(max_length=150, verbose_name="Ismi")
     phone = models.CharField(max_length=50, verbose_name="Telefon")

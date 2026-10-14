@@ -100,6 +100,7 @@
                 <button class="dash-tab" onclick="switchAdminTab('tab-kds')">🔥 KDS Oshxona</button>
                 <button class="dash-tab" onclick="switchAdminTab('tab-products')">🍽 Mahsulotlar</button>
                 <button class="dash-tab" onclick="switchAdminTab('tab-categories')">📁 Kategoriyalar</button>
+                <button class="dash-tab" onclick="switchAdminTab('tab-banners')">🖼 Bannerlar</button>
                 <button class="dash-tab" onclick="switchAdminTab('tab-chefs')">👨‍🍳 Oshpazlar</button>
                 <button class="dash-tab" onclick="switchAdminTab('tab-messages')">✉️ Xabarlar</button>
             </div>
@@ -244,6 +245,34 @@
                         </thead>
                         <tbody id="categories-tbody">
                             <!-- Categories dynamic -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- TAB: BANNERS -->
+            <section id="tab-banners" class="admin-tab-content" style="display:none;">
+                <div class="custom-table-card">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:10px;">
+                        <div>
+                            <h3 style="font-size:18px; color:var(--white);">Menyu Bannerlari</h3>
+                            <small style="color:var(--muted);">Ushbu bannerlar Menyu sahifasining eng yuqori qismida slayd bo‘lib aylanadi</small>
+                        </div>
+                        <button onclick="openBannerModal()" class="btn-primary" style="padding:10px 18px;">+ Yangi Banner qo‘shish</button>
+                    </div>
+
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Rasm</th>
+                                <th>Nomi</th>
+                                <th>Tartib raqami</th>
+                                <th>Holati</th>
+                                <th>Amallar</th>
+                            </tr>
+                        </thead>
+                        <tbody id="banners-tbody">
+                            <!-- Banners dynamic -->
                         </tbody>
                     </table>
                 </div>
@@ -435,6 +464,38 @@
         </div>
     </div>
 
+    <!-- MODAL: BANNER (ADD) -->
+    <div id="modal-banner" class="modal-backdrop">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal('modal-banner')">✕</button>
+            <h3 style="font-size:20px; margin-bottom:18px; color:var(--white);">Yangi Banner qo‘shish</h3>
+            <form id="form-banner">
+                <div class="form-group">
+                    <label class="form-label" for="banner-title">Banner nomi / Aksiya matni (ixtiyoriy)</label>
+                    <input type="text" id="banner-title" class="form-input" placeholder="Masalan: Maxsus Taklif">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="banner-file">📸 Kompyuterdan rasm yuklash</label>
+                    <input type="file" id="banner-file" class="form-input" accept="image/*" style="padding:8px;" onchange="previewBannerImage(this)">
+                    <div id="banner-preview-box" style="display:none; margin-top:10px;">
+                        <img id="banner-preview-img" src="" style="width:100%; max-height:160px; border-radius:12px; object-fit:cover; border:1px solid var(--gold);">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="banner-url">Yoki Rasm URL havolasi</label>
+                    <input type="url" id="banner-url" class="form-input" placeholder="https://misol.uz/banner.jpg">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="banner-order">Tartib raqami (0 - eng birinchi)</label>
+                    <input type="number" id="banner-order" class="form-input" value="0">
+                </div>
+                <button type="submit" class="btn-primary" style="width:100%; justify-content:center; padding:13px; margin-top:10px;">
+                    Bannerni saqlash <span>✓</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
     <script src="/static/app.js"></script>
     <script>
         let adminToken = localStorage.getItem('admin_jwt_token') || '';
@@ -548,6 +609,7 @@
             loadAdminOrders();
             loadAdminProducts();
             loadAdminCategories();
+            loadAdminBanners();
             loadAdminChefs();
             loadAdminMessages();
             adminLoadKdsOrders();
@@ -946,6 +1008,101 @@
             });
             loadAdminCategories();
             AllonApp.showToast('Kategoriya o‘chirildi');
+        }
+
+        // BANNERS
+        async function loadAdminBanners() {
+            try {
+                const res = await fetch('/api/admin/banners', {
+                    headers: {'Authorization': 'Bearer ' + adminToken}
+                });
+                if (!res.ok) return;
+                const banners = await res.json();
+                const tbody = document.getElementById('banners-tbody');
+                if (!banners.length) {
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--muted); padding:24px;">Hozircha bannerlar mavjud emas</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = banners.map(b => `
+                    <tr>
+                        <td>
+                            <img src="${b.image || '/static/about-dish.png'}" alt="Banner" style="width:110px; height:50px; object-fit:cover; border-radius:8px; border:1px solid var(--border);">
+                        </td>
+                        <td><strong>${b.title || 'Nomsiz banner'}</strong></td>
+                        <td>${b.sort_order}</td>
+                        <td><span class="badge ${b.is_active ? 'badge-ready' : 'badge-cancelled'}">${b.is_active ? 'Faol' : 'Nofaol'}</span></td>
+                        <td>
+                            <button onclick="deleteBanner(${b.id})" style="border:none; background:transparent; color:#f87171; cursor:pointer; font-size:16px;" title="O‘chirish">🗑</button>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function openBannerModal() {
+            document.getElementById('form-banner').reset();
+            document.getElementById('banner-preview-box').style.display = 'none';
+            document.getElementById('modal-banner').classList.add('open');
+        }
+
+        function previewBannerImage(input) {
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    document.getElementById('banner-preview-img').src = e.target.result;
+                    document.getElementById('banner-preview-box').style.display = 'block';
+                };
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+
+        document.getElementById('form-banner').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const title = document.getElementById('banner-title').value.trim();
+            const url = document.getElementById('banner-url').value.trim();
+            const order = document.getElementById('banner-order').value || '0';
+            const fileInput = document.getElementById('banner-file');
+
+            const formData = new FormData();
+            formData.append('title', title);
+            formData.append('image_url', url);
+            formData.append('sort_order', order);
+            if (fileInput.files && fileInput.files[0]) {
+                formData.append('image', fileInput.files[0]);
+            }
+
+            if (!fileInput.files[0] && !url) {
+                alert('Iltimos rasm yuklang yoki rasm havolasini kiriting!');
+                return;
+            }
+
+            const res = await fetch('/api/admin/banners', {
+                method: 'POST',
+                headers: {'Authorization': 'Bearer ' + adminToken},
+                body: formData
+            });
+            if (res.ok) {
+                closeModal('modal-banner');
+                loadAdminBanners();
+                AllonApp.showToast('Banner saqlandi');
+            } else {
+                const err = await res.json();
+                alert(err.detail || 'Xatolik yuz berdi');
+            }
+        });
+
+        async function deleteBanner(id) {
+            if (!confirm('Ushbu bannerni o‘chirmoqchimisiz?')) return;
+            const res = await fetch(`/api/admin/banners/${id}`, {
+                method: 'DELETE',
+                headers: {'Authorization': 'Bearer ' + adminToken}
+            });
+            if (res.ok) {
+                loadAdminBanners();
+                AllonApp.showToast('Banner o‘chirildi');
+            }
         }
 
         // CHEFS

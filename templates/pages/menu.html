@@ -32,10 +32,9 @@
     </div>
 
     <div class="background"></div>
+    <!-- HEADER (STICKY) -->
 
-    <!-- HEADER -->
-
-    <header class="header">
+    <header class="header header-sticky" id="main-header">
 
         <div class="table-info">
             <div class="table-icon" style="padding:0; background:none; border:none; box-shadow:none;">
@@ -44,43 +43,8 @@
             </div>
 
             <div>
-                <strong>Stol №7</strong>
-                <small data-i18n="table.welcome">Xush kelibsiz!</small>
-            </div>
-        </div>
-
-
-        <div class="menu-control">
-            <button id="menu-btn" class="menu-btn">
-                <span>☷</span>
-                <span data-i18n="nav.menu">Menyu</span>
-            </button>
-
-            <div id="menu-dropdown" class="menu-dropdown">
-                <button class="category active" data-category="all">
-                    <span>▦</span>
-                    Barchasi
-                </button>
-                <button class="category" data-category="food">
-                    <span>🍽</span>
-                    Taomlar
-                </button>
-                <button class="category" data-category="salad">
-                    <span>🥗</span>
-                    Salatlar
-                </button>
-                <button class="category" data-category="snack">
-                    <span>🍟</span>
-                    Snacklar
-                </button>
-                <button class="category" data-category="drink">
-                    <span>🥤</span>
-                    Ichimliklar
-                </button>
-                <button class="category" data-category="dessert">
-                    <span>🍰</span>
-                    Desertlar
-                </button>
+                <strong>Al Ezoz</strong>
+                <small>MILLIY CAFE</small>
             </div>
         </div>
 
@@ -88,7 +52,6 @@
         <!-- DESKTOP NAVBAR -->
         <nav class="main-nav">
             <ul class="nav-links">
-                <li><a href="/" class="nav-link" data-i18n="nav.home">Bosh sahifa</a></li>
                 <li><a href="/menu" class="nav-link active" data-i18n="nav.menu">Menyu</a></li>
                 <li><a href="/about" class="nav-link" data-i18n="nav.about">Biz haqimizda</a></li>
                 <li><a href="/contact" class="nav-link" data-i18n="nav.contact">Aloqa</a></li>
@@ -132,7 +95,6 @@
             <button class="drawer-close">✕</button>
         </div>
         <ul class="drawer-links">
-            <li><a href="/" class="nav-link">🏠 <span data-i18n="nav.home">Bosh sahifa</span></a></li>
             <li><a href="/menu" class="nav-link active">🍽 <span data-i18n="nav.menu">Menyu</span></a></li>
             <li><a href="/about" class="nav-link">ℹ️ <span data-i18n="nav.about">Biz haqimizda</span></a></li>
             <li><a href="/contact" class="nav-link">📞 <span data-i18n="nav.contact">Aloqa</span></a></li>
@@ -143,38 +105,62 @@
 
     <!-- MAIN -->
 
-    <main class="main">
+    <main class="main" style="padding-top: 15px;">
 
         <section class="menu-section">
 
-            <div class="welcome">
-
-                <span class="welcome-small">
-                    AL EZOZ
-                </span>
-
-                <h1>
-                    Mazali taomlar
-                    <br>
-                    <span>yaxshi kayfiyat.</span>
-                </h1>
-
-                <div class="line"></div>
-
-                <p data-i18n="menu.desc">
-                    Menyudan istagan taomingizni tanlang
-                    va buyurtmangizni savatga qo‘shing.
-                </p>
-
+            <!-- BANNER SLIDER -->
+            <div class="banner-slider" id="banner-slider">
+                <div class="banner-track" id="banner-track">
+                    {% if banners %}
+                        {% for banner in banners %}
+                        <div class="banner-slide">
+                            <img src="{{ banner.display_image }}" alt="{{ banner.title|default:'Al Ezoz Banner' }}">
+                        </div>
+                        {% endfor %}
+                    {% else %}
+                        <div class="banner-slide">
+                            <div class="banner-default-card">
+                                <div class="banner-default-content">
+                                    <span class="banner-tag">🔥 AL EZOZ MILLIY CAFE</span>
+                                    <h2>Mazali taomlar, yaxshi kayfiyat!</h2>
+                                    <p>Eng sara milliy va zamonaviy taomlar, tezkor oshxona va unutilmas lazzat.</p>
+                                </div>
+                                <img src="/static/about-dish.png" alt="Al Ezoz Taomlar" class="banner-default-img">
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+                {% if banners and banners|length > 1 %}
+                <div class="banner-dots" id="banner-dots">
+                    {% for banner in banners %}
+                    <button class="banner-dot{% if forloop.first %} active{% endif %}" data-index="{{ forloop.counter0 }}"></button>
+                    {% endfor %}
+                </div>
+                {% endif %}
             </div>
 
+            <!-- KATEGORIYALAR (inline mahsulotlar tepasida) -->
+            <div class="category-bar" id="category-bar">
+                <button class="cat-pill active" data-category="all">
+                    <span>▦</span> Barchasi
+                </button>
+                {% for cat in categories %}
+                    {% if cat.slug != 'all' %}
+                    <button class="cat-pill" data-category="{{ cat.slug }}">
+                        <span>{{ cat.icon }}</span> {{ cat.name }}
+                    </button>
+                    {% endif %}
+                {% endfor %}
+            </div>
 
-            <!-- 50 TA MAHSULOT -->
+            <!-- MAHSULOTLAR -->
 
             <div id="food-list" class="food-list">
 
 
                 <!-- 1 -->
+
 
                 <article class="food-card" data-category="food">
 
