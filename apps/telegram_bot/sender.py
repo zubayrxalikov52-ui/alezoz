@@ -242,3 +242,66 @@ def notify_chefs_new_order(order):
 
     for chef_id in chef_ids:
         _send_message(chef_id, text)
+
+
+def try_send_confirmation_code_on_order(order):
+    """
+    Buyurtma yaratilganda chaqiriladi.
+    Agar foydalanuvchi avval botga /start bosgan bo'lsa (TelegramProfile yoki avvalgi Order'da chat_id mavjud),
+    darhol tasdiqlash kodini uning Telegram akkauntiga yuboradi — havola bosish yoki /start bosish shart emas!
+    """
+    if not order.telegram_username:
+        return False
+
+    try:
+        from apps.telegram_bot.models import TelegramProfile
+        from apps.orders.models import Order
+
+        username_clean = (
+            order.telegram_username.strip()
+            .replace('https://t.me/', '')
+            .replace('http://t.me/', '')
+            .replace('t.me/', '')
+            .lstrip('@')
+            .strip()
+            .lower()
+        )
+        if not username_clean:
+            return False
+
+        # 1. TelegramProfile jadvalida shu username bo'yicha qidiramiz
+        profile = TelegramProfile.objects.filter(
+            username__iexact=username_clean
+        ).exclude(chat_id='').first()
+
+        chat_id = profile.chat_id if (profile and profile.chat_id) else None
+
+        # 2. Agar TelegramProfile da topilmasa, avvalgi Order'lar tarixidan chat_id ni qidiramiz
+        if not chat_id:
+            prev_order = Order.objects.filter(
+                telegram_username__iexact=username_clean
+            ).exclude(telegram_chat_id='').order_by('-created_at').first()
+            if prev_order and prev_order.telegram_chat_id:
+                chat_id = str(prev_order.telegram_chat_id)
+                # Profilni ham yaratib / to'ldirib qo'yamiz
+                profile, _ = TelegramProfile.objects.update_or_create(
+                    chat_id=chat_id,
+                    defaults={'username': username_clean}
+                )
+
+        if not chat_id:
+            logger.info(f"Foydalanuvchi @{username_clean} uchun bot chat_id topilmadi (avval /start bosmagan bo'lishi mumkin)")
+            return False
+
+        # Buyurtmaga chat_id bog'laymiz
+        order.telegram_chat_id = str(chat_id)
+        order.save(update_fields=['telegram_chat_id'])
+
+        language = (profile.language if profile else None) or 'uz'
+
+        from apps.telegram_bot.views import _send_confirmation_code
+        return bool(_send_confirmation_code(chat_id, order, language))
+
+    except Exception as e:
+        logger.error(f"try_send_confirmation_code_on_order error: {e}")
+        return False

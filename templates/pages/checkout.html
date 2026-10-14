@@ -76,9 +76,9 @@
     </aside>
 
     <main>
-        <section style="max-width:1200px; margin:20px auto 0 auto; padding:0 40px;">
+        <section class="checkout-header-section" style="max-width:1200px; margin:20px auto 0 auto; padding:0 40px;">
             <span class="welcome-small" data-i18n="checkout.badge">RASMIYLASHTIRISH</span>
-            <h1 style="font-size:38px; margin-top:8px;">
+            <h1 class="checkout-main-title" style="font-size:38px; margin-top:8px;">
                 <span data-i18n="checkout.pageTitle">Buyurtma</span> <span data-i18n="checkout.pageTitleAccent">Berish</span>
             </h1>
             <div class="line"></div>
@@ -103,7 +103,7 @@
 
                     <h4 style="font-size:16px; margin:24px 0 16px 0; color:var(--gold);">Mijoz ma’lumotlari</h4>
 
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+                    <div class="checkout-grid-2col" style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
                         <div class="form-group">
                             <label class="form-label" for="cust-name" data-i18n="checkout.nameLabel">Ism va familiyangiz *</label>
                             <input type="text" id="cust-name" class="form-input" placeholder="Ali Valiyev" required>
@@ -122,8 +122,8 @@
                             <span style="background:rgba(41,182,246,0.15); border:1px solid rgba(41,182,246,0.3); border-right:none; border-radius:10px 0 0 10px; padding:12px 14px; color:#7dd3fc; font-weight:600; font-size:15px;">@</span>
                             <input type="text" id="cust-telegram" class="form-input" placeholder="username" style="border-radius:0 10px 10px 0; border-left:none;">
                         </div>
-                        <p style="font-size:12px; color:var(--muted); margin-top:8px; line-height:1.5;">
-                            Buyurtma yuborilgach, Telegram botimizga <b>/start</b> yuboring — 6 xonali tasdiqlash kodi keladi.
+                        <p style="font-size:12px; color:#4ade80; margin-top:8px; line-height:1.5;">
+                            ✨ Agar botimizga ilgari <b>/start</b> bosgan bo‘lsangiz, tasdiqlash kodi to‘g‘ridan-to‘g‘ri Telegramingizga yuboriladi (hech narsa bosish shart emas).
                         </p>
                     </div>
 
@@ -307,7 +307,8 @@
             btn.textContent = isRu ? 'Отправка заказа...' : 'Buyurtma yuborilmoqda...';
 
             const cart = AllonApp.getCart();
-            const telegramUsername = document.getElementById('cust-telegram').value.trim().replace(/^@/, '');
+            const rawTgInput = document.getElementById('cust-telegram').value.trim();
+            const telegramUsername = rawTgInput.replace(/^https?:\/\/t\.me\//i, '').replace(/^t\.me\//i, '').replace(/^@+/, '').replace(/\/+$/, '').trim();
             const payload = {
                 customer_name: document.getElementById('cust-name').value,
                 customer_phone: document.getElementById('cust-phone').value,

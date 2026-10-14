@@ -23,7 +23,7 @@ class TelegramBotStartupTests(SimpleTestCase):
 
 
 class TelegramLanguageTests(TestCase):
-    def test_start_prompts_for_language_and_sends_linked_code_in_selected_language(self):
+    def test_start_sends_code_immediately_without_extra_prompts(self):
         order = Order.objects.create(
             order_number='TEST-1001',
             customer_name='Test Customer',
@@ -42,30 +42,12 @@ class TelegramLanguageTests(TestCase):
             })
 
             profile = TelegramProfile.objects.get(chat_id='12345')
-            self.assertEqual(profile.pending_tracking_code, str(order.tracking_code))
-            self.assertIn('Tilni tanlang / Выберите язык', send_message.call_args.args[1])
-            self.assertEqual(
-                send_message.call_args.kwargs['reply_markup']['keyboard'],
-                [["O'zbekcha", 'Русский']],
-            )
-
-            _handle_update({
-                'message': {
-                    'chat': {'id': 12345},
-                    'from': {'username': 'customer'},
-                    'text': 'Русский',
-                },
-            })
-
-        profile.refresh_from_db()
-        order.refresh_from_db()
-        self.assertEqual(profile.language, TelegramProfile.LANGUAGE_RUSSIAN)
-        self.assertEqual(order.telegram_chat_id, '12345')
-        self.assertEqual(profile.pending_tracking_code, '')
-        self.assertTrue(any(
-            'Код подтверждения заказа' in call.args[1]
-            for call in send_message.call_args_list
-        ))
+            order.refresh_from_db()
+            self.assertEqual(order.telegram_chat_id, '12345')
+            self.assertTrue(any(
+                '123456' in str(call.args)
+                for call in send_message.call_args_list
+            ))
 
     @override_settings(ADMIN_TELEGRAM_ID='')
     def test_status_notification_uses_saved_language(self):
@@ -195,3 +177,25 @@ class TelegramLanguageTests(TestCase):
             self.assertFalse(any('Tilni tanlang' in call.args[1] for call in send_message.call_args_list))
             self.assertTrue(any('654321' in call.args[1] for call in send_message.call_args_list))
             self.assertTrue(any('tasdiqlash kodi' in call.args[1] for call in send_message.call_args_list))
+
+    def test_auto_send_confirmation_code_on_order_without_start(self):
+        from apps.telegram_bot.sender import try_send_confirmation_code_on_order
+
+        # Foydalanuvchi avval botga /start bosgan (TelegramProfile da username va chat_id bor)
+        TelegramProfile.objects.create(chat_id='888777', username='testuser123', language='uz')
+
+        order = Order.objects.create(
+            order_number='TEST-8888',
+            customer_name='Farrux',
+            customer_phone='+998901234567',
+            confirmation_code='778899',
+            telegram_username='@testuser123',
+        )
+
+        with patch('apps.telegram_bot.sender._send_message') as send_message:
+            send_message.return_value = True
+            sent = try_send_confirmation_code_on_order(order)
+            self.assertTrue(sent)
+            order.refresh_from_db()
+            self.assertEqual(order.telegram_chat_id, '888777')
+            self.assertTrue(any('778899' in str(call.args) for call in send_message.call_args_list))

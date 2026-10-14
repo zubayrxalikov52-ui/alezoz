@@ -191,6 +191,8 @@ class Order(models.Model):
             'latitude': str(self.latitude) if self.latitude else None,
             'longitude': str(self.longitude) if self.longitude else None,
             'telegram_username': self.telegram_username,
+            'telegram_chat_id': self.telegram_chat_id,
+            'has_telegram_chat': bool(self.telegram_chat_id),
             'bot_username': bot_username,
             'bot_start_url': f"https://t.me/{bot_username}?start={self.tracking_code}",
             'items': [item.to_dict() for item in self.items.select_related('menu_item').all()],

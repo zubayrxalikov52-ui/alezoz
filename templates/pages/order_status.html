@@ -113,29 +113,38 @@
                 <p id="current-status-desc" style="color:var(--muted); font-size:13px;">Ma’lumotlar tekshirilmoqda</p>
                 
                 <div id="confirmation-box" style="display:none; margin-top:15px; padding-top:15px; border-top:1px solid rgba(232,187,88,0.3);">
-                    <div style="background:rgba(41,182,246,0.08); border:1px solid rgba(41,182,246,0.2); border-radius:12px; padding:14px; margin-bottom:14px;">
-                        <p style="color:#7dd3fc; font-size:14px; font-weight:600; margin-bottom:6px;">📱 Tasdiqlash kodi olish:</p>
-                        <ol style="color:#e2e8f0; font-size:13px; line-height:2; padding-left:18px; margin:0;">
-                            <li>Telegram botimizga o'ting: <a id="bot-link" href="https://t.me/alezozmilliycafebot" target="_blank" style="color:#7dd3fc; text-decoration:underline;">Al Ezoz boti</a></li>
-                            <li>Botga <code style="background:rgba(255,255,255,0.1); padding:1px 6px; border-radius:4px;">/start</code> yoki istalgan xabar yuboring</li>
-                            <li>Bot sizga <b>6 xonali kod</b> yuboradi</li>
-                            <li>Kodni pastdagi maydonga kiriting</li>
-                        </ol>
-                        <p id="username-hint" style="display:none; color:#4ade80; font-size:12px; margin-top:8px;">
-                            ✅ Kod <b id="username-display"></b> username'iga yuboriladi
+                    <!-- Agar kod avtomatik Telegramga yuborilgan bo'lsa -->
+                    <div id="direct-code-box" style="display:none; background:rgba(34,197,94,0.1); border:1px solid rgba(34,197,94,0.3); border-radius:12px; padding:14px; margin-bottom:14px;">
+                        <p style="color:#4ade80; font-size:15px; font-weight:700; margin-bottom:6px;">
+                            ✈️ Tasdiqlash kodi Telegramingizga yuborildi!
+                        </p>
+                        <p style="color:#e2e8f0; font-size:13px; margin:0 0 6px 0; line-height:1.5;">
+                            Kod <b id="direct-username-display" style="color:#fde047;">@...</b> Telegram akkauntingizga yetkazildi. Telegram ilovangizni ochib, kelgan <b>6 xonali kodni</b> pastga kiriting. Botda hech qanday tugma bosish shart emas!
                         </p>
                     </div>
-                    <div style="display:flex; gap:10px; align-items:center;">
-                        <input type="text" id="confirm-code-input" class="form-input" placeholder="6 xonali kod" maxlength="6" style="max-width:160px; letter-spacing:4px; font-size:18px; text-align:center;" oninput="this.value=this.value.replace(/\D/g,'')">
-                        <button onclick="confirmOrder()" class="btn-secondary" style="white-space:nowrap;">✅ Tasdiqlash</button>
+
+                    <!-- Agar foydalanuvchi avval botga kirmagan bo'lsa (fallback) -->
+                    <div id="fallback-code-box" style="display:none; background:rgba(41,182,246,0.08); border:1px solid rgba(41,182,246,0.2); border-radius:12px; padding:14px; margin-bottom:14px;">
+                        <p style="color:#7dd3fc; font-size:14px; font-weight:600; margin-bottom:6px;">📱 Tasdiqlash kodini olish:</p>
+                        <p style="color:#e2e8f0; font-size:13px; line-height:1.5; margin:0 0 8px 0;">
+                            Siz avval botimizga kirmagansiz. Kod olish uchun havola orqali botga o'ting:
+                        </p>
+                        <a id="bot-link" href="https://t.me/alezozmilliycafebot" target="_blank" style="display:inline-block; background:#0284c7; color:#fff; padding:7px 14px; border-radius:8px; text-decoration:none; font-size:13px; font-weight:600;">
+                            ✈️ Telegram botni ochish
+                        </a>
+                    </div>
+
+                    <div class="confirm-code-row" style="display:flex; gap:10px; align-items:center;">
+                        <input type="text" id="confirm-code-input" class="form-input" placeholder="6 xonali kod" maxlength="6" style="max-width:180px; letter-spacing:4px; font-size:18px; text-align:center;" oninput="this.value=this.value.replace(/\D/g,'')">
+                        <button onclick="confirmOrder()" class="btn-secondary" style="white-space:nowrap; padding:12px 20px;">✅ Tasdiqlash</button>
                     </div>
                 </div>
             </div>
 
             <!-- ORDER DETAILS CARD -->
-            <div style="text-align:left; background:rgba(8,15,20,0.7); border:1px solid var(--border); border-radius:18px; padding:24px;">
+            <div class="order-details-card" style="text-align:left; background:rgba(8,15,20,0.7); border:1px solid var(--border); border-radius:18px; padding:24px;">
                 <h4 style="font-size:16px; margin-bottom:14px; color:var(--white);">Buyurtma ma’lumotlari</h4>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; font-size:14px; margin-bottom:16px;">
+                <div class="order-details-grid" style="display:grid; grid-template-columns:1fr 1fr; gap:12px; font-size:14px; margin-bottom:16px;">
                     <div><span style="color:var(--muted);" data-i18n="status.custName">Mijoz:</span> <strong id="det-name" style="color:var(--white);">-</strong></div>
                     <div><span style="color:var(--muted);" data-i18n="status.custPhone">Telefon:</span> <strong id="det-phone" style="color:var(--white);">-</strong></div>
                     <div><span style="color:var(--muted);" data-i18n="status.orderType">Turi:</span> <strong id="det-type" style="color:var(--white);">-</strong></div>
@@ -153,7 +162,7 @@
                 </div>
             </div>
 
-            <div style="margin-top:30px; display:flex; justify-content:center; gap:16px;">
+            <div class="order-actions-row" style="margin-top:30px; display:flex; justify-content:center; gap:16px;">
                 <a href="/menu" class="btn-secondary">🍽 Menyuga qaytish</a>
                 <a href="/" class="btn-primary">🏠 Bosh sahifa</a>
             </div>
@@ -258,14 +267,28 @@
                 const botLink = document.getElementById('bot-link');
 
                 if (currentStatus === 'pending') {
-                    statusTitle.textContent = isRu ? '📋 Ожидается подтверждение — Требуется код' : '📋 Buyurtma kutilmoqda — Tasdiqlash kerak';
-                    statusDesc.textContent = isRu ? 'Для подтверждения заказа перейдите в Telegram-бот и отправьте команду /start.' : 'Buyurtmani tasdiqlash uchun Telegram bot orqali 6 xonali kodni oling.';
                     confirmationBox.style.display = 'block';
-                    botLink.href = data.bot_start_url || `https://t.me/${data.bot_username || 'alezozmilliycafebot'}?start=${data.tracking_code}`;
-                    
-                    if (data.telegram_username) {
-                        document.getElementById('username-hint').style.display = 'block';
-                        document.getElementById('username-display').textContent = '@' + data.telegram_username;
+                    const hasTgChat = Boolean(data.has_telegram_chat);
+                    const directBox = document.getElementById('direct-code-box');
+                    const fallbackBox = document.getElementById('fallback-code-box');
+
+                    if (hasTgChat) {
+                        statusTitle.textContent = isRu ? '✈️ Код отправлен в Telegram' : '✈️ Kod Telegramingizga yuborildi';
+                        statusDesc.textContent = isRu 
+                            ? 'Проверьте ваш Telegram. 6-значный код уже доставлен.' 
+                            : 'Telegram ilovangizni tekshiring. 6 xonali tasdiqlash kodi yetkazildi.';
+                        if (directBox) directBox.style.display = 'block';
+                        if (fallbackBox) fallbackBox.style.display = 'none';
+                        const uDisplay = document.getElementById('direct-username-display');
+                        if (uDisplay) uDisplay.textContent = '@' + (data.telegram_username || 'Telegram');
+                    } else {
+                        statusTitle.textContent = isRu ? '📋 Ожидается подтверждение — Требуется код' : '📋 Buyurtma kutilmoqda — Tasdiqlash kerak';
+                        statusDesc.textContent = isRu ? 'Для подтверждения заказа получите код в боте.' : 'Buyurtmani tasdiqlash uchun bot orqali 6 xonali kodni oling.';
+                        if (directBox) directBox.style.display = 'none';
+                        if (fallbackBox) fallbackBox.style.display = 'block';
+                        if (botLink) {
+                            botLink.href = data.bot_start_url || `https://t.me/${data.bot_username || 'alezozmilliycafebot'}?start=${data.tracking_code}`;
+                        }
                     }
                 } else {
                     confirmationBox.style.display = 'none';

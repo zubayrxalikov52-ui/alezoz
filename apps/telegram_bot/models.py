@@ -10,8 +10,9 @@ class TelegramProfile(models.Model):
     ]
 
     chat_id = models.CharField(max_length=50, unique=True)
+    username = models.CharField(max_length=100, blank=True, db_index=True)
     language = models.CharField(max_length=2, choices=LANGUAGE_CHOICES, blank=True)
     pending_tracking_code = models.CharField(max_length=64, blank=True)
 
     def __str__(self):
-        return self.chat_id
+        return self.username or self.chat_id

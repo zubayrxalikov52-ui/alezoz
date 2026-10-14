@@ -81,6 +81,11 @@ def _get_profile(chat_id, username='', first_name=''):
     from apps.telegram_bot.models import TelegramProfile
 
     profile, _ = TelegramProfile.objects.get_or_create(chat_id=str(chat_id))
+    # username yangilangan bo'lsa saqlaymiz
+    clean_username = (username or '').strip().lstrip('@')
+    if clean_username and profile.username != clean_username:
+        profile.username = clean_username
+        profile.save(update_fields=['username'])
     return profile
 
 
@@ -103,14 +108,16 @@ def _handle_update(data):
         _handle_callback(callback_query)
         return
 
-    message = data.get('message', {})
+    message = data.get('message') or data.get('edited_message') or {}
     if not message:
         return
 
     chat_id = str(message.get('chat', {}).get('id', ''))
     text = message.get('text', '').strip()
-    username = message.get('from', {}).get('username', '').strip().lstrip('@')
-    first_name = message.get('from', {}).get('first_name', '').strip()
+    from_user = message.get('from') or {}
+    chat_info = message.get('chat') or {}
+    username = (from_user.get('username') or chat_info.get('username') or '').strip().lstrip('@')
+    first_name = (from_user.get('first_name') or chat_info.get('first_name') or '').strip()
 
     if not chat_id or not text:
         return
@@ -127,22 +134,20 @@ def _handle_update(data):
     if text.startswith('/start'):
         parts = text.split(maxsplit=1)
         tracking_code = parts[1].strip() if len(parts) > 1 else ''
+        lang = profile.language or 'uz'
 
-        # If user has not chosen language yet -> prompt for language first!
-        if not profile.language:
-            if tracking_code:
-                profile.pending_tracking_code = tracking_code
-                profile.save(update_fields=['pending_tracking_code'])
-            _send_language_prompt(chat_id)
-            return
-
-        # User already selected language: communicate in their saved language
-        lang = profile.language
+        # Tracking code bo'lsa — hech qanday til tanlash so'ramasdan DARHOL kodni beramiz!
         if tracking_code:
             if _send_code_by_tracking_code(chat_id, username, tracking_code, lang):
                 return
 
+        # Username bo'yicha kutilayotgan buyurtma bo'lsa — DARHOL kodni beramiz!
         if username and _try_send_code_by_username(chat_id, username, lang):
+            return
+
+        # Agar faol buyurtma topilmasa va til ham tanlanmagan bo'lsa -> til so'raymiz
+        if not profile.language:
+            _send_language_prompt(chat_id)
             return
 
         # Welcome message in user's saved language
@@ -343,57 +348,69 @@ def _send_code_by_tracking_code(chat_id, username, tracking_code, language):
         return True  # True — shu foydalanuvchiga xabar yuborildi, boshqa handle qilinmasin
 
     # Username mos keldi — chat_id bog'laymiz va kod yuboramiz
-    order.telegram_chat_id = chat_id
-    if sender_username and not order_username:
+    order.telegram_chat_id = str(chat_id)
+    if sender_username and not order.telegram_username:
         order.telegram_username = username  # agar checkout'da username kiritilmagan bo'lsa, saqlab qo'yamiz
     order.save(update_fields=['telegram_chat_id', 'telegram_username'])
-    _send_confirmation_code(chat_id, order, language)
-    return True
+
+    if sender_username:
+        from apps.telegram_bot.models import TelegramProfile
+        TelegramProfile.objects.filter(chat_id=str(chat_id)).update(username=sender_username)
+
+    return _send_confirmation_code(chat_id, order, language)
 
 
 def _send_confirmation_code(chat_id, order, language):
     from apps.orders.models import Order
 
+    lang = language or 'uz'
+
     if order.is_code_expired:
         order.update_status(
             Order.STATUS_CANCELLED,
-            note=_language_text(language, '10 daqiqada tasdiqlanmadi', 'Не подтверждён в течение 10 минут'),
+            note=_language_text(lang, '10 daqiqada tasdiqlanmadi', 'Не подтверждён в течение 10 минут'),
         )
-        _send_message(
+        return _send_message(
             chat_id,
             _language_text(
-                language,
+                lang,
                 f"⚠️ <b>#{order.order_number}</b> buyurtmangizning tasdiqlash kodi muddati tugadi (10 daqiqa o'tdi).\n"
                 "Iltimos, saytdan qaytadan buyurtma bering.",
                 f"⚠️ Срок действия кода заказа <b>№{order.order_number}</b> истёк (прошло 10 минут).\n"
                 "Пожалуйста, оформите заказ на сайте заново.",
             ),
-            reply_markup=_get_main_keyboard(language),
+            reply_markup=_get_main_keyboard(lang),
         )
-        return
 
-    _send_message(
+    return _send_message(
         chat_id,
         _language_text(
-            language,
-            f"✅ <b>#{order.order_number} buyurtmangizni tasdiqlash kodi:</b>\n\n"
-            f"<code>{order.confirmation_code}</code>\n\n"
+            lang,
+            f"🔐 <b>Al Ezoz — Tasdiqlash kodi</b>\n\n"
+            f"Hurmatli mijoz, <b>#{order.order_number}</b> buyurtmangizni tasdiqlash kodi:\n\n"
+            f"👉 <code>{order.confirmation_code}</code> 👈\n\n"
             f"⏱ Kod <b>10 daqiqa</b> amal qiladi.\n"
             "Ushbu kodni saytdagi tasdiqlash oynasiga kiriting.",
-            f"✅ <b>Код подтверждения заказа №{order.order_number}:</b>\n\n"
-            f"<code>{order.confirmation_code}</code>\n\n"
+            f"🔐 <b>Al Ezoz — Код подтверждения</b>\n\n"
+            f"Уважаемый клиент, код подтверждения заказа <b>№{order.order_number}</b>:\n\n"
+            f"👉 <code>{order.confirmation_code}</code> 👈\n\n"
             f"⏱ Код действует <b>10 минут</b>.\n"
-            "Введите его в окне подтверждения на сайте.",
+            "Введите этот код в окне подтверждения на сайте.",
         ),
-        reply_markup=_get_main_keyboard(language),
+        reply_markup=_get_main_keyboard(lang),
     )
 
 
 def _try_send_code_by_username(chat_id, username, language, only_unlinked=False):
     from apps.orders.models import Order
+    from apps.telegram_bot.models import TelegramProfile
+
+    username_clean = username.strip().lstrip('@').lower()
+    if not username_clean:
+        return False
 
     orders = Order.objects.filter(
-        telegram_username__iexact=username.strip().lstrip('@'),
+        telegram_username__iexact=username_clean,
         status=Order.STATUS_PENDING,
     ).order_by('-created_at')
     if only_unlinked:
@@ -402,11 +419,12 @@ def _try_send_code_by_username(chat_id, username, language, only_unlinked=False)
     if not order:
         return False
 
-    if not order.telegram_chat_id:
-        order.telegram_chat_id = chat_id
-        order.save(update_fields=['telegram_chat_id'])
-    _send_confirmation_code(chat_id, order, language)
-    return True
+    order.telegram_chat_id = str(chat_id)
+    order.save(update_fields=['telegram_chat_id'])
+
+    TelegramProfile.objects.filter(chat_id=str(chat_id)).update(username=username_clean)
+
+    return _send_confirmation_code(chat_id, order, language)
 
 
 def _send_last_order_info(chat_id, username, language):

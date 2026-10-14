@@ -10,7 +10,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.utils.decorators import method_decorator
 from .models import Order, OrderItem
 from apps.menu.models import MenuItem
-from apps.telegram_bot.sender import notify_new_order, notify_order_status_change
+from apps.telegram_bot.sender import notify_new_order, notify_order_status_change, try_send_confirmation_code_on_order
 
 logger = logging.getLogger(__name__)
 
@@ -56,8 +56,9 @@ class PlaceOrderView(View):
         table_number = data.get('table_number', '').strip()
         payment_method = data.get('payment_method', 'cash')
         
-        # Telegram username (@ belgisisiz saqlash)
-        telegram_username = data.get('telegram_username', '').strip().lstrip('@')
+        # Telegram username (@ belgisisiz va linklarsiz toza saqlash)
+        raw_tg = data.get('telegram_username', '').strip()
+        telegram_username = raw_tg.replace('https://t.me/', '').replace('http://t.me/', '').replace('t.me/', '').lstrip('@').strip().rstrip('/')
         
         latitude = data.get('latitude')
         longitude = data.get('longitude')
@@ -148,6 +149,13 @@ class PlaceOrderView(View):
         # Notify via Telegram is now moved to ConfirmOrderView
         # We just return the created order details so the user can verify it
 
+        # Agar foydalanuvchi avval botga /start bosgan bo'lsa — darhol kod yuboramiz
+        code_sent_direct = False
+        try:
+            code_sent_direct = bool(try_send_confirmation_code_on_order(order))
+        except Exception as e:
+            logger.error(f"Auto send confirmation code error: {e}")
+
         return _json({
             'status': 'success',
             'success': True,
@@ -156,6 +164,7 @@ class PlaceOrderView(View):
             'total_price': total_price,
             'total': total_price,
             'has_telegram': bool(telegram_username),
+            'code_sent_direct': code_sent_direct,
         }, 201)
 
 
