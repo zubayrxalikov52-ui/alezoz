@@ -682,15 +682,68 @@ footer {
     }
 
     .main {
-        padding: 25px 15px;
+        padding: 20px 10px;
     }
 
     .food-list {
-        grid-template-columns: 1fr;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 10px !important;
+    }
+
+    .food-card {
+        border-radius: 14px;
+    }
+
+    .food-card img {
+        height: 125px;
+    }
+
+    .food-info {
+        padding: 10px 8px;
+    }
+
+    .food-info h3 {
+        font-size: 13.5px;
+        line-height: 1.3;
+        margin-bottom: 4px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .food-info p {
+        font-size: 10.5px;
+        line-height: 1.3;
+        min-height: 28px;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .food-info strong {
+        font-size: 13.5px;
+        margin: 6px 0;
+    }
+
+    .food-controls {
+        height: 34px;
+        padding: 3px 4px;
+    }
+
+    .food-controls button {
+        width: 26px;
+        height: 26px;
+        font-size: 14px;
+    }
+
+    .quantity {
+        min-width: 20px;
+        font-size: 13px;
     }
 
     .welcome h1 {
-        font-size: 38px;
+        font-size: 32px;
     }
 }
 
