@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
         function startBannerTimer() {
             bannerInterval = setInterval(() => {
                 goToBanner(currentBannerIndex + 1);
-            }, 4500);
+            }, 3000);
         }
 
         function resetBannerTimer() {

@@ -1710,10 +1710,10 @@ body {
 .banner-slider {
     position: relative;
     width: 100%;
-    margin: 0 0 20px 0;
-    border-radius: 20px;
+    margin: 0 0 16px 0;
+    border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.45);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
     background: #111a20;
     touch-action: pan-y;
 }
@@ -1731,28 +1731,30 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    aspect-ratio: 16 / 7;
-    max-height: 320px;
+    height: 180px !important;
+    max-height: 180px !important;
     background: #0d1419;
+    overflow: hidden;
 }
 
 .banner-slide img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: center;
     display: block;
 }
 
 .banner-default-card {
     width: 100%;
     height: 100%;
-    padding: 24px 32px;
+    padding: 16px 26px;
     background: linear-gradient(135deg, #1d2833 0%, #111a20 60%, #1f1b13 100%);
     border: 1px solid rgba(232, 187, 88, 0.25);
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 20px;
+    gap: 16px;
 }
 
 .banner-default-content {
@@ -1763,88 +1765,88 @@ body {
     display: inline-block;
     background: linear-gradient(135deg, #e8bb58 0%, #caa043 100%);
     color: #0b1115;
-    font-size: 11px;
+    font-size: 10.5px;
     font-weight: 800;
     letter-spacing: 0.5px;
-    padding: 4px 10px;
+    padding: 3px 9px;
     border-radius: 20px;
-    margin-bottom: 10px;
+    margin-bottom: 6px;
 }
 
 .banner-default-content h2 {
-    font-size: 22px;
+    font-size: 18px;
     color: #fff;
     font-weight: 700;
-    margin-bottom: 8px;
+    margin-bottom: 4px;
     line-height: 1.25;
 }
 
 .banner-default-content p {
-    font-size: 13px;
+    font-size: 12px;
     color: #94a3b8;
-    line-height: 1.4;
+    line-height: 1.35;
 }
 
 .banner-default-img {
-    width: 140px;
-    height: 140px;
+    width: 100px;
+    height: 100px;
     object-fit: contain;
-    filter: drop-shadow(0 8px 16px rgba(0,0,0,0.5));
+    filter: drop-shadow(0 6px 14px rgba(0,0,0,0.5));
 }
 
 @media (max-width: 600px) {
     .banner-slider {
-        margin: 0 0 14px 0;
-        border-radius: 14px;
+        margin: 0 0 10px 0;
+        border-radius: 12px;
     }
     .banner-slide {
-        aspect-ratio: 16 / 8.5;
-        max-height: 190px;
+        height: 115px !important;
+        max-height: 115px !important;
     }
     .banner-default-card {
-        padding: 14px;
-        gap: 10px;
+        padding: 10px 14px;
+        gap: 8px;
     }
     .banner-tag {
-        font-size: 9.5px;
-        padding: 3px 8px;
-        margin-bottom: 6px;
+        font-size: 8.5px;
+        padding: 2px 6px;
+        margin-bottom: 3px;
     }
     .banner-default-content h2 {
-        font-size: 15px;
-        margin-bottom: 4px;
+        font-size: 13px;
+        margin-bottom: 2px;
     }
     .banner-default-content p {
-        font-size: 11px;
-        line-height: 1.3;
+        font-size: 10px;
+        line-height: 1.25;
         display: -webkit-box;
         -webkit-line-clamp: 2;
         -webkit-box-orient: vertical;
         overflow: hidden;
     }
     .banner-default-img {
-        width: 75px;
-        height: 75px;
+        width: 52px;
+        height: 52px;
     }
 }
 
 .banner-dots {
     position: absolute;
-    bottom: 10px;
+    bottom: 8px;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
-    gap: 7px;
+    gap: 6px;
     z-index: 10;
-    background: rgba(0, 0, 0, 0.45);
-    padding: 4px 9px;
+    background: rgba(0, 0, 0, 0.5);
+    padding: 3px 8px;
     border-radius: 20px;
     backdrop-filter: blur(8px);
 }
 
 .banner-dot {
-    width: 8px;
-    height: 8px;
+    width: 7px;
+    height: 7px;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.45);
     border: none;
@@ -1854,13 +1856,13 @@ body {
 }
 
 .banner-dot.active {
-    width: 22px;
-    border-radius: 10px;
+    width: 18px;
+    border-radius: 8px;
     background: #e8bb58;
 }
 
 /* ==========================================================================
-   CATEGORY BAR (HORIZONTAL SCROLL PILLS DIRECTLY ABOVE PRODUCTS)
+   CATEGORY BAR (ULTRA-STYLISH HORIZONTAL PILLS DIRECTLY ABOVE PRODUCTS)
    ========================================================================== */
 .category-bar {
     display: flex;
@@ -1868,8 +1870,8 @@ body {
     gap: 10px;
     overflow-x: auto;
     overflow-y: hidden;
-    padding: 8px 2px 14px 2px;
-    margin-bottom: 18px;
+    padding: 6px 2px 14px 2px;
+    margin-bottom: 16px;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
 }
@@ -1884,16 +1886,16 @@ body {
     gap: 8px;
     padding: 9px 18px;
     border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    background: rgba(17, 26, 32, 0.85);
-    color: #cbd5e1;
-    font-size: 14px;
+    border: 1px solid rgba(232, 187, 88, 0.25);
+    background: linear-gradient(180deg, rgba(20, 29, 36, 0.92) 0%, rgba(12, 18, 23, 0.95) 100%);
+    color: #e2e8f0;
+    font-size: 13.5px;
     font-weight: 600;
     white-space: nowrap;
     cursor: pointer;
     transition: all 0.22s cubic-bezier(0.25, 1, 0.5, 1);
     user-select: none;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.08);
 }
 
 .cat-pill span {
@@ -1902,19 +1904,20 @@ body {
 }
 
 .cat-pill:hover {
-    border-color: rgba(232, 187, 88, 0.45);
-    background: rgba(26, 38, 48, 0.95);
+    border-color: rgba(232, 187, 88, 0.65);
+    background: linear-gradient(180deg, rgba(28, 40, 50, 0.95) 0%, rgba(17, 25, 32, 0.95) 100%);
     color: #fff;
     transform: translateY(-2px);
+    box-shadow: 0 5px 14px rgba(232, 187, 88, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.15);
 }
 
 .cat-pill.active {
-    background: linear-gradient(135deg, #e8bb58 0%, #caa043 100%) !important;
-    color: #0c1216 !important;
-    border-color: #ffd978 !important;
-    font-weight: 700 !important;
-    box-shadow: 0 4px 14px rgba(232, 187, 88, 0.4) !important;
-    transform: scale(1.03);
+    background: linear-gradient(135deg, #f6cf70 0%, #e0a736 50%, #c48e23 100%) !important;
+    color: #0a0f13 !important;
+    border: 1px solid #ffe399 !important;
+    font-weight: 800 !important;
+    box-shadow: 0 4px 18px rgba(232, 187, 88, 0.55), inset 0 1px 1px rgba(255, 255, 255, 0.5) !important;
+    transform: scale(1.04);
 }
 
 @media (max-width: 600px) {
@@ -1927,6 +1930,7 @@ body {
         padding: 7px 13px;
         font-size: 12px;
         gap: 5px;
+        border-radius: 999px;
     }
     .cat-pill span {
         font-size: 13px;
@@ -1934,7 +1938,86 @@ body {
 }
 
 /* ==========================================================================
-   MOBILE FOOD CARDS - EXACT TWO COLUMNS COMPACT VIEW
+   DESKTOP / LAPTOP / NOTEBOOK FOOD PRODUCTS LAYOUT FIX
+   ========================================================================== */
+@media (min-width: 601px) {
+    .food-list {
+        display: grid !important;
+        grid-template-columns: repeat(auto-fill, minmax(215px, 1fr)) !important;
+        gap: 18px !important;
+    }
+    .food-card {
+        display: flex !important;
+        flex-direction: column !important;
+        height: 100% !important;
+        border-radius: 17px !important;
+        background: rgba(14, 21, 27, 0.82) !important;
+        border: 1px solid rgba(255, 255, 255, 0.08) !important;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25) !important;
+        overflow: hidden !important;
+        transition: transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease !important;
+    }
+    .food-card:hover {
+        transform: translateY(-5px) !important;
+        border-color: rgba(232, 187, 88, 0.45) !important;
+        box-shadow: 0 14px 32px rgba(0, 0, 0, 0.4) !important;
+    }
+    .food-card img {
+        width: 100% !important;
+        height: 155px !important;
+        object-fit: cover !important;
+        display: block !important;
+        background: #121a20;
+    }
+    .food-info {
+        display: flex !important;
+        flex-direction: column !important;
+        flex: 1 !important;
+        padding: 14px !important;
+    }
+    .food-info h3 {
+        font-size: 15.5px !important;
+        font-weight: 700 !important;
+        color: #fff !important;
+        margin: 0 0 6px 0 !important;
+        line-height: 1.25 !important;
+    }
+    .food-info p {
+        font-size: 11.5px !important;
+        color: #94a3b8 !important;
+        line-height: 1.4 !important;
+        margin: 0 0 10px 0 !important;
+        flex: 1 !important;
+    }
+    .food-info strong {
+        font-size: 15px !important;
+        color: var(--gold, #e8bb58) !important;
+        font-weight: 700 !important;
+        margin-bottom: 10px !important;
+        display: block !important;
+    }
+    .food-controls {
+        margin-top: auto !important;
+        background: rgba(255, 255, 255, 0.06) !important;
+        border-radius: 20px !important;
+        padding: 4px 6px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+    }
+    .category-title {
+        grid-column: 1 / -1 !important;
+        font-size: 22px !important;
+        font-weight: 700 !important;
+        color: var(--gold, #e8bb58) !important;
+        margin: 22px 0 10px 0 !important;
+        padding-bottom: 8px !important;
+        border-bottom: 1px solid rgba(232, 187, 88, 0.2) !important;
+    }
+}
+
+/* ==========================================================================
+   MOBILE FOOD CARDS - EXACT TWO COLUMNS COMPACT VIEW (PRESERVED)
    ========================================================================== */
 @media (max-width: 600px) {
     .main {
