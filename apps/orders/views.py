@@ -149,6 +149,14 @@ class PlaceOrderView(View):
         # Notify via Telegram is now moved to ConfirmOrderView
         # We just return the created order details so the user can verify it
 
+        # === DARHOL ADMIN VA CHEFGA XABAR YUBORISH ===
+        # Buyurtma yaratilgandayoq (tasdiqlashni kutmay) adminga habar ketadi
+        try:
+            from apps.telegram_bot.sender import notify_new_order as _notify_admin
+            _notify_admin(order)
+        except Exception as e:
+            logger.error(f"Instant admin notification error: {e}")
+
         # Agar foydalanuvchi avval botga /start bosgan bo'lsa — darhol kod yuboramiz
         code_sent_direct = False
         try:
