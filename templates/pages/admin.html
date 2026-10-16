@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Al Ezoz — Xavfsiz Boshqaruv Paneli (Secure Admin)</title>
-    <link rel="stylesheet" href="/static/style.css?v=20261010-alezoz">
+    <link rel="stylesheet" href="/static/style.css?v=20261015b">
     <link rel="stylesheet" href="/static/common_extra.css">
     <!-- Chart.js for analytics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -20,7 +20,7 @@
         <header class="header" style="justify-content:center;">
             <div class="logo" style="position:static; transform:none;">
                 <span>Al Ezoz</span>
-                <small>MILLI CAFE</small>
+                <small>Milliy Taomlar</small>
             </div>
         </header>
 
@@ -87,7 +87,6 @@
 
             <div class="header-actions">
                 <a href="/" target="_blank" class="round-btn" title="Saytni ko‘rish" style="text-decoration:none; display:grid; place-items:center;">🌐</a>
-                <button id="theme-btn" class="round-btn">🌿</button>
                 <button onclick="adminLogout()" class="round-btn" title="Chiqish" style="color:#f87171; border-color:rgba(239,68,68,0.3);">🚪</button>
             </div>
         </header>
@@ -227,20 +226,27 @@
             <!-- TAB 4: CATEGORIES -->
             <section id="tab-categories" class="admin-tab-content" style="display:none;">
                 <div class="custom-table-card">
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-                        <h3 style="font-size:18px; color:var(--white);">Kategoriyalar</h3>
-                        <button onclick="openCategoryModal()" class="btn-primary" style="padding:10px 18px;">+ Yangi toifa</button>
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <h3 style="font-size:18px; color:var(--white);">Menyu Kategoriyalari</h3>
+                            <span id="categories-count-badge" class="badge badge-ready" style="font-size:12px; padding:4px 10px;">0 ta</span>
+                        </div>
+                        <div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+                            <input type="text" id="cat-search" class="form-input" placeholder="Kategoriya qidirish..." onkeyup="filterCategoriesTable()" style="max-width:220px; padding:8px 14px; font-size:13px;">
+                            <button onclick="openCategoryModal()" class="btn-primary" style="padding:9px 18px; font-size:13px;">+ Yangi kategoriya</button>
+                        </div>
                     </div>
 
                     <table class="custom-table">
                         <thead>
                             <tr>
-                                <th>Ikonka</th>
-                                <th>Nomi</th>
-                                <th>Slug</th>
-                                <th>Tavsif</th>
+                                <th style="width:50px; text-align:center;">Emoji</th>
+                                <th>Kategoriya nomi</th>
+                                <th>Slug (ID)</th>
+                                <th>Taomlar</th>
+                                <th>Tartib</th>
                                 <th>Holati</th>
-                                <th>Amallar</th>
+                                <th style="text-align:right;">Amallar</th>
                             </tr>
                         </thead>
                         <tbody id="categories-tbody">
@@ -400,29 +406,76 @@
         </div>
     </div>
 
-    <!-- MODAL: CATEGORY -->
+    <!-- MODAL: CATEGORY (ADD / EDIT) -->
     <div id="modal-category" class="modal-backdrop">
-        <div class="modal-content">
+        <div class="modal-content" style="max-width:540px;">
             <button class="modal-close" onclick="closeModal('modal-category')">✕</button>
-            <h3 style="font-size:20px; margin-bottom:18px; color:var(--white);">Kategoriya qo‘shish</h3>
+            <h3 id="modal-cat-title" style="font-size:20px; margin-bottom:18px; color:var(--white);">Yangi kategoriya qo‘shish</h3>
             <form id="form-category">
+                <input type="hidden" id="cat-id" value="">
+                
                 <div class="form-group">
-                    <label class="form-label" for="cat-name">Toifa nomi *</label>
-                    <input type="text" id="cat-name" class="form-input" placeholder="Masalan: Pitsalar" required>
+                    <label class="form-label" for="cat-name">Kategoriya nomi (O‘zbekcha) *</label>
+                    <input type="text" id="cat-name" class="form-input" placeholder="Masalan: Shashliklar" required oninput="if(!document.getElementById('cat-id').value) autoGenerateCatSlug(this.value)">
                 </div>
+
                 <div class="form-group">
-                    <label class="form-label" for="cat-slug">Slug (identifikator) *</label>
-                    <input type="text" id="cat-slug" class="form-input" placeholder="pizza" required>
+                    <label class="form-label" for="cat-name-ru">Kategoriya nomi (Ruscha)</label>
+                    <input type="text" id="cat-name-ru" class="form-input" placeholder="Masalan: Шашлыки">
                 </div>
+
                 <div class="form-group">
-                    <label class="form-label" for="cat-icon">Ikonka (emoji)</label>
-                    <input type="text" id="cat-icon" class="form-input" value="🍕" required>
+                    <label class="form-label" for="cat-slug">Identifikator (Slug) *</label>
+                    <input type="text" id="cat-slug" class="form-input" placeholder="shashlik" required>
+                    <small style="color:var(--muted); font-size:11px; margin-top:4px; display:block;">Lotin harflarida, bo‘sh joylarsiz (masalan: fastfood, shashlik, ichimliklar)</small>
                 </div>
+
                 <div class="form-group">
-                    <label class="form-label" for="cat-desc">Tavsif</label>
-                    <input type="text" id="cat-desc" class="form-input" placeholder="Qisqa tavsif...">
+                    <label class="form-label">Emoji / Ikonka tanlang *</label>
+                    <div style="display:flex; align-items:center; gap:12px; margin-bottom:8px;">
+                        <input type="text" id="cat-icon" class="form-input" value="🍽️" style="width:70px; font-size:24px; text-align:center; padding:6px;" required>
+                        <span style="font-size:13px; color:var(--muted);">Quyidagi tayyor emojilardan birini bosing:</span>
+                    </div>
+                    <div style="display:flex; gap:6px; flex-wrap:wrap; background:rgba(255,255,255,0.03); padding:10px; border-radius:12px; border:1px solid var(--border);">
+                        <button type="button" class="btn-secondary" style="padding:4px 8px; font-size:18px;" onclick="selectCatEmoji('🥩')">🥩</button>
+                        <button type="button" class="btn-secondary" style="padding:4px 8px; font-size:18px;" onclick="selectCatEmoji('🍔')">🍔</button>
+                        <button type="button" class="btn-secondary" style="padding:4px 8px; font-size:18px;" onclick="selectCatEmoji('🍕')">🍕</button>
+                        <button type="button" class="btn-secondary" style="padding:4px 8px; font-size:18px;" onclick="selectCatEmoji('🥗')">🥗</button>
+                        <button type="button" class="btn-secondary" style="padding:4px 8px; font-size:18px;" onclick="selectCatEmoji('🍟')">🍟</button>
+                        <button type="button" class="btn-secondary" style="padding:4px 8px; font-size:18px;" onclick="selectCatEmoji('☕️')">☕️</button>
+                        <button type="button" class="btn-secondary" style="padding:4px 8px; font-size:18px;" onclick="selectCatEmoji('🍰')">🍰</button>
+                        <button type="button" class="btn-secondary" style="padding:4px 8px; font-size:18px;" onclick="selectCatEmoji('🥤')">🥤</button>
+                        <button type="button" class="btn-secondary" style="padding:4px 8px; font-size:18px;" onclick="selectCatEmoji('🍲')">🍲</button>
+                        <button type="button" class="btn-secondary" style="padding:4px 8px; font-size:18px;" onclick="selectCatEmoji('🥟')">🥟</button>
+                        <button type="button" class="btn-secondary" style="padding:4px 8px; font-size:18px;" onclick="selectCatEmoji('🍗')">🍗</button>
+                        <button type="button" class="btn-secondary" style="padding:4px 8px; font-size:18px;" onclick="selectCatEmoji('🥪')">🥪</button>
+                        <button type="button" class="btn-secondary" style="padding:4px 8px; font-size:18px;" onclick="selectCatEmoji('🍣')">🍣</button>
+                        <button type="button" class="btn-secondary" style="padding:4px 8px; font-size:18px;" onclick="selectCatEmoji('🍜')">🍜</button>
+                        <button type="button" class="btn-secondary" style="padding:4px 8px; font-size:18px;" onclick="selectCatEmoji('🍦')">🍦</button>
+                        <button type="button" class="btn-secondary" style="padding:4px 8px; font-size:18px;" onclick="selectCatEmoji('🍽️')">🍽️</button>
+                    </div>
                 </div>
-                <button type="submit" class="btn-primary" style="width:100%; justify-content:center; padding:14px;">Qo‘shish</button>
+
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:16px;">
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label class="form-label" for="cat-sort-order">Tartib raqami</label>
+                        <input type="number" id="cat-sort-order" class="form-input" value="0" min="0">
+                        <small style="color:var(--muted); font-size:11px;">Kichik sonlar oldin ko‘rinadi</small>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom:0; display:flex; flex-direction:column; justify-content:center;">
+                        <label class="form-label">Holati</label>
+                        <label style="display:flex; align-items:center; gap:8px; cursor:pointer; color:#e2e8f0; font-size:14px; margin-top:6px;">
+                            <input type="checkbox" id="cat-is-active" checked style="accent-color:var(--gold); width:18px; height:18px;">
+                            <span>Menyuda faol ko‘rinsin</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div style="display:flex; gap:10px; margin-top:20px;">
+                    <button type="button" class="btn-secondary" style="flex:1; justify-content:center; padding:12px;" onclick="closeModal('modal-category')">Bekor qilish</button>
+                    <button type="submit" id="cat-submit-btn" class="btn-primary" style="flex:1.5; justify-content:center; padding:12px;">Saqlash</button>
+                </div>
             </form>
         </div>
     </div>
@@ -957,57 +1010,194 @@
             }
         }
 
-        // CATEGORIES
+        // CATEGORIES MANAGEMENT
+        let adminCategoriesData = [];
+
         async function loadAdminCategories() {
-            const res = await fetch('/api/categories');
-            const cats = await res.json();
+            try {
+                const res = await fetch('/api/admin/categories', {
+                    headers: {'Authorization': 'Bearer ' + adminToken}
+                });
+                if (!res.ok) {
+                    // Fallback to public categories API if token issue
+                    const pubRes = await fetch('/api/categories');
+                    adminCategoriesData = await pubRes.json();
+                } else {
+                    adminCategoriesData = await res.json();
+                }
+
+                const badge = document.getElementById('categories-count-badge');
+                if (badge) badge.textContent = `${adminCategoriesData.length} ta`;
+
+                renderCategoriesTable(adminCategoriesData);
+            } catch (err) {
+                console.error("loadAdminCategories error:", err);
+            }
+        }
+
+        function renderCategoriesTable(cats) {
             const tbody = document.getElementById('categories-tbody');
+            if (!cats.length) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--muted); padding:24px;">Hozircha kategoriyalar mavjud emas</td></tr>';
+                return;
+            }
+
             tbody.innerHTML = cats.map(c => `
                 <tr>
-                    <td style="font-size:22px;">${c.icon || '🍽'}</td>
-                    <td><strong>${c.name}</strong></td>
-                    <td style="color:var(--muted);">${c.slug}</td>
-                    <td style="color:var(--muted); font-size:13px;">${c.description || '-'}</td>
-                    <td><span class="badge badge-ready">Faol</span></td>
+                    <td style="font-size:24px; text-align:center;">${c.icon || '🍽️'}</td>
                     <td>
-                        <button onclick="deleteCategory(${c.id})" style="border:none; background:transparent; color:#f87171; cursor:pointer;" title="O‘chirish">🗑</button>
+                        <strong style="color:#ffffff; font-size:15px;">${escapeHtml(c.name)}</strong>
+                        ${c.name_ru && c.name_ru !== c.name ? `<br><small style="color:var(--muted);">${escapeHtml(c.name_ru)}</small>` : ''}
+                    </td>
+                    <td>
+                        <code style="background:rgba(255,255,255,0.06); padding:3px 8px; border-radius:6px; color:#e2e8f0; font-size:12px;">${c.slug}</code>
+                    </td>
+                    <td>
+                        <span class="badge ${c.items_count > 0 ? 'badge-confirmed' : 'badge-cancelled'}" style="font-size:12px;">
+                            ${c.items_count || 0} ta taom
+                        </span>
+                    </td>
+                    <td>
+                        <span style="color:var(--gold); font-weight:600;">#${c.sort_order || 0}</span>
+                    </td>
+                    <td>
+                        <span class="badge ${c.is_active ? 'badge-ready' : 'badge-cancelled'}">
+                            ${c.is_active ? 'Faol' : 'Nofaol'}
+                        </span>
+                    </td>
+                    <td style="text-align:right; white-space:nowrap;">
+                        <button onclick="editCategory(${c.id})" class="btn-secondary" style="padding:6px 10px; font-size:12px; margin-right:4px;" title="Tahrirlash">
+                            ✏️ Tahrirlash
+                        </button>
+                        <button onclick="deleteCategory(${c.id}, '${escapeQuote(c.name)}', ${c.items_count || 0})" class="btn-secondary" style="padding:6px 10px; font-size:12px; color:#f87171; border-color:rgba(248,113,113,0.3);" title="O‘chirish">
+                            🗑 O‘chirish
+                        </button>
                     </td>
                 </tr>
             `).join('');
         }
 
+        function filterCategoriesTable() {
+            const query = (document.getElementById('cat-search').value || '').toLowerCase().trim();
+            if (!query) {
+                renderCategoriesTable(adminCategoriesData);
+                return;
+            }
+            const filtered = adminCategoriesData.filter(c => 
+                (c.name && c.name.toLowerCase().includes(query)) ||
+                (c.name_ru && c.name_ru.toLowerCase().includes(query)) ||
+                (c.slug && c.slug.toLowerCase().includes(query))
+            );
+            renderCategoriesTable(filtered);
+        }
+
         function openCategoryModal() {
+            document.getElementById('modal-cat-title').textContent = 'Yangi kategoriya qo‘shish';
+            document.getElementById('form-category').reset();
+            document.getElementById('cat-id').value = '';
+            document.getElementById('cat-icon').value = '🍽️';
+            document.getElementById('cat-sort-order').value = adminCategoriesData.length + 1;
+            document.getElementById('cat-is-active').checked = true;
             document.getElementById('modal-category').classList.add('open');
+            document.getElementById('cat-name').focus();
+        }
+
+        function selectCatEmoji(emoji) {
+            document.getElementById('cat-icon').value = emoji;
+        }
+
+        function autoGenerateCatSlug(text) {
+            const slug = (text || '')
+                .toLowerCase()
+                .replace(/['’`]/g, '')
+                .replace(/[^a-z0-9]/g, '-')
+                .replace(/-+/g, '-')
+                .replace(/^-|-$/g, '');
+            document.getElementById('cat-slug').value = slug;
+        }
+
+        function editCategory(id) {
+            const c = adminCategoriesData.find(item => item.id === id);
+            if (!c) return;
+
+            document.getElementById('modal-cat-title').textContent = 'Kategoriyani tahrirlash';
+            document.getElementById('cat-id').value = c.id;
+            document.getElementById('cat-name').value = c.name || '';
+            document.getElementById('cat-name-ru').value = c.name_ru || '';
+            document.getElementById('cat-slug').value = c.slug || '';
+            document.getElementById('cat-icon').value = c.icon || '🍽️';
+            document.getElementById('cat-sort-order').value = c.sort_order || 0;
+            document.getElementById('cat-is-active').checked = c.is_active !== false;
+
+            document.getElementById('modal-category').classList.add('open');
+            document.getElementById('cat-name').focus();
         }
 
         document.getElementById('form-category').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const id = document.getElementById('cat-id').value;
             const payload = {
-                name: document.getElementById('cat-name').value,
-                slug: document.getElementById('cat-slug').value,
-                icon: document.getElementById('cat-icon').value,
-                description: document.getElementById('cat-desc').value
+                id: id || undefined,
+                name: document.getElementById('cat-name').value.trim(),
+                name_uz: document.getElementById('cat-name').value.trim(),
+                name_ru: document.getElementById('cat-name-ru').value.trim() || document.getElementById('cat-name').value.trim(),
+                slug: document.getElementById('cat-slug').value.trim(),
+                icon: document.getElementById('cat-icon').value.trim() || '🍽️',
+                sort_order: parseInt(document.getElementById('cat-sort-order').value, 10) || 0,
+                is_active: document.getElementById('cat-is-active').checked ? 1 : 0
             };
-            const res = await fetch('/api/admin/categories', {
-                method: 'POST',
-                headers: {'Authorization': 'Bearer ' + adminToken, 'Content-Type': 'application/json'},
-                body: JSON.stringify(payload)
-            });
-            if (res.ok) {
-                closeModal('modal-category');
-                loadAdminCategories();
-                AllonApp.showToast('Kategoriya qo‘shildi');
+
+            const url = id ? `/api/admin/categories/${id}` : '/api/admin/categories';
+
+            try {
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': 'Bearer ' + adminToken,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (res.ok) {
+                    closeModal('modal-category');
+                    await loadAdminCategories();
+                    await populateCategorySelect();
+                    AllonApp.showToast(id ? 'Kategoriya yangilandi' : 'Yangi kategoriya muvaffaqiyatli qo‘shildi');
+                } else {
+                    const err = await res.json();
+                    alert(err.detail || 'Kategoriya saqlashda xatolik yuz berdi');
+                }
+            } catch (err) {
+                console.error("Save category error:", err);
+                alert("Server bilan bog‘lanishda xatolik yuz berdi");
             }
         });
 
-        async function deleteCategory(id) {
-            if (!confirm('Kategoriyani o‘chirmoqchimisiz?')) return;
-            await fetch(`/api/admin/categories/${id}`, {
-                method: 'DELETE',
-                headers: {'Authorization': 'Bearer ' + adminToken}
-            });
-            loadAdminCategories();
-            AllonApp.showToast('Kategoriya o‘chirildi');
+        async function deleteCategory(id, name, itemsCount) {
+            let msg = `"${name}" kategoriyasini o‘chirmoqchimisiz?`;
+            if (itemsCount > 0) {
+                msg = `⚠️ DIQQAT! "${name}" kategoriyasiga bog‘langan ${itemsCount} ta taom mavjud!\nKategoriya o‘chirilsa, uning ichidagi taomlar ham o‘chiriladi.\n\nRostdan ham o‘chirishni xohlaysizmi?`;
+            }
+            if (!confirm(msg)) return;
+
+            try {
+                const res = await fetch(`/api/admin/categories/${id}`, {
+                    method: 'DELETE',
+                    headers: {'Authorization': 'Bearer ' + adminToken}
+                });
+                if (res.ok) {
+                    await loadAdminCategories();
+                    await populateCategorySelect();
+                    AllonApp.showToast('Kategoriya o‘chirildi');
+                } else {
+                    const err = await res.json();
+                    alert(err.detail || 'Kategoriyani o‘chirishda xatolik yuz berdi');
+                }
+            } catch (err) {
+                console.error("Delete category error:", err);
+                alert("Server bilan bog‘lanishda xatolik yuz berdi");
+            }
         }
 
         // BANNERS
@@ -1356,4 +1546,7 @@
     </script>
 </body>
 </html>
+
+
+
 

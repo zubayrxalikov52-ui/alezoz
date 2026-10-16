@@ -47,8 +47,8 @@ def run_tests():
             sys.exit(1)
 
     # 1. Frontend Pages
-    resp = client.get('/')
-    assert_test(resp.status_code == 200, "Home Page: 200 OK")
+    resp = client.get('/', follow=True)
+    assert_test(resp.status_code == 200, "Home Page (redirects to /menu/): 200 OK")
 
     resp = client.get('/menu/')
     assert_test(resp.status_code == 200, "Menu Page: 200 OK")

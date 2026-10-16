@@ -86,68 +86,14 @@ const AllonApp = (function() {
         });
     }
 
-    // 2. THEME PERSISTENCE & UNIVERSAL THEME SWITCHER
-    const themes = [
-        { key: "olive",     name: "Olive Gold",  sub: "Qorong‘i hashamat",    colors: ["#e8bb58", "#071014", "#1e6e64"] },
-        { key: "aurora",    name: "Aurora",      sub: "Harakatlanuvchi nur",  colors: ["#7cffcb", "#a78bfa", "#030712"] },
-        { key: "chalk",     name: "Chalkboard",  sub: "Bo‘r bilan doska",     colors: ["#ffe9a8", "#24312a", "#7a4b25"] },
-        { key: "matrix",    name: "Matrix",      sub: "Yashil terminal",      colors: ["#00ff66", "#000000", "#052a12"] },
-        { key: "bubble",    name: "Bubblegum 3D", sub: "Shirin va yorqin",    colors: ["#ff5fb7", "#8c46ff", "#fff36b"] },
-        { key: "blueprint", name: "Blueprint",   sub: "Muhandislik chizmasi", colors: ["#ffffff", "#0b3d91", "#a5e8ff"] }
-    ];
-
-    function applyTheme(key) {
-        if (key === "olive") {
-            document.body.removeAttribute("data-theme");
-        } else {
-            document.body.setAttribute("data-theme", key);
-        }
-        document.querySelectorAll(".theme-item").forEach((el) => {
-            el.classList.toggle("active", el.dataset.theme === key);
-        });
-        try { localStorage.setItem("cafe-theme", key); } catch (e) {}
-    }
-
+    // 2. PERMANENT WHITE (OQTEPA) THEME — Theme switcher removed
     function initTheme() {
-        let savedTheme = "olive";
-        try { savedTheme = localStorage.getItem("cafe-theme") || "olive"; } catch (e) {}
-        applyTheme(themes.some(t => t.key === savedTheme) ? savedTheme : "olive");
-
-        // Attach theme dropdown if themeBtn exists and not already created
-        const themeBtn = document.querySelector("#theme-btn");
-        if (themeBtn && !document.querySelector(".theme-dropdown")) {
-            const themeDropdown = document.createElement("div");
-            themeDropdown.className = "theme-dropdown";
-            themeDropdown.innerHTML = "<div class='theme-title'>Dizayn tanlang</div>";
-
-            themes.forEach((t) => {
-                const item = document.createElement("button");
-                item.className = "theme-item" + (t.key === savedTheme ? " active" : "");
-                item.dataset.theme = t.key;
-                item.innerHTML =
-                    "<span class='swatch'>" +
-                    t.colors.map((c) => "<i style='background:" + c + "'></i>").join("") +
-                    "</span><span><b>" + t.name + "</b><small>" + t.sub + "</small></span>";
-                item.addEventListener("click", () => {
-                    applyTheme(t.key);
-                    themeDropdown.classList.remove("show");
-                });
-                themeDropdown.appendChild(item);
-            });
-
-            document.body.appendChild(themeDropdown);
-
-            themeBtn.addEventListener("click", (event) => {
-                event.stopPropagation();
-                themeDropdown.classList.toggle("show");
-            });
-
-            document.addEventListener("click", (event) => {
-                if (!themeDropdown.contains(event.target) && event.target !== themeBtn) {
-                    themeDropdown.classList.remove("show");
-                }
-            });
-        }
+        // Always use the clean white theme; clear any old saved theme
+        document.body.removeAttribute("data-theme");
+        try { localStorage.removeItem("cafe-theme"); } catch (e) {}
+        // Remove any leftover theme-dropdown that may have been injected before
+        const old = document.querySelector(".theme-dropdown");
+        if (old) old.remove();
     }
 
     // 3. TOAST NOTIFICATIONS
@@ -202,9 +148,18 @@ const AllonApp = (function() {
             // Navigation
             "nav.home": "Bosh sahifa",
             "nav.menu": "Menyu",
+            "nav.promos": "Aksiyalar",
             "nav.about": "Biz haqimizda",
-            "nav.contact": "Aloqa",
+            "nav.branches": "Filiallar",
+            "nav.contact": "Kontaktlar",
             "nav.cart": "Savat",
+            "header.deliveryType": "Yetkazib berish yoki olib ketish",
+            "header.delivery": "Yetkazib berish",
+            "header.region": "Hudud",
+            "header.city": "Toshkent",
+            "header.login": "Kirish",
+            "header.searchPlaceholder": "Qidirish...",
+            "menu.categoriesTitle": "Kategoriyalar",
             "table.welcome": "Xush kelibsiz!",
             "menu.heroTitle": "Mazali taomlar <br><span>yaxshi kayfiyat.</span>",
             "nav.admin": "🔐 Admin Panel",
@@ -261,6 +216,26 @@ const AllonApp = (function() {
             "about.val2Desc": "Har bir taom o‘z sohasining ustalari tomonidan mualliflik retseptlari asosida tayyorlanadi.",
             "about.val3Title": "Tezkor & Issiq Yetkazish",
             "about.val3Desc": "Maxsus termobokslar orqali buyurtmangiz xuddi pechdan chiqqandek issiq va xushbo‘y yetib boradi.",
+
+            // About Location & Map
+            "about.locationBadge": "BIZNING MANZILIMIZ",
+            "about.locationTitle": "Bizni xaritada <span>oson toping</span>",
+            "about.locationSubtitle": "Toshkent markazida siz va yaqinlaringiz uchun shinam va mazali maskan",
+            "about.addressLabel": "Aniq manzilimiz",
+            "about.addressVal": "Toshkent shahri, Shayxontohur tumani, Qoratosh ko'chasi",
+            "about.orientLabel": "Mo'ljal",
+            "about.orientVal": "1-sonli shahar klinik shifoxonasi yaqinida",
+            "about.hoursLabel": "Ish tartibi",
+            "about.hoursVal": "Har kuni: 09:00 — 23:00 (Oshxona: 22:30 gacha)",
+            "about.phoneLabel": "Telefon va Aloqa",
+            "about.deliveryLabel": "Yetkazib berish xizmati",
+            "about.deliveryVal": "Toshkent shahri bo'ylab issiq va tezkor yetkazib beramiz",
+            "about.btnGoogleMaps": "Google Maps",
+            "about.btnYandexMaps": "Yandex Xarita",
+            "about.btnCall": "Qo'ng'iroq qilish",
+            "about.btnRoute": "Yo'nalish olish (Marshrut)",
+            "about.btnMenu": "Taomlar menyusi",
+            "about.mapOpenNow": "Hozir ochiq • 09:00 - 23:00",
 
             "category.food": "Taomlar",
             "category.foodDesc": "Burgerlar va Issiq taomlar",
@@ -407,9 +382,18 @@ const AllonApp = (function() {
             // Navigation
             "nav.home": "Главная",
             "nav.menu": "Меню",
+            "nav.promos": "Акции",
             "nav.about": "О нас",
+            "nav.branches": "Филиалы",
             "nav.contact": "Контакты",
             "nav.cart": "Корзина",
+            "header.deliveryType": "Доставка или еда навынос",
+            "header.delivery": "Доставка",
+            "header.region": "Регион",
+            "header.city": "Ташкент",
+            "header.login": "Войти",
+            "header.searchPlaceholder": "Поиск...",
+            "menu.categoriesTitle": "Категории",
             "table.welcome": "Добро пожаловать!",
             "menu.heroTitle": "Вкусные блюда <br><span>отличное настроение.</span>",
             "nav.admin": "🔐 Админ панель",
@@ -466,6 +450,26 @@ const AllonApp = (function() {
             "about.val2Desc": "Каждое блюдо готовится мастерами своего дела по авторским рецептам.",
             "about.val3Title": "Быстрая & Горячая доставка",
             "about.val3Desc": "Блюда доставляются быстро и бережно в специальных термосумках, сохраняя идеальную температуру и свежесть.",
+
+            // About Location & Map
+            "about.locationBadge": "НАШЕ МЕСТОПОЛОЖЕНИЕ",
+            "about.locationTitle": "Легко найдите нас <span>на карте</span>",
+            "about.locationSubtitle": "Уютное и вкусное место для вас и ваших близких в центре Ташкента",
+            "about.addressLabel": "Наш точный адрес",
+            "about.addressVal": "г. Ташкент, Шайхантахурский район, ул. Караташ",
+            "about.orientLabel": "Ориентир",
+            "about.orientVal": "Рядом с городской клинической больницей №1",
+            "about.hoursLabel": "Режим работы",
+            "about.hoursVal": "Ежедневно: 09:00 — 23:00 (Кухня: до 22:30)",
+            "about.phoneLabel": "Телефон и Связь",
+            "about.deliveryLabel": "Служба доставки",
+            "about.deliveryVal": "Быстро и бережно доставим горячие блюда по всему Ташкенту",
+            "about.btnGoogleMaps": "Google Карты",
+            "about.btnYandexMaps": "Яндекс Карты",
+            "about.btnCall": "Позвонить",
+            "about.btnRoute": "Построить маршрут",
+            "about.btnMenu": "Меню блюд",
+            "about.mapOpenNow": "Сейчас открыто • 09:00 - 23:00",
 
             // Home category cards
             "category.food": "Блюда",
@@ -699,7 +703,7 @@ const AllonApp = (function() {
         const dict = translations[cleanLang];
 
         // 1. Language buttons active state update (Segmented 2-button control)
-        document.querySelectorAll('.lang-btn-item').forEach(btn => {
+        document.querySelectorAll('.lang-btn-item, .m-lang-btn, .more-lang-btn').forEach(btn => {
             if (btn.dataset.lang === cleanLang) {
                 btn.classList.add('active');
             } else {
@@ -860,7 +864,7 @@ const AllonApp = (function() {
     function initLanguageSwitcher() {
         const currentLang = getCurrentLanguage();
 
-        document.querySelectorAll('.lang-btn-item').forEach(btn => {
+        document.querySelectorAll('.lang-btn-item, .m-lang-btn, .more-lang-btn').forEach(btn => {
             btn.onclick = function(e) {
                 if (e) { e.preventDefault(); e.stopPropagation(); }
                 const targetLang = this.dataset.lang;
@@ -881,7 +885,7 @@ const AllonApp = (function() {
 
     // Attach global click event delegation as fallback
     document.addEventListener('click', (e) => {
-        const item = e.target.closest('.lang-btn-item');
+        const item = e.target.closest('.lang-btn-item, .m-lang-btn, .more-lang-btn');
         if (item && item.dataset.lang) {
             if (e) { e.preventDefault(); e.stopPropagation(); }
             const targetLang = item.dataset.lang;
@@ -903,12 +907,28 @@ const AllonApp = (function() {
             updateCartBadges();
             initMobileNav();
             initLanguageSwitcher();
+
+            // Cart button: navigate to /cart page
+            const openCartBtn = document.getElementById('open-cart-btn');
+            if (openCartBtn) {
+                openCartBtn.addEventListener('click', function() {
+                    window.location.href = '/cart';
+                });
+            }
         });
     } else {
         initTheme();
         updateCartBadges();
         initMobileNav();
         initLanguageSwitcher();
+
+        // Cart button: navigate to /cart page
+        const openCartBtn = document.getElementById('open-cart-btn');
+        if (openCartBtn) {
+            openCartBtn.addEventListener('click', function() {
+                window.location.href = '/cart';
+            });
+        }
     }
 
     return {
@@ -921,7 +941,7 @@ const AllonApp = (function() {
         getCartTotal,
         getCartCount,
         updateCartBadges,
-        applyTheme,
+        applyTheme: initTheme,
         showToast,
         getCurrentLanguage,
         setLanguage,
@@ -962,15 +982,17 @@ const AllonApp = (function() {
 })();
 
 // ==========================================================================
-// UNIVERSAL LUXURY SPLASH / PRELOADER INTRO (AL EZOZ LOGO ANIMATION)
+// AL EZOZ - PREMIUM SPLASH & LOGO ENTRANCE ANIMATION
 // ==========================================================================
-(function initSitePreloader() {
-    function showIntro() {
+(function initSiteSplashIntro() {
+    function createSplashDOM() {
         let preloader = document.getElementById('site-preloader');
         if (!preloader && document.body) {
             preloader = document.createElement('div');
             preloader.id = 'site-preloader';
             preloader.className = 'site-preloader';
+            preloader.setAttribute('role', 'status');
+            preloader.setAttribute('aria-label', 'Yuklanmoqda...');
             preloader.innerHTML = `
                 <div class="preloader-content">
                     <div class="preloader-logo-ring">
@@ -979,7 +1001,7 @@ const AllonApp = (function() {
                     </div>
                     <div class="preloader-brand">
                         <span class="preloader-title">Al Ezoz</span>
-                        <span class="preloader-sub">MILLIY CAFE</span>
+                        <span class="preloader-sub">MILLIY TAOMLAR</span>
                     </div>
                     <div class="preloader-bar-wrap">
                         <div class="preloader-bar-line"></div>
@@ -990,20 +1012,26 @@ const AllonApp = (function() {
         }
 
         if (preloader) {
+            preloader.addEventListener('click', () => {
+                preloader.classList.add('hide-preloader');
+                setTimeout(() => preloader.remove(), 500);
+            });
+
             setTimeout(() => {
                 preloader.classList.add('hide-preloader');
                 setTimeout(() => {
                     if (preloader && preloader.parentNode) {
-                        preloader.style.display = 'none';
+                        preloader.remove();
                     }
-                }, 650);
-            }, 1350);
+                }, 550);
+            }, 1400);
         }
     }
 
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', showIntro);
+        document.addEventListener('DOMContentLoaded', createSplashDOM);
     } else {
-        showIntro();
+        createSplashDOM();
     }
 })();
+

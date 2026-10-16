@@ -270,35 +270,116 @@ class AdminProductToggleApiView(View):
 @method_decorator(csrf_exempt, name='dispatch')
 class AdminCategoriesApiView(View):
     @method_decorator(require_admin)
-    def get(self, request):
-        categories = Category.objects.filter(is_active=True).order_by('sort_order')
-        return _json([{'id': c.id, 'name': c.name, 'slug': c.slug, 'icon': c.icon} for c in categories])
+    def get(self, request, cat_id=None):
+        if cat_id:
+            c = get_object_or_404(Category, pk=cat_id)
+            return _json({
+                'id': c.id,
+                'name': c.name,
+                'name_uz': c.name_uz or c.name,
+                'name_ru': c.name_ru or c.name,
+                'slug': c.slug,
+                'icon': c.icon,
+                'sort_order': c.sort_order,
+                'is_active': c.is_active,
+                'items_count': c.items.count()
+            })
+
+        categories = Category.objects.all().order_by('sort_order', 'id')
+        return _json([
+            {
+                'id': c.id,
+                'name': c.name,
+                'name_uz': c.name_uz or c.name,
+                'name_ru': c.name_ru or c.name,
+                'slug': c.slug,
+                'icon': c.icon,
+                'sort_order': c.sort_order,
+                'is_active': c.is_active,
+                'items_count': c.items.count()
+            }
+            for c in categories
+        ])
 
     @method_decorator(require_admin)
-    def post(self, request):
-        try:
-            data = json.loads(request.body)
-        except json.JSONDecodeError:
-            return _json({'status': 'error', 'detail': 'Bad request'}, 400)
+    def post(self, request, cat_id=None):
+        if request.content_type and 'multipart/form-data' in request.content_type:
+            data = request.POST.dict()
+        else:
+            try:
+                data = json.loads(request.body)
+            except json.JSONDecodeError:
+                return _json({'status': 'error', 'detail': 'Noto‘g‘ri ma’lumot formati'}, 400)
 
         name = data.get('name', '').strip()
-        slug = data.get('slug', '').strip() or slugify(name, allow_unicode=True)
-        icon = data.get('icon', '🍽')
+        if not name:
+            return _json({'status': 'error', 'detail': 'Kategoriya nomi kiritilishi shart'}, 400)
 
-        if not name or not slug:
-            return _json({'status': 'error', 'detail': 'Nomi va slug majburiy'}, 400)
+        name_uz = data.get('name_uz', '').strip() or name
+        name_ru = data.get('name_ru', '').strip() or name
+        icon = data.get('icon', '🍽️').strip() or '🍽️'
+        sort_order = int(data.get('sort_order', 0) or 0)
+        is_active = str(data.get('is_active', '1')).lower() in ('1', 'true', 'yes', 'on')
+        slug = data.get('slug', '').strip()
 
-        cat, _ = Category.objects.get_or_create(
+        target_id = cat_id or data.get('id')
+        if target_id:
+            # Update existing category
+            cat = get_object_or_404(Category, pk=target_id)
+            cat.name = name
+            cat.name_uz = name_uz
+            cat.name_ru = name_ru
+            cat.icon = icon
+            cat.sort_order = sort_order
+            cat.is_active = is_active
+
+            if slug and slug != cat.slug:
+                if Category.objects.filter(slug=slug).exclude(pk=cat.id).exists():
+                    return _json({'status': 'error', 'detail': f"'{slug}' nomli slug allaqachon mavjud"}, 400)
+                cat.slug = slug
+
+            cat.save()
+            return _json({
+                'status': 'updated',
+                'category': {'id': cat.id, 'name': cat.name, 'slug': cat.slug}
+            }, 200)
+
+        # Create new category
+        if not slug:
+            clean_name = name.replace("'", "").replace("’", "").replace("`", "")
+            slug = slugify(clean_name, allow_unicode=True) or f"cat-{Category.objects.count() + 1}"
+
+        if Category.objects.filter(slug=slug).exists():
+            base_slug = slug
+            counter = 1
+            while Category.objects.filter(slug=slug).exists():
+                slug = f"{base_slug}-{counter}"
+                counter += 1
+
+        cat = Category.objects.create(
+            name=name,
+            name_uz=name_uz,
+            name_ru=name_ru,
             slug=slug,
-            defaults={'name': name, 'icon': icon, 'is_active': True}
+            icon=icon,
+            sort_order=sort_order,
+            is_active=is_active
         )
-        return _json({'status': 'created', 'category': {'id': cat.id, 'name': cat.name, 'slug': cat.slug}}, 201)
+        return _json({
+            'status': 'created',
+            'category': {'id': cat.id, 'name': cat.name, 'slug': cat.slug}
+        }, 201)
+
+    @method_decorator(require_admin)
+    def put(self, request, cat_id=None):
+        return self.post(request, cat_id=cat_id)
 
     @method_decorator(require_admin)
     def delete(self, request, cat_id=None):
         cat = get_object_or_404(Category, pk=cat_id)
+        items_count = cat.items.count()
         cat.delete()
-        return _json({'status': 'deleted'})
+        return _json({'status': 'deleted', 'id': cat_id, 'deleted_items': items_count})
 
 
 @method_decorator(csrf_exempt, name='dispatch')

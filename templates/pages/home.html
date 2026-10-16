@@ -7,15 +7,15 @@
     <title>Al Ezoz — Bosh sahifa</title>
     <link rel="icon" type="image/jpeg" href="/static/alezoz-logo.jpg">
     <link rel="shortcut icon" href="/static/alezoz-logo.jpg">
-    <link rel="stylesheet" href="/static/style.css?v=20261010-alezoz">
-    <link rel="stylesheet" href="/static/common_extra.css?v=20261010-alezoz">
-    <script src="/static/app.js?v=202610101241" defer></script>
+    <link rel="stylesheet" href="/static/style.css?v=20261016_v5">
+    <link rel="stylesheet" href="/static/common_extra.css?v=20261016_v5">
+    <script src="/static/app.js?v=20261016_v5" defer></script>
 </head>
 
 <body>
 
-    <!-- PRELOADER INTRO ANIMATION -->
-    <div id="site-preloader" class="site-preloader">
+    <!-- AL EZOZ LOGO ENTRANCE ANIMATION -->
+    <div id="site-preloader" class="site-preloader" role="status" aria-label="Yuklanmoqda..." style="position:fixed;inset:0;z-index:9999999;background:radial-gradient(circle at 50% 45%, #0f3d2e 0%, #08281e 55%, #03140e 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.5s ease, transform 0.5s ease;cursor:pointer;">
         <div class="preloader-content">
             <div class="preloader-logo-ring">
                 <div class="preloader-spinner-ring"></div>
@@ -23,28 +23,45 @@
             </div>
             <div class="preloader-brand">
                 <span class="preloader-title">Al Ezoz</span>
-                <span class="preloader-sub">MILLIY CAFE</span>
+                <span class="preloader-sub">MILLIY TAOMLAR</span>
             </div>
             <div class="preloader-bar-wrap">
                 <div class="preloader-bar-line"></div>
             </div>
         </div>
     </div>
+    <script>
+    (function() {
+        var p = document.getElementById('site-preloader');
+        if (!p) return;
+        var dismissed = false;
+        function dismiss() {
+            if (dismissed) return;
+            dismissed = true;
+            p.classList.add('hide-preloader');
+            p.style.opacity = '0';
+            p.style.pointerEvents = 'none';
+            setTimeout(function() { if (p && p.parentNode) p.parentNode.removeChild(p); }, 500);
+        }
+        p.onclick = dismiss;
+        setTimeout(dismiss, 1300);
+    })();
+    </script>
 
     <div class="background"></div>
 
     <!-- HEADER -->
     <header class="header">
-        <div class="table-info">
+        <a href="/" class="table-info" style="text-decoration:none;">
             <div class="table-icon" style="padding:0; background:none; border:none; box-shadow:none;">
                 <img src="/static/alezoz-logo.jpg" alt="Al Ezoz Logo"
-                     style="width:44px; height:44px; border-radius:50%; object-fit:cover; display:block;">
+                     style="width:40px; height:40px; border-radius:50%; object-fit:cover; display:block;">
             </div>
-            <div>
+            <div class="table-info-text">
                 <strong>Al Ezoz</strong>
-                <small>Premium Lounge</small>
+                <small>Milliy Taomlar</small>
             </div>
-        </div>
+        </a>
 
         <!-- DESKTOP NAVBAR -->
         <nav class="main-nav">
@@ -62,17 +79,10 @@
             </ul>
         </nav>
 
-        <div class="logo">
-            <span>Al Ezoz</span>
-            <small>MILLI CAFE</small>
-        </div>
-
         <div class="header-actions">
-            <button class="mobile-nav-toggle" aria-label="Menyuni ochish">☰</button>
-            <button id="theme-btn" class="round-btn">🌿</button>
             <div class="lang-toggle-group">
-                <button type="button" class="lang-btn-item active" data-lang="uz" title="O'zbekcha"><span>🇺🇿</span> UZ</button>
-                <button type="button" class="lang-btn-item" data-lang="ru" title="Русский"><span>🇷🇺</span> RU</button>
+                <button type="button" class="lang-btn-item active" data-lang="uz" title="O'zbekcha">UZ</button>
+                <button type="button" class="lang-btn-item" data-lang="ru" title="Русский">RU</button>
             </div>
         </div>
     </header>
@@ -83,7 +93,7 @@
         <div class="drawer-header">
             <div class="logo" style="position:static; transform:none;">
                 <span style="font-size:30px;">Al Ezoz</span>
-                <small>MILLI CAFE</small>
+                <small>Milliy Taomlar</small>
             </div>
             <button class="drawer-close">✕</button>
         </div>
@@ -264,7 +274,7 @@
     <footer class="site-footer">
         <div class="footer-brand">
             <span class="logo-text">Al Ezoz</span>
-            <small>MILLI CAFE</small>
+            <small>Milliy Taomlar</small>
             <p data-i18n="footer.desc">Toshkent markazidagi eng mazali taomlar, yuqori darajadagi xizmat va shinam muhit maskani.</p>
         </div>
         <div class="footer-col">
@@ -301,6 +311,41 @@
         <div data-i18n="footer.slogan">🍃 Yaxshi taom — yaxshi kayfiyat!</div>
     </div>
 
+    <!-- BOTTOM MOBILE DOCK NAV -->
+    <nav class="feedup-bottom-dock" id="feedup-bottom-dock" aria-label="Mobil navigatsiya">
+        <a href="/" class="dock-btn dock-btn-main active" title="Bosh sahifa">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <span>Asosiy</span>
+        </a>
+        <a href="/about" class="dock-btn" title="Biz haqimizda">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+        </a>
+        <a href="/order-status" class="dock-btn" title="Buyurtmalar holati">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+            </svg>
+        </a>
+        <a href="/cart" class="dock-btn dock-btn-cart" title="Savat">
+            <div class="dock-cart-wrap">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="9" cy="21" r="1.5"></circle>
+                    <circle cx="20" cy="21" r="1.5"></circle>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+                <span class="dock-cart-badge cart-count-badge">0</span>
+            </div>
+        </a>
+    </nav>
+
         <script>
         function syncFeatured() {
             const cart = AllonApp.getCart();
@@ -314,6 +359,9 @@
     </script>
 </body>
 </html>
+
+
+
 
 
 

@@ -34,8 +34,8 @@ class Command(BaseCommand):
                 resp = requests.get(url, params=params, timeout=25)
 
                 if resp.status_code == 409:
-                    logger.warning("Telegram polling conflict: another instance running. Retrying in 5s...")
-                    time.sleep(5)
+                    logger.warning("Telegram polling conflict: boshqa bot instansiyasi ishlab turibdi (409 Conflict). 15 soniyadan so'ng qayta uriniladi...")
+                    time.sleep(15)
                     continue
 
                 resp.raise_for_status()

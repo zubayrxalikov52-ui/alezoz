@@ -15,7 +15,8 @@ class TelegramBotConfig(AppConfig):
 
         # Only run in the main process (not during migrations, manage commands, etc.)
         # When RUN_MAIN is true, it means it's the auto-reloaded worker thread.
-        if os.environ.get('RUN_MAIN') == 'true' and not self.__class__._bot_started:
+        enable_bot = os.environ.get('ENABLE_BOT_POLLING', 'true').lower() in ('true', '1', 'yes')
+        if enable_bot and os.environ.get('RUN_MAIN') == 'true' and not self.__class__._bot_started:
             self.__class__._bot_started = True
 
             def run_bot():

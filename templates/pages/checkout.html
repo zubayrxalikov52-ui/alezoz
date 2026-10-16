@@ -5,26 +5,43 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Al Ezoz — Buyurtmani rasmiylashtirish</title>
-    <link rel="stylesheet" href="/static/style.css?v=20261010-alezoz">
-    <link rel="stylesheet" href="/static/common_extra.css?v=20261010-alezoz">
-    <script src="/static/app.js?v=202610101241" defer></script>
+    <link rel="stylesheet" href="/static/style.css?v=20261015f">
+    <link rel="stylesheet" href="/static/common_extra.css?v=20261015f">
+    <script src="/static/app.js?v=20261015f" defer></script>
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </head>
 
 <body>
 
+    <!-- AL EZOZ LOGO ENTRANCE ANIMATION -->
+    <div id="site-preloader" class="site-preloader" role="status" aria-label="Yuklanmoqda...">
+        <div class="preloader-content">
+            <div class="preloader-logo-ring">
+                <div class="preloader-spinner-ring"></div>
+                <img src="/static/alezoz-logo.jpg" alt="Al Ezoz Logo" class="preloader-logo-img">
+            </div>
+            <div class="preloader-brand">
+                <span class="preloader-title">Al Ezoz</span>
+                <span class="preloader-sub">MILLIY TAOMLAR</span>
+            </div>
+            <div class="preloader-bar-wrap">
+                <div class="preloader-bar-line"></div>
+            </div>
+        </div>
+    </div>
+
     <div class="background"></div>
 
     <!-- HEADER -->
     <header class="header">
-        <div class="table-info">
-            <div class="table-icon">♧</div>
-            <div>
+        <a href="/" class="table-info" style="text-decoration:none;">
+            <div class="table-icon" style="padding:0;background:none;border:none;box-shadow:none;"><img src="/static/alezoz-logo.jpg" alt="Al Ezoz Logo" style="width:40px;height:40px;border-radius:50%;object-fit:cover;display:block;"></div>
+            <div class="table-info-text">
                 <strong>Al Ezoz</strong>
                 <small>Buyurtma & To‘lov</small>
             </div>
-        </div>
+        </a>
 
         <nav class="main-nav">
             <ul class="nav-links">
@@ -41,17 +58,10 @@
             </ul>
         </nav>
 
-        <div class="logo">
-            <span>Al Ezoz</span>
-            <small>MILLI CAFE</small>
-        </div>
-
         <div class="header-actions">
-            <button class="mobile-nav-toggle" aria-label="Menyuni ochish">☰</button>
-            <button id="theme-btn" class="round-btn">🎨</button>
             <div class="lang-toggle-group">
-                <button type="button" class="lang-btn-item active" data-lang="uz" title="O'zbekcha"><span>🇺🇿</span> UZ</button>
-                <button type="button" class="lang-btn-item" data-lang="ru" title="Русский"><span>🇷🇺</span> RU</button>
+                <button type="button" class="lang-btn-item active" data-lang="uz" title="O'zbekcha">UZ</button>
+                <button type="button" class="lang-btn-item" data-lang="ru" title="Русский">RU</button>
             </div>
         </div>
     </header>
@@ -62,7 +72,7 @@
         <div class="drawer-header">
             <div class="logo" style="position:static; transform:none;">
                 <span style="font-size:30px;">Al Ezoz</span>
-                <small>MILLI CAFE</small>
+                <small>Milliy Taomlar</small>
             </div>
             <button class="drawer-close">✕</button>
         </div>
@@ -199,7 +209,7 @@
     <footer class="site-footer">
         <div class="footer-brand">
             <span class="logo-text">Al Ezoz</span>
-            <small>MILLI CAFE</small>
+            <small>Milliy Taomlar</small>
             <p data-i18n="footer.desc">Toshkent markazidagi eng mazali taomlar, yuqori darajadagi xizmat va shinam muhit maskani.</p>
         </div>
         <div class="footer-col">
@@ -473,6 +483,9 @@
     </script>
 </body>
 </html>
+
+
+
 
 
 

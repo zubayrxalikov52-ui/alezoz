@@ -7,15 +7,15 @@
 
     <title>Al Ezoz — Menyu</title>
 
-    <link rel="stylesheet" href="/static/style.css?v=20261010-alezoz">
-    <link rel="stylesheet" href="/static/common_extra.css?v=20261010-alezoz">
-    <script src="/static/app.js?v=202610101241" defer></script>
+    <link rel="stylesheet" href="/static/style.css?v=20261016_v5">
+    <link rel="stylesheet" href="/static/common_extra.css?v=20261016_v5">
+    <script src="/static/app.js?v=20261016_v5" defer></script>
 </head>
 
 <body>
 
-    <!-- PRELOADER INTRO ANIMATION -->
-    <div id="site-preloader" class="site-preloader">
+    <!-- AL EZOZ LOGO ENTRANCE ANIMATION -->
+    <div id="site-preloader" class="site-preloader" role="status" aria-label="Yuklanmoqda..." style="position:fixed;inset:0;z-index:9999999;background:radial-gradient(circle at 50% 45%, #0f3d2e 0%, #08281e 55%, #03140e 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 0.5s ease, transform 0.5s ease;cursor:pointer;">
         <div class="preloader-content">
             <div class="preloader-logo-ring">
                 <div class="preloader-spinner-ring"></div>
@@ -23,140 +23,478 @@
             </div>
             <div class="preloader-brand">
                 <span class="preloader-title">Al Ezoz</span>
-                <span class="preloader-sub">MILLIY CAFE</span>
+                <span class="preloader-sub">MILLIY TAOMLAR</span>
             </div>
             <div class="preloader-bar-wrap">
                 <div class="preloader-bar-line"></div>
             </div>
         </div>
     </div>
+    <script>
+    (function() {
+        var p = document.getElementById('site-preloader');
+        if (!p) return;
+        var dismissed = false;
+        function dismiss() {
+            if (dismissed) return;
+            dismissed = true;
+            p.classList.add('hide-preloader');
+            p.style.opacity = '0';
+            p.style.pointerEvents = 'none';
+            setTimeout(function() { if (p && p.parentNode) p.parentNode.removeChild(p); }, 500);
+        }
+        p.onclick = dismiss;
+        setTimeout(dismiss, 1300);
+    })();
+    </script>
 
     <div class="background"></div>
     <!-- HEADER (STICKY) -->
 
-    <header class="header header-sticky" id="main-header">
-
-        <div class="table-info">
-            <div class="table-icon" style="padding:0; background:none; border:none; box-shadow:none;">
-                <img src="/static/alezoz-logo.jpg" alt="Al Ezoz Logo"
-                     style="width:44px; height:44px; border-radius:50%; object-fit:cover; display:block;">
+    <!-- HEADER (STICKY FEED UP / OQTEPA STYLE) -->
+    <header class="header oqtepa-header header-sticky" id="main-header">
+        <!-- MOBILE FEED UP STYLE TOP ROW -->
+        <div class="mobile-feedup-topbar">
+            <div class="m-feedup-avatar" title="Foydalanuvchi profili">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="#111">
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+                </svg>
             </div>
 
-            <div>
-                <strong>Al Ezoz</strong>
-                <small>MILLIY CAFE</small>
+            <div class="m-feedup-delivery" id="delivery-select-trigger">
+                <div class="m-feedup-delivery-label">
+                    <svg viewBox="0 0 24 24" class="m-pin-svg" width="13" height="13" fill="#e52d27">
+                        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                    </svg>
+                    <span>BUYURTMA TURINI TANLANG</span>
+                </div>
+                <div class="m-feedup-delivery-val">
+                    <span id="current-delivery-type">Buyurtma turini tanlang</span>
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5">
+                        <polyline points="6 9 12 15 18 9"></polyline>
+                    </svg>
+                </div>
+            </div>
+
+            <div class="m-feedup-actions">
+                <!-- USER REQUEST: Til o'zgartirish (UZ / RU) tugmasi -->
+                <div class="m-feedup-lang" id="m-feedup-lang" title="Tilni tanlash / Выбор языка" aria-label="Tilni tanlash">
+                    <button type="button" class="m-lang-btn active" data-lang="uz" title="O‘zbekcha">UZ</button>
+                    <button type="button" class="m-lang-btn" data-lang="ru" title="Русский">RU</button>
+                </div>
             </div>
         </div>
 
+        <!-- TOP ROW (DESKTOP) -->
+        <div class="header-top-row">
+            <div class="header-left">
+                <a href="/menu" class="brand-oqtepa-logo" title="Al Ezoz — Milliy Taomlar">
+                    <img src="/static/alezoz-logo.jpg" alt="Al Ezoz Logo" class="brand-logo-img" style="width:42px;height:42px;border-radius:50%;object-fit:cover;display:inline-block;vertical-align:middle;margin-right:8px;">
+                    <span class="brand-logo-text">Al Ezoz</span>
+                    <span class="brand-logo-badge">MILLIY TAOMLAR</span>
+                </a>
+            </div>
 
-        <!-- DESKTOP NAVBAR -->
-        <nav class="main-nav">
-            <ul class="nav-links">
-                <li><a href="/menu" class="nav-link active" data-i18n="nav.menu">Menyu</a></li>
-                <li><a href="/about" class="nav-link" data-i18n="nav.about">Biz haqimizda</a></li>
-                <li><a href="/contact" class="nav-link" data-i18n="nav.contact">Aloqa</a></li>
-                <li>
-                    <a href="/cart" class="nav-link">
-                        <span data-i18n="nav.cart">Savat</span>
-                        <span class="cart-nav-badge cart-count-badge">0</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
+            <!-- DESKTOP NAVBAR -->
+            <nav class="main-nav">
+                <ul class="nav-links">
+                    <li><a href="/menu" class="nav-link active" data-i18n="nav.menu">Menyu</a></li>
+                    <li><a href="#category-bar" class="nav-link" data-i18n="nav.promos">Aksiyalar</a></li>
+                    <li><a href="/about" class="nav-link" data-i18n="nav.about">Biz haqimizda</a></li>
+                    <li><a href="/contact" class="nav-link" data-i18n="nav.branches">Filiallar</a></li>
+                    <li><a href="/contact" class="nav-link" data-i18n="nav.contact">Kontaktlar</a></li>
+                </ul>
+            </nav>
 
+            <div class="header-right-meta">
+                <div class="meta-pill delivery-pill">
+                    <span class="meta-icon">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="#e52d27">
+                            <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+                        </svg>
+                    </span>
+                    <div class="meta-text">
+                        <small data-i18n="header.deliveryType">Yetkazib berish yoki olib ketish</small>
+                        <strong data-i18n="header.delivery">Yetkazib berish</strong>
+                    </div>
+                </div>
 
-        <div class="logo">
-            <span>Al Ezoz</span>
-            <small>MILLI CAFE</small>
+                <div class="meta-pill region-pill">
+                    <span class="meta-icon">
+                        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="2" y1="12" x2="22" y2="12"></line>
+                            <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                        </svg>
+                    </span>
+                    <div class="meta-text">
+                        <small data-i18n="header.region">Hudud</small>
+                        <strong data-i18n="header.city">Toshkent</strong>
+                    </div>
+                </div>
+
+                <div class="lang-toggle-group">
+                    <button type="button" class="lang-btn-item active" data-lang="uz" title="O'zbekcha">UZ</button>
+                    <button type="button" class="lang-btn-item" data-lang="ru" title="Русский">RU</button>
+                </div>
+
+                <button type="button" class="navbar-more-btn" id="navbar-more-btn" aria-label="Sozlamalar va qo'shimcha menyu" title="Sozlamalar va Qo'shimcha">
+                    <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round">
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="12" x2="16" y2="12"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
         </div>
 
+        <!-- SEARCH & CART ACTION ROW -->
+        <div class="header-action-row">
+            <div class="search-box-wrap">
+                <span class="search-glass-icon">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#6b7280" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </span>
+                <input type="text" id="menu-search-input" class="search-input" placeholder="Qidirish... / Поиск..." aria-label="Taom qidirish" data-i18n-placeholder="header.searchPlaceholder">
+            </div>
 
-        <div class="header-actions">
-            <button class="mobile-nav-toggle" aria-label="Menyuni ochish">☰</button>
-            <button id="theme-btn" class="round-btn">
-                ☼
+            <button type="button" class="oqtepa-cart-btn" id="open-cart-btn" aria-label="Savat">
+                <span class="cart-icon">
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
+                </span>
+                <span class="cart-label" data-i18n="nav.cart">Savat</span>
+                <span class="cart-count-badge">0</span>
             </button>
-            <div class="lang-toggle-group">
-                <button type="button" class="lang-btn-item active" data-lang="uz" title="O'zbekcha"><span>🇺🇿</span> UZ</button>
-                <button type="button" class="lang-btn-item" data-lang="ru" title="Русский"><span>🇷🇺</span> RU</button>
+        </div>
+    </header>
+
+    <!-- NAVBAR MORE OPTIONS DROPDOWN / BOTTOM SHEET -->
+    <div class="navbar-more-backdrop" id="navbar-more-backdrop"></div>
+    <div class="navbar-more-dropdown" id="navbar-more-dropdown" role="dialog" aria-modal="true" aria-label="Qo'shimcha sozlamalar">
+        <div class="more-menu-header">
+            <div class="more-menu-title-wrap">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="16" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+                <span class="more-menu-title" data-i18n="more.title">Sozlamalar va Xizmatlar</span>
+            </div>
+            <button type="button" class="more-menu-close" id="more-menu-close-btn" aria-label="Yopish">✕</button>
+        </div>
+
+        <!-- 1. LANGUAGE SWITCHER (User requested: "u orqali boshqa funksiyalarni ishlatsa bolsin, misol uchun til ozgartirish") -->
+        <div class="more-menu-section">
+            <div class="more-section-label">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                <span data-i18n="more.langLabel">Tilni tanlash / Выбор языка</span>
+            </div>
+            <div class="more-lang-switcher">
+                <button type="button" class="more-lang-btn active" data-lang="uz">
+                    <span class="name">O‘zbekcha</span>
+                </button>
+                <button type="button" class="more-lang-btn" data-lang="ru">
+                    <span class="name">Русский</span>
+                </button>
             </div>
         </div>
 
-    </header>
+        <!-- 2. DELIVERY / PICKUP TOGGLE -->
+        <div class="more-menu-section">
+            <div class="more-section-label">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
+                <span data-i18n="more.deliveryLabel">Buyurtma turi</span>
+            </div>
+            <div class="more-delivery-switcher">
+                <button type="button" class="more-del-opt active" id="more-del-delivery">
+                    <span>🛵 Yetkazib berish</span>
+                </button>
+                <button type="button" class="more-del-opt" id="more-del-pickup">
+                    <span>🛍 Olib ketish</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- 3. BARCHA SAHIFALARGA O'TISH TUGMALARI (USER REQUEST: uchta chiziqli tugmani bossa boshqa pagelarga kiradigan tugmalar bo'lsin) -->
+        <div class="more-section-label" style="margin-top: 14px; margin-bottom: 8px;">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
+            <span style="font-weight:700;">Barcha sahifalar / Все страницы</span>
+        </div>
+        <div class="more-menu-links">
+            <a href="/" class="more-link-item">
+                <div class="more-link-icon" style="background:#fef3c7;color:#d97706;">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                </div>
+                <div class="more-link-content">
+                    <strong data-i18n="nav.home">Bosh sahifa</strong>
+                    <small>Asosiy vitrina va maxsus takliflar</small>
+                </div>
+                <span class="more-arrow">›</span>
+            </a>
+
+            <a href="/menu" class="more-link-item active-page">
+                <div class="more-link-icon" style="background:#fee2e2;color:#dc2626;">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>
+                </div>
+                <div class="more-link-content">
+                    <strong data-i18n="nav.menu">Menyu (Taomlar)</strong>
+                    <small>Barcha milliy va fast-fud taomlari</small>
+                </div>
+                <span class="more-arrow">›</span>
+            </a>
+
+            <a href="/cart" class="more-link-item">
+                <div class="more-link-icon" style="background:#dcfce7;color:#16a34a;">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                </div>
+                <div class="more-link-content">
+                    <strong data-i18n="nav.cart">Savat</strong>
+                    <small>Tanlangan taomlar va buyurtma berish</small>
+                </div>
+                <span class="more-arrow">›</span>
+            </a>
+
+            <a href="/order-status" class="more-link-item">
+                <div class="more-link-icon" style="background:#eff6ff;color:#2563eb;">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                </div>
+                <div class="more-link-content">
+                    <strong data-i18n="status.trackingSub">Buyurtmani kuzatish</strong>
+                    <small>Buyurtma holatini real vaqtda bilish</small>
+                </div>
+                <span class="more-arrow">›</span>
+            </a>
+
+            <a href="/about" class="more-link-item">
+                <div class="more-link-icon" style="background:#ecfdf5;color:#10b981;">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                </div>
+                <div class="more-link-content">
+                    <strong data-i18n="nav.about">Biz haqimizda</strong>
+                    <small>Al Ezoz tarixi, qadriyatlari va jamoasi</small>
+                </div>
+                <span class="more-arrow">›</span>
+            </a>
+
+            <a href="/contact" class="more-link-item">
+                <div class="more-link-icon" style="background:#fffbeb;color:#f59e0b;">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                </div>
+                <div class="more-link-content">
+                    <strong data-i18n="nav.branches">Filiallar va Kontaktlar</strong>
+                    <small>Toshkent sh., Amir Temur shoh ko‘chasi, 42</small>
+                </div>
+                <span class="more-arrow">›</span>
+            </a>
+
+            <a href="/chef" class="more-link-item">
+                <div class="more-link-icon" style="background:#f3e8ff;color:#9333ea;">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 13.8V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v9.8"></path><path d="M4 10h16"></path><path d="M6 18v2a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-2"></path></svg>
+                </div>
+                <div class="more-link-content">
+                    <strong data-i18n="nav.chef">👨‍🍳 Oshpaz ekrani (KDS)</strong>
+                    <small>Oshxona buyurtmalari monitoringi</small>
+                </div>
+                <span class="more-arrow">›</span>
+            </a>
+
+            <a href="/admin" class="more-link-item">
+                <div class="more-link-icon" style="background:#f1f5f9;color:#0f172a;">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                </div>
+                <div class="more-link-content">
+                    <strong data-i18n="nav.admin">🔐 Admin panel</strong>
+                    <small>Restoran boshqaruvi va statistika</small>
+                </div>
+                <span class="more-arrow">›</span>
+            </a>
+
+            <a href="tel:+998712000000" class="more-link-item hotline-link">
+                <div class="more-link-icon" style="background:#fef2f2;color:#ef4444;">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                </div>
+                <div class="more-link-content">
+                    <strong>Call-markaz 24/7</strong>
+                    <small>+998 71 200 00 00 (Bepul qo‘ng‘iroq)</small>
+                </div>
+                <span class="more-arrow">›</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- QUICK CATEGORY MODAL (Triggered by the cloche dome icon in dock) -->
+    <div class="category-modal-backdrop" id="category-modal-backdrop"></div>
+    <div class="category-quick-modal" id="category-quick-modal" role="dialog" aria-modal="true" aria-label="Kategoriyalar">
+        <div class="cat-modal-header">
+            <div class="cat-modal-title-wrap">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><line x1="12" y1="2" x2="12" y2="6"></line><path d="M4 17h16a8 8 0 0 0-16 0z"></path><line x1="2" y1="20" x2="22" y2="20"></line></svg>
+                <span data-i18n="menu.categoriesTitle">Kategoriyalar</span>
+            </div>
+            <button type="button" class="cat-modal-close" id="cat-modal-close-btn" aria-label="Yopish">✕</button>
+        </div>
+        <div class="cat-modal-grid">
+            <button type="button" class="cat-modal-item active" data-category="all">
+                <span class="cat-modal-icon">%</span>
+                <span class="cat-modal-name">Aksiyalar</span>
+            </button>
+            {% for cat in categories %}
+                {% if cat.slug != 'all' %}
+                <button type="button" class="cat-modal-item" data-category="{{ cat.slug }}">
+                    <span class="cat-modal-icon">{{ cat.icon }}</span>
+                    <span class="cat-modal-name">{{ cat.name }}</span>
+                </button>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
 
     <!-- MOBILE DRAWER -->
     <div class="drawer-backdrop"></div>
     <aside class="mobile-drawer">
         <div class="drawer-header">
-            <div class="logo" style="position:static; transform:none;">
-                <span style="font-size:30px;">Al Ezoz</span>
-                <small>MILLI CAFE</small>
+            <div class="brand-oqtepa-logo" style="margin:0;">
+                <img src="/static/alezoz-logo.jpg" alt="Al Ezoz Logo" style="width:38px;height:38px;border-radius:50%;object-fit:cover;vertical-align:middle;margin-right:6px;"><span class="brand-logo-text">Al Ezoz</span>
+                <span class="brand-logo-badge">Milliy Taomlar</span>
             </div>
-            <button class="drawer-close">✕</button>
+            <button class="drawer-close" aria-label="Yopish">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
         </div>
         <ul class="drawer-links">
-            <li><a href="/menu" class="nav-link active">🍽 <span data-i18n="nav.menu">Menyu</span></a></li>
-            <li><a href="/about" class="nav-link">ℹ️ <span data-i18n="nav.about">Biz haqimizda</span></a></li>
-            <li><a href="/contact" class="nav-link">📞 <span data-i18n="nav.contact">Aloqa</span></a></li>
-            <li><a href="/cart" class="nav-link">🛒 <span data-i18n="nav.cart">Savat</span> (<span class="cart-count-badge">0</span>)</a></li>
+            <li>
+                <a href="/menu" class="nav-link active">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px;vertical-align:middle;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path></svg>
+                    <span data-i18n="nav.menu">Menyu</span>
+                </a>
+            </li>
+            <li>
+                <a href="#category-bar" class="nav-link">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px;vertical-align:middle;"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                    <span data-i18n="nav.promos">Aksiyalar</span>
+                </a>
+            </li>
+            <li>
+                <a href="/about" class="nav-link">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px;vertical-align:middle;"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                    <span data-i18n="nav.about">Biz haqimizda</span>
+                </a>
+            </li>
+            <li>
+                <a href="/contact" class="nav-link">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px;vertical-align:middle;"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                    <span data-i18n="nav.branches">Filiallar</span>
+                </a>
+            </li>
+            <li>
+                <a href="/contact" class="nav-link">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px;vertical-align:middle;"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                    <span data-i18n="nav.contact">Kontaktlar</span>
+                </a>
+            </li>
+            <li>
+                <a href="/cart" class="nav-link">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:8px;vertical-align:middle;"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
+                    <span data-i18n="nav.cart">Savat</span> (<span class="cart-count-badge">0</span>)
+                </a>
+            </li>
         </ul>
+        <div style="padding: 16px 20px; border-top: 1px solid #eee; display: flex; gap: 10px; align-items: center; justify-content: space-between;">
+            <span style="font-size: 13px; color: #666;">Til / Язык:</span>
+            <div class="lang-toggle-group">
+                <button type="button" class="lang-btn-item active" data-lang="uz">UZ</button>
+                <button type="button" class="lang-btn-item" data-lang="ru">RU</button>
+            </div>
+        </div>
     </aside>
 
+    <!-- MAIN MENU PAGE -->
+    <main class="main oqtepa-main-layout">
 
-    <!-- MAIN -->
-
-    <main class="main" style="padding-top: 15px;">
-
-        <section class="menu-section">
-
-            <!-- BANNER SLIDER -->
+        <!-- PROMOTIONAL BANNER SLIDER (Full Width) -->
+        <div class="banner-slider-section">
             <div class="banner-slider" id="banner-slider">
                 <div class="banner-track" id="banner-track">
                     {% if banners %}
                         {% for banner in banners %}
                         <div class="banner-slide">
-                            <img src="{{ banner.display_image }}" alt="{{ banner.title|default:'Al Ezoz Banner' }}">
+                            <img src="{{ banner.display_image }}" alt="{{ banner.title|default:'Al Ezoz Lavash Promo' }}">
                         </div>
                         {% endfor %}
                     {% else %}
                         <div class="banner-slide">
-                            <div class="banner-default-card">
-                                <div class="banner-default-content">
-                                    <span class="banner-tag">🔥 AL EZOZ MILLIY CAFE</span>
-                                    <h2>Mazali taomlar, yaxshi kayfiyat!</h2>
-                                    <p>Eng sara milliy va zamonaviy taomlar, tezkor oshxona va unutilmas lazzat.</p>
-                                </div>
-                                <img src="/static/about-dish.png" alt="Al Ezoz Taomlar" class="banner-default-img">
-                            </div>
+                            <img src="/static/banner_lavash.jpg" alt="Al Ezoz Katta Tovuqli Lavash">
+                        </div>
+                        <div class="banner-slide">
+                            <img src="/static/banner_combo.jpg" alt="Ultimate Combo Burger Set">
                         </div>
                     {% endif %}
                 </div>
-                {% if banners and banners|length > 1 %}
                 <div class="banner-dots" id="banner-dots">
-                    {% for banner in banners %}
-                    <button class="banner-dot{% if forloop.first %} active{% endif %}" data-index="{{ forloop.counter0 }}"></button>
+                    {% if banners and banners|length > 1 %}
+                        {% for banner in banners %}
+                        <button class="banner-dot{% if forloop.first %} active{% endif %}" data-index="{{ forloop.counter0 }}"></button>
+                        {% endfor %}
+                    {% else %}
+                        <button class="banner-dot active" data-index="0"></button>
+                        <button class="banner-dot" data-index="1"></button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- TWO-COLUMN CONTENT: SIDEBAR CATEGORIES (LEFT) & FOOD GRID (RIGHT) -->
+        <div class="menu-content-grid">
+            <!-- DESKTOP LEFT SIDEBAR -->
+            <aside class="sidebar-categories" id="sidebar-categories">
+                <div class="sidebar-cat-header">
+                    <span class="cat-grid-icon">▦</span>
+                    <span data-i18n="menu.categoriesTitle">Kategoriyalar</span>
+                </div>
+                <div class="sidebar-cat-list">
+                    <button type="button" class="cat-pill active" data-category="all">
+                        <span class="cat-icon">%</span>
+                        <span class="cat-label">Aksiyalar</span>
+                    </button>
+                    {% for cat in categories %}
+                        {% if cat.slug != 'all' %}
+                        <button type="button" class="cat-pill" data-category="{{ cat.slug }}">
+                            <span class="cat-icon">{{ cat.icon }}</span>
+                            <span class="cat-label">{{ cat.name }}</span>
+                        </button>
+                        {% endif %}
                     {% endfor %}
                 </div>
-                {% endif %}
-            </div>
+            </aside>
 
-            <!-- KATEGORIYALAR (inline mahsulotlar tepasida) -->
-            <div class="category-bar" id="category-bar">
-                <button class="cat-pill active" data-category="all">
-                    <span>▦</span> Barchasi
-                </button>
-                {% for cat in categories %}
-                    {% if cat.slug != 'all' %}
-                    <button class="cat-pill" data-category="{{ cat.slug }}">
-                        <span>{{ cat.icon }}</span> {{ cat.name }}
+            <!-- PRODUCTS WRAPPER -->
+            <section class="menu-products-section">
+                <!-- MOBILE HORIZONTAL CATEGORY BAR (SCROLLABLE PILLS) -->
+                <div class="category-bar mobile-only-cat-bar" id="category-bar">
+                    <button type="button" class="cat-pill active" data-category="all">
+                        <span>%</span> Aksiyalar
                     </button>
-                    {% endif %}
-                {% endfor %}
-            </div>
+                    {% for cat in categories %}
+                        {% if cat.slug != 'all' %}
+                        <button type="button" class="cat-pill" data-category="{{ cat.slug }}">
+                            <span>{{ cat.icon }}</span> {{ cat.name }}
+                        </button>
+                        {% endif %}
+                    {% endfor %}
+                </div>
 
-            <!-- MAHSULOTLAR -->
+                <!-- SECTION TITLE (Меню / АКЦИИ) -->
+                <div class="menu-section-headings">
+                    <h1 class="menu-heading-main" data-i18n="nav.menu">Menyu</h1>
+                    <h2 class="menu-heading-sub" id="active-category-display">AKSIYALAR</h2>
+                </div>
 
-            <div id="food-list" class="food-list">
+                <!-- FOOD ITEMS GRID -->
+                <div id="food-list" class="food-list">
 
 
                 <!-- 1 -->
@@ -1810,23 +2148,67 @@
                 </article>
 
             </div>
-
-
-            <footer>
-                🍃 Yaxshi taom — yaxshi kayfiyat!
-            </footer>
-
         </section>
+    </div>
+
+    <!-- BOTTOM FLOATING DOCK (FEED UP STYLE - EXACT AS IMAGE 1) -->
+    <nav class="feedup-bottom-dock" id="feedup-bottom-dock" aria-label="Mobil navigatsiya">
+        <a href="/menu" class="dock-btn dock-btn-main active" id="dock-home-btn" title="Asosiy menyu">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            <span>Asosiy</span>
+        </a>
+
+        <!-- USER REQUEST: Qidiruv o'rniga Biz haqimizda (/about) sahifasiga o'tish tugmasi (SVG belgili) -->
+        <a href="/about" class="dock-btn" id="dock-about-btn" title="Biz haqimizda" aria-label="Biz haqimizda">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="16" x2="12" y2="12"></line>
+                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+            </svg>
+        </a>
+
+        <!-- USER REQUEST: Buyurtmalar holati (/order-status) oynasiga o'tish tugmasi (SVG belgili) -->
+        <a href="/order-status" class="dock-btn" id="dock-orders-btn" title="Buyurtmalar holati" aria-label="Buyurtmalar holati">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
+                <line x1="12" y1="22.08" x2="12" y2="12"></line>
+            </svg>
+        </a>
+
+        <!-- FOOTER PROFIL O'RNIGA SAVAT TUGMASI (USER REQUEST: Savatga kirish tugmasi) -->
+        <a href="/cart" class="dock-btn dock-btn-cart" id="dock-cart-btn" title="Savatga kirish" aria-label="Savatga kirish">
+            <div class="dock-cart-wrap">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="9" cy="21" r="1.5"></circle>
+                    <circle cx="20" cy="21" r="1.5"></circle>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+                <span class="dock-cart-badge cart-count-badge">0</span>
+            </div>
+        </a>
+    </nav>
+
+    <footer class="oqtepa-footer-simple">
+        Al Ezoz &mdash; Mazali va sifatli milliy fast-food
+    </footer>
 
 
-        <!-- CART -->
+        <!-- CART DRAWER -->
 
         <aside class="cart">
 
             <div class="cart-header">
 
                 <div class="cart-title">
-                    <span>🛒</span>
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
                     <h2>Savat</h2>
                     <b id="cart-count">0</b>
                 </div>
@@ -1838,7 +2220,11 @@
 
                 <div class="empty-cart">
 
-                    <span>🛒</span>
+                    <svg viewBox="0 0 24 24" width="44" height="44" fill="none" stroke="#9ca3af" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:12px;">
+                        <circle cx="9" cy="21" r="1"></circle>
+                        <circle cx="20" cy="21" r="1"></circle>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                    </svg>
 
                     <h3>Savat bo‘sh</h3>
 
@@ -1867,12 +2253,19 @@
 
                 <button id="order-btn" class="order-btn">
                     Zakaz berish
-                    <span>→</span>
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="margin-left:6px;vertical-align:middle;">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
                 </button>
 
 
                 <div class="order-info" data-i18n="cart.orderInfo">
-                    ◷ Buyurtma oshxonaga yuboriladi
+                    <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-right:4px;vertical-align:middle;">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                    </svg>
+                    Buyurtma oshxonaga yuboriladi
                 </div>
 
             </div>
@@ -1882,11 +2275,14 @@
     </main>
 
 
-        <script src="/static/script.js"></script>
+        <script src="/static/script.js?v=20261016a"></script>
 
 </body>
 
 </html>
+
+
+
 
 
 
