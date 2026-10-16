@@ -236,3 +236,34 @@ class ConfirmOrderView(View):
             logger.error(f"Telegram staff notification error on confirm: {e}")
             
         return _json({'status': 'success', 'success': True, 'detail': 'Buyurtma tasdiqlandi'})
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class ResendCodeView(View):
+    """POST /api/orders/<tracking_code>/resend-code — Resend confirmation code to Telegram."""
+    def post(self, request, tracking_code):
+        order = Order.objects.filter(tracking_code=tracking_code).first()
+        if not order:
+            return _json({'status': 'error', 'detail': 'Buyurtma topilmadi', 'sent': False}, 404)
+
+        if order.status != Order.STATUS_PENDING:
+            return _json({'status': 'error', 'detail': 'Buyurtma allaqachon tasdiqlangan', 'sent': False}, 400)
+
+        # Try sending directly if we have chat_id
+        sent = False
+        try:
+            sent = bool(try_send_confirmation_code_on_order(order))
+        except Exception as e:
+            logger.error(f"ResendCode error: {e}")
+
+        if sent:
+            return _json({'status': 'success', 'sent': True, 'detail': 'Kod yuborildi'})
+        else:
+            from django.conf import settings as _settings
+            bot_username = getattr(_settings, 'TELEGRAM_BOT_USERNAME', 'alezozmilliycafebot')
+            return _json({
+                'status': 'error',
+                'sent': False,
+                'detail': "Telegram chat_id topilmadi. Botga /start bosib qayta urinib ko'ring.",
+                'bot_url': f"https://t.me/{bot_username}?start={order.tracking_code}"
+            }, 400)
