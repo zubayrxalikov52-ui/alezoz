@@ -22,11 +22,14 @@ urlpatterns = [
     path('products', AdminProductsApiView.as_view(), name='admin_products_direct'),
     path('products/', AdminProductsApiView.as_view(), name='admin_products_direct_slash'),
     path('products/<int:product_id>', AdminProductsApiView.as_view(), name='admin_product_detail_direct'),
+    path('products/<int:product_id>/', AdminProductsApiView.as_view(), name='admin_product_detail_direct_slash'),
     path('products/<int:product_id>/toggle', AdminProductToggleApiView.as_view(), name='admin_product_toggle_direct'),
+    path('products/<int:product_id>/toggle/', AdminProductToggleApiView.as_view(), name='admin_product_toggle_direct_slash'),
 
     path('categories', AdminCategoriesApiView.as_view(), name='admin_categories_direct'),
     path('categories/', AdminCategoriesApiView.as_view(), name='admin_categories_direct_slash'),
     path('categories/<int:cat_id>', AdminCategoriesApiView.as_view(), name='admin_category_delete_direct'),
+    path('categories/<int:cat_id>/', AdminCategoriesApiView.as_view(), name='admin_category_delete_direct_slash'),
 
     path('banners', AdminBannersApiView.as_view(), name='admin_banners_direct'),
     path('banners/', AdminBannersApiView.as_view(), name='admin_banners_direct_slash'),
@@ -50,11 +53,14 @@ urlpatterns = [
     path('api/products', AdminProductsApiView.as_view(), name='admin_products'),
     path('api/products/', AdminProductsApiView.as_view(), name='admin_products_slash'),
     path('api/products/<int:product_id>', AdminProductsApiView.as_view(), name='admin_product_detail'),
+    path('api/products/<int:product_id>/', AdminProductsApiView.as_view(), name='admin_product_detail_slash'),
     path('api/products/<int:product_id>/toggle', AdminProductToggleApiView.as_view(), name='admin_product_toggle'),
+    path('api/products/<int:product_id>/toggle/', AdminProductToggleApiView.as_view(), name='admin_product_toggle_slash'),
 
     path('api/categories', AdminCategoriesApiView.as_view(), name='admin_categories'),
     path('api/categories/', AdminCategoriesApiView.as_view(), name='admin_categories_slash'),
     path('api/categories/<int:cat_id>', AdminCategoriesApiView.as_view(), name='admin_category_delete'),
+    path('api/categories/<int:cat_id>/', AdminCategoriesApiView.as_view(), name='admin_category_delete_slash'),
 
     path('api/banners', AdminBannersApiView.as_view(), name='admin_banners'),
     path('api/banners/', AdminBannersApiView.as_view(), name='admin_banners_slash'),
