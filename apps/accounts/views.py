@@ -33,18 +33,14 @@ class Send2FACodeView(View):
             return _json({'status': 'error', 'detail': 'Noto‘g‘ri JSON format'}, 400)
 
         username = data.get('username', '').strip()
-        password = data.get('password', '').strip()
 
-        if not username or not password:
-            return _json({'status': 'error', 'detail': 'Login yoki parol kiritilmadi'}, 400)
+        if not username:
+            return _json({'status': 'error', 'detail': 'Login kiritilmadi'}, 400)
 
         try:
             user = CustomUser.objects.get(username=username, is_active=True)
         except CustomUser.DoesNotExist:
-            return _json({'status': 'error', 'detail': 'Login yoki parol noto‘g‘ri'}, 400)
-
-        if not user.check_password(password):
-            return _json({'status': 'error', 'detail': 'Login yoki parol noto‘g‘ri'}, 400)
+            return _json({'status': 'error', 'detail': 'Foydalanuvchi topilmadi'}, 400)
 
         if role_to_check and user.role != role_to_check:
             return _json({'status': 'error', 'detail': 'Ruxsat yo‘q'}, 403)
