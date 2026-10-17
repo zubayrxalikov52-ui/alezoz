@@ -202,22 +202,24 @@
                         <button onclick="openProductModal()" class="btn-primary" style="padding:10px 18px;">+ Yangi taom qo‘shish</button>
                     </div>
 
-                    <table class="custom-table">
-                        <thead>
-                            <tr>
-                                <th>Rasm</th>
-                                <th>Nomi</th>
-                                <th>Kategoriya</th>
-                                <th>Narxi</th>
-                                <th>Mavjudligi</th>
-                                <th>Saralangan</th>
-                                <th>Amallar</th>
-                            </tr>
-                        </thead>
-                        <tbody id="products-tbody">
-                            <!-- Products dynamic -->
-                        </tbody>
-                    </table>
+                    <div style="overflow-x:auto; -webkit-overflow-scrolling:touch; width:100%;">
+                        <table class="custom-table" style="min-width:600px; width:100%;">
+                            <thead>
+                                <tr>
+                                    <th>Rasm</th>
+                                    <th>Nomi</th>
+                                    <th>Kategoriya</th>
+                                    <th>Narxi</th>
+                                    <th>Mavjudligi</th>
+                                    <th>Saralangan</th>
+                                    <th>Amallar</th>
+                                </tr>
+                            </thead>
+                            <tbody id="products-tbody">
+                                <!-- Products dynamic -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </section>
 
@@ -235,22 +237,24 @@
                         </div>
                     </div>
 
-                    <table class="custom-table">
-                        <thead>
-                            <tr>
-                                <th style="width:50px; text-align:center;">Emoji</th>
-                                <th>Kategoriya nomi</th>
-                                <th>Slug (ID)</th>
-                                <th>Taomlar</th>
-                                <th>Tartib</th>
-                                <th>Holati</th>
-                                <th style="text-align:right;">Amallar</th>
-                            </tr>
-                        </thead>
-                        <tbody id="categories-tbody">
-                            <!-- Categories dynamic -->
-                        </tbody>
-                    </table>
+                    <div style="overflow-x:auto; -webkit-overflow-scrolling:touch; width:100%;">
+                        <table class="custom-table" style="min-width:580px; width:100%;">
+                            <thead>
+                                <tr>
+                                    <th style="width:50px; text-align:center;">Emoji</th>
+                                    <th>Kategoriya nomi</th>
+                                    <th>Slug (ID)</th>
+                                    <th>Taomlar</th>
+                                    <th>Tartib</th>
+                                    <th>Holati</th>
+                                    <th style="text-align:right;">Amallar</th>
+                                </tr>
+                            </thead>
+                            <tbody id="categories-tbody">
+                                <!-- Categories dynamic -->
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </section>
 
@@ -552,6 +556,16 @@
         let adminToken = localStorage.getItem('admin_jwt_token') || '';
         let salesChartInst = null;
         let catChartInst = null;
+
+        function escapeHtml(str) {
+            if (str === null || str === undefined) return '';
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
 
         // AUTHENTICATION FLOW
         document.getElementById('login-step1-form').addEventListener('submit', async (e) => {
@@ -1042,39 +1056,40 @@
 
         function renderCategoriesTable(cats) {
             const tbody = document.getElementById('categories-tbody');
-            if (!cats.length) {
+            if (!tbody) return;
+            if (!cats || !cats.length) {
                 tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:var(--muted); padding:24px;">Hozircha kategoriyalar mavjud emas</td></tr>';
                 return;
             }
 
             tbody.innerHTML = cats.map(c => `
-                <tr>
-                    <td style="font-size:24px; text-align:center;">${c.icon || '🍽️'}</td>
-                    <td>
-                        <strong style="color:#ffffff; font-size:15px;">${escapeHtml(c.name)}</strong>
-                        ${c.name_ru && c.name_ru !== c.name ? `<br><small style="color:var(--muted);">${escapeHtml(c.name_ru)}</small>` : ''}
+                <tr style="border-bottom: 1px solid rgba(128,128,128,0.2);">
+                    <td style="font-size:24px; text-align:center; vertical-align:middle;">${c.icon || '🍽️'}</td>
+                    <td style="vertical-align:middle;">
+                        <strong style="font-size:15px; font-weight:600; display:block;">${escapeHtml(c.name)}</strong>
+                        ${c.name_ru && c.name_ru !== c.name ? `<small style="color:var(--muted); font-size:12px;">${escapeHtml(c.name_ru)}</small>` : ''}
                     </td>
-                    <td>
-                        <code style="background:rgba(255,255,255,0.06); padding:3px 8px; border-radius:6px; color:#e2e8f0; font-size:12px;">${c.slug}</code>
+                    <td style="vertical-align:middle;">
+                        <code style="background:rgba(128,128,128,0.14); padding:3px 8px; border-radius:6px; font-size:12px; font-weight:600;">${escapeHtml(c.slug)}</code>
                     </td>
-                    <td>
+                    <td style="vertical-align:middle;">
                         <span class="badge ${c.items_count > 0 ? 'badge-confirmed' : 'badge-cancelled'}" style="font-size:12px;">
                             ${c.items_count || 0} ta taom
                         </span>
                     </td>
-                    <td>
-                        <span style="color:var(--gold); font-weight:600;">#${c.sort_order || 0}</span>
+                    <td style="vertical-align:middle;">
+                        <span style="color:var(--gold, #d97706); font-weight:700;">#${c.sort_order || 0}</span>
                     </td>
-                    <td>
+                    <td style="vertical-align:middle;">
                         <span class="badge ${c.is_active ? 'badge-ready' : 'badge-cancelled'}">
                             ${c.is_active ? 'Faol' : 'Nofaol'}
                         </span>
                     </td>
-                    <td style="text-align:right; white-space:nowrap;">
-                        <button onclick="editCategory(${c.id})" class="btn-secondary" style="padding:6px 10px; font-size:12px; margin-right:4px;" title="Tahrirlash">
+                    <td style="text-align:right; white-space:nowrap; vertical-align:middle;">
+                        <button onclick="editCategory(${c.id})" class="btn-secondary" style="padding:6px 12px; font-size:12px; margin-right:4px; cursor:pointer;" title="Tahrirlash">
                             ✏️ Tahrirlash
                         </button>
-                        <button onclick="deleteCategory(${c.id}, '${escapeQuote(c.name)}', ${c.items_count || 0})" class="btn-secondary" style="padding:6px 10px; font-size:12px; color:#f87171; border-color:rgba(248,113,113,0.3);" title="O‘chirish">
+                        <button onclick="deleteCategory(${c.id})" class="btn-secondary" style="padding:6px 12px; font-size:12px; color:#f87171; border-color:rgba(248,113,113,0.3); cursor:pointer;" title="O‘chirish">
                             🗑 O‘chirish
                         </button>
                     </td>
@@ -1179,7 +1194,11 @@
             }
         });
 
-        async function deleteCategory(id, name, itemsCount) {
+        async function deleteCategory(id) {
+            const c = adminCategoriesData.find(item => item.id === id);
+            const name = c ? c.name : 'Kategoriya';
+            const itemsCount = c ? (c.items_count || 0) : 0;
+
             let msg = `"${name}" kategoriyasini o‘chirmoqchimisiz?`;
             if (itemsCount > 0) {
                 msg = `⚠️ DIQQAT! "${name}" kategoriyasiga bog‘langan ${itemsCount} ta taom mavjud!\nKategoriya o‘chirilsa, uning ichidagi taomlar ham o‘chiriladi.\n\nRostdan ham o‘chirishni xohlaysizmi?`;
@@ -1196,7 +1215,7 @@
                     await populateCategorySelect();
                     AllonApp.showToast('Kategoriya o‘chirildi');
                 } else {
-                    const err = await res.json();
+                    const err = await res.json().catch(() => ({}));
                     alert(err.detail || 'Kategoriyani o‘chirishda xatolik yuz berdi');
                 }
             } catch (err) {
