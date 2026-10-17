@@ -65,7 +65,7 @@ class MenuItem(models.Model):
     def display_image(self):
         if self.image:
             return self.image.url
-        return self.image_url or '/static/images/default-dish.jpg'
+        return self.image_url or '/static/about-dish.png'
 
     def to_dict(self):
         return {

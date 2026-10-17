@@ -122,30 +122,57 @@ function initMenuApp() {
     }
 
     if (foodList && foodCards.length > 0) {
-        /* BO'LIMLAR - EMOJILARSIZ TOZA MATN VA SVG */
-        const groups = [
-            { key: "food",    title: "Taomlar",     svg: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#e52d27" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>` },
-            { key: "salad",   title: "Salatlar",    svg: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#10b981" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path></svg>` },
-            { key: "snack",   title: "Snacklar",    svg: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>` },
-            { key: "drink",   title: "Ichimliklar", svg: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#3b82f6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"></path><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"></path><line x1="6" y1="2" x2="6" y2="4"></line><line x1="10" y1="2" x2="10" y2="4"></line><line x1="14" y1="2" x2="14" y2="4"></line></svg>` },
-            { key: "dessert", title: "Desertlar",   svg: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#ec4899" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"></path><path d="M8 6h8"></path><path d="M4 10h16v11a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V10z"></path></svg>` }
-        ];
+        /* BO'LIMLAR - DINAMIK VA MOSLASHUVCHAN */
+        const knownSvgs = {
+            food: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#e52d27" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>`,
+            salad: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#10b981" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path><path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path></svg>`,
+            snack: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#f59e0b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>`,
+            drink: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#3b82f6" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 8h1a4 4 0 1 1 0 8h-1"></path><path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4Z"></path><line x1="6" y1="2" x2="6" y2="4"></line><line x1="10" y1="2" x2="10" y2="4"></line><line x1="14" y1="2" x2="14" y2="4"></line></svg>`,
+            dessert: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#ec4899" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"></path><path d="M8 6h8"></path><path d="M4 10h16v11a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V10z"></path></svg>`
+        };
+
+        const categoryMap = new Map();
+        document.querySelectorAll(".sidebar-cat-list .cat-pill, .category-bar .cat-pill").forEach(pill => {
+            const key = pill.dataset.category;
+            if (key && key !== "all" && !categoryMap.has(key)) {
+                const label = pill.querySelector(".cat-label") ? pill.querySelector(".cat-label").textContent.trim() : pill.textContent.trim().replace(/^[^a-zA-Z0-9а-яА-ЯёЁ]+/, "").trim();
+                const icon = pill.querySelector(".cat-icon") ? pill.querySelector(".cat-icon").textContent.trim() : "🍽️";
+                const iconHtml = knownSvgs[key] || `<span style="font-size:18px;">${icon || '🍽️'}</span>`;
+                categoryMap.set(key, { key: key, title: label || key, iconHtml: iconHtml });
+            }
+        });
+
+        foodCards.forEach(card => {
+            const cat = card.dataset.category || "food";
+            if (!categoryMap.has(cat)) {
+                const iconHtml = knownSvgs[cat] || `🍽️`;
+                categoryMap.set(cat, { key: cat, title: cat.charAt(0).toUpperCase() + cat.slice(1), iconHtml: iconHtml });
+            }
+        });
 
         const titles = [];
-
-        // Har bir bo'lim uchun toza sarlavha yaratamiz
-        groups.forEach((group) => {
+        const processedCards = new Set();
+        categoryMap.forEach((group) => {
             const groupCards = foodCards.filter((card) => card.dataset.category === group.key);
             if (groupCards.length > 0) {
                 const title = document.createElement("h2");
                 title.className = "category-title";
                 title.dataset.category = group.key;
-                title.innerHTML = `${group.svg} <span>${group.title}</span>`;
+                title.innerHTML = `${group.iconHtml} <span>${group.title}</span>`;
 
                 foodList.appendChild(title);
                 titles.push(title);
 
-                groupCards.forEach((card) => foodList.appendChild(card));
+                groupCards.forEach((card) => {
+                    foodList.appendChild(card);
+                    processedCards.add(card);
+                });
+            }
+        });
+
+        foodCards.forEach(card => {
+            if (!processedCards.has(card)) {
+                foodList.appendChild(card);
             }
         });
 
