@@ -214,13 +214,14 @@ body {
     box-shadow: 0 0 0 3px rgba(200, 16, 46, 0.12);
 }
 
-/* OQTEPA RED CART BUTTON */
+/* OQTEPA GREEN CART BUTTON (LOGO GREEN) */
 .oqtepa-cart-btn {
     height: 44px;
     padding: 0 24px;
-    background: #c8102e;
+    background: #08281e;
+    background: linear-gradient(135deg, #0f3d2e 0%, #08281e 100%);
     color: #ffffff;
-    border: none;
+    border: 1px solid rgba(214, 169, 77, 0.4);
     border-radius: 10px;
     font-size: 15px;
     font-weight: 700;
@@ -228,20 +229,20 @@ body {
     align-items: center;
     gap: 10px;
     cursor: pointer;
-    box-shadow: 0 4px 14px rgba(200, 16, 46, 0.28);
+    box-shadow: 0 4px 14px rgba(8, 40, 30, 0.35);
     transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
     white-space: nowrap;
 }
 
 .oqtepa-cart-btn:hover {
-    background: #b00d27;
-    box-shadow: 0 6px 18px rgba(200, 16, 46, 0.38);
+    background: #0d3a2c;
+    box-shadow: 0 6px 18px rgba(8, 40, 30, 0.45);
     transform: translateY(-1px);
 }
 
 .oqtepa-cart-btn .cart-count-badge {
     background: #ffffff;
-    color: #c8102e;
+    color: #08281e;
     font-size: 12px;
     font-weight: 800;
     min-width: 20px;
@@ -572,22 +573,23 @@ body {
 }
 
 .sidebar-cat-list .cat-pill:hover {
-    border-color: #c8102e;
-    color: #c8102e;
-    background: #fef2f2;
+    border-color: #08281e;
+    color: #08281e;
+    background: #f0f7f4;
     transform: translateX(3px);
 }
 
 .sidebar-cat-list .cat-pill.active {
-    border-color: #c8102e;
-    color: #c8102e;
-    background: #fef2f2;
+    border-color: #08281e;
+    color: #ffffff;
+    background: #08281e;
+    background: linear-gradient(135deg, #0f3d2e 0%, #08281e 100%);
     font-weight: 800;
-    box-shadow: 0 4px 12px rgba(200, 16, 46, 0.12);
+    box-shadow: 0 4px 12px rgba(8, 40, 30, 0.35);
 }
 
 .sidebar-cat-list .cat-pill.active .cat-icon {
-    color: #c8102e;
+    color: #f3d27c;
 }
 
 /* MAIN PRODUCTS AREA */
@@ -806,14 +808,14 @@ body {
     height: 36px !important;
     padding: 0 16px !important;
     border-radius: 20px !important;
-    background: #c8102e !important;
-    background: linear-gradient(135deg, #e52d27 0%, #b91c1c 100%) !important;
+    background: #08281e !important;
+    background: linear-gradient(135deg, #0f3d2e 0%, #08281e 100%) !important;
+    border: 1px solid rgba(214, 169, 77, 0.4) !important;
     color: #ffffff !important;
     font-size: 14px !important;
     font-weight: 700 !important;
-    border: none !important;
     cursor: pointer !important;
-    box-shadow: 0 4px 12px rgba(200, 16, 46, 0.28) !important;
+    box-shadow: 0 4px 12px rgba(8, 40, 30, 0.35) !important;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
@@ -830,7 +832,7 @@ html[lang="ru"] .food-controls:not(.has-qty) .plus::after {
 
 .food-controls:not(.has-qty) .plus:hover {
     transform: translateY(-2px) scale(1.02) !important;
-    box-shadow: 0 6px 18px rgba(200, 16, 46, 0.38) !important;
+    box-shadow: 0 6px 18px rgba(8, 40, 30, 0.5) !important;
 }
 
 .food-controls.has-qty {
@@ -868,7 +870,7 @@ html[lang="ru"] .food-controls:not(.has-qty) .plus::after {
 }
 
 .food-controls.has-qty button.plus {
-    background: #e52d27 !important;
+    background: #08281e !important;
     color: #ffffff !important;
 }
 
@@ -1537,13 +1539,14 @@ footer {
 
 .dock-btn.active,
 .dock-btn-main.active {
-    background: #e52d27;
-    color: #ffffff;
+    background: #d6a94d;
+    background: linear-gradient(135deg, #f3d27c 0%, #d6a94d 50%, #b98531 100%);
+    color: #08281e;
     padding: 8px 16px;
     gap: 6px;
-    font-weight: 700;
+    font-weight: 800;
     font-size: 13px;
-    box-shadow: 0 4px 14px rgba(229, 45, 39, 0.4);
+    box-shadow: 0 4px 16px rgba(214, 169, 77, 0.45);
 }
 
 .dock-cart-wrap {
@@ -1557,8 +1560,9 @@ footer {
     position: absolute;
     top: -8px;
     right: -10px;
-    background: #e52d27;
-    color: #ffffff;
+    background: #08281e;
+    background: linear-gradient(135deg, #0f3d2e 0%, #08281e 100%);
+    color: #f3d27c;
     font-size: 10px;
     font-weight: 800;
     min-width: 18px;
