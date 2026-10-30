@@ -11,7 +11,23 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         # 1. Admin User
-        admin_tg = getattr(settings, 'ADMIN_TELEGRAM_ID', '') or '7987528056'
+        admin_tg = getattr(settings, 'ADMIN_TELEGRAM_ID', '') or '7319624771'
+
+        # 0. 7987528056 Telegram IDga ega akkauntlarni adminlikdan olib tashlash
+        users_7987528056 = CustomUser.objects.filter(telegram_id='7987528056')
+        for u in users_7987528056:
+            if u.username in ('Alezozadmin', 'admin'):
+                u.telegram_id = admin_tg
+                u.save()
+            else:
+                u.role = CustomUser.ROLE_CHEF
+                u.is_staff = False
+                u.is_superuser = False
+                u.is_active = False
+                u.telegram_id = None
+                u.save()
+                self.stdout.write(self.style.WARNING(f"Foydalanuvchi {u.username} (7987528056) adminlikdan olib tashlandi."))
+
         admin_user = CustomUser.objects.filter(username='Alezozadmin').first()
         if not admin_user:
             admin_user = CustomUser.objects.create(
@@ -32,6 +48,13 @@ class Command(BaseCommand):
             admin_user.is_superuser = True
             admin_user.telegram_id = admin_tg
             admin_user.save()
+
+        # Legacy admin akkaunti ham yangilanadi
+        admin_legacy = CustomUser.objects.filter(username='admin').first()
+        if admin_legacy:
+            admin_legacy.telegram_id = admin_tg
+            admin_legacy.save()
+
         self.stdout.write(self.style.SUCCESS(f"Admin user ready: {admin_user.username} (TG: {admin_tg})"))
 
         # 2. Chef User
