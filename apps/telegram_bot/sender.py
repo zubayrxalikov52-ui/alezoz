@@ -92,9 +92,9 @@ def send_verification_code_to_user(user, code):
     tg_id = user.telegram_id
     if not tg_id:
         if getattr(user, 'is_admin', False) or getattr(user, 'role', '') == 'admin':
-            tg_id = getattr(settings, 'ADMIN_TELEGRAM_ID', '')
+            tg_id = getattr(settings, 'ADMIN_TELEGRAM_IDS', '') or getattr(settings, 'ADMIN_TELEGRAM_ID', '')
         elif getattr(user, 'is_chef', False) or getattr(user, 'role', '') == 'chef':
-            tg_id = getattr(settings, 'CHEF_TELEGRAM_ID', '') or getattr(settings, 'CHEF_TELEGRAM_IDS', '')
+            tg_id = getattr(settings, 'CHEF_TELEGRAM_IDS', '') or getattr(settings, 'CHEF_TELEGRAM_ID', '')
 
     if not tg_id:
         logger.error(f"User {user.username} has no telegram_id and no fallback in settings")
@@ -108,12 +108,18 @@ def send_verification_code_to_user(user, code):
         f"⏱ Kod <b>10 daqiqa</b> davomida amal qiladi.\n"
         f"🚫 Ushbu kodni hech kimga ma'lum qilmang!"
     )
-    return _send_message(tg_id, text)
+    tg_ids = [tid.strip() for tid in str(tg_id).split(',') if tid.strip()]
+    success = False
+    for single_id in tg_ids:
+        if _send_message(single_id, text):
+            success = True
+    return success
 
 
 def notify_new_order(order):
     """Notify admin and chefs about a new order."""
-    admin_id = getattr(settings, 'ADMIN_TELEGRAM_ID', '')
+    admin_ids_str = getattr(settings, 'ADMIN_TELEGRAM_IDS', '') or getattr(settings, 'ADMIN_TELEGRAM_ID', '')
+    admin_ids = [aid.strip() for aid in str(admin_ids_str).split(',') if aid.strip()]
 
     items_text = '\n'.join(
         f"  • {item.name} × {item.quantity} — {int(item.total):,} so'm"
@@ -153,9 +159,10 @@ def notify_new_order(order):
     if order.latitude and order.longitude:
         text += f"\n📍 Xarita: https://yandex.ru/maps/?pt={order.longitude},{order.latitude}&z=16&l=map"
 
-    if admin_id and not _is_dev_mode():
-        _send_message(admin_id, text.strip())
-    elif _is_dev_mode():
+    if not _is_dev_mode():
+        for aid in admin_ids:
+            _send_message(aid, text.strip())
+    else:
         print(f"\n[DEV] New Order Telegram Notification:\n{text.strip()}\n")
 
     # Also notify chefs
@@ -168,7 +175,8 @@ def notify_order_status_change(order, old_status):
     if old_status == order.status:
         return False
 
-    admin_id = getattr(settings, 'ADMIN_TELEGRAM_ID', '')
+    admin_ids_str = getattr(settings, 'ADMIN_TELEGRAM_IDS', '') or getattr(settings, 'ADMIN_TELEGRAM_ID', '')
+    admin_ids = [aid.strip() for aid in str(admin_ids_str).split(',') if aid.strip()]
 
     status_messages = {
         'uz': {
@@ -187,13 +195,14 @@ def notify_order_status_change(order, old_status):
         },
     }
 
-    if admin_id and not _is_dev_mode():
+    if not _is_dev_mode():
         admin_text = (
             f"📊 <b>Buyurtma holati o'zgardi #{order.order_number}</b>\n"
             f"{old_status} ➔ <b>{order.status}</b>\n"
             f"👤 {order.customer_name} ({order.customer_phone})"
         )
-        _send_message(admin_id, admin_text)
+        for aid in admin_ids:
+            _send_message(aid, admin_text)
 
     # Notify customer via Telegram if they have a chat ID
     if order.telegram_chat_id:

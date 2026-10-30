@@ -969,9 +969,10 @@
 
 .form-label {
     display: block;
-    font-size: 13px;
+    font-size: 13.5px;
     margin-bottom: 8px;
-    color: #e2e8f0;
+    color: #0f172a !important;
+    font-weight: 600 !important;
 }
 
 .form-input, .form-textarea, .form-select {
@@ -2525,13 +2526,18 @@ body {
         border: 1px solid #f0f0f4 !important;
         box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04) !important;
         padding: 0 !important;
-        display: flex !important;
+        display: flex;
         flex-direction: column !important;
         justify-content: space-between !important;
         position: relative !important;
         overflow: hidden !important;
         height: 100% !important;
         min-height: 235px !important;
+    }
+
+    .food-card.is-hidden,
+    .category-title.is-hidden {
+        display: none !important;
     }
     .food-card-img-wrap {
         position: relative !important;
@@ -2615,6 +2621,27 @@ body {
         text-decoration: line-through !important;
         margin-bottom: 2px !important;
         display: block !important;
+    }
+    .food-info strong.food-promo-price,
+    .food-promo-price {
+        color: #ef4444 !important;
+        font-weight: 700 !important;
+    }
+    .food-price-wrap {
+        display: flex !important;
+        align-items: baseline !important;
+        gap: 6px !important;
+        flex-wrap: wrap !important;
+        margin-bottom: 2px !important;
+        line-height: 1.2 !important;
+    }
+    .food-price-wrap .food-old-price {
+        font-size: 11.5px !important;
+        font-weight: 400 !important;
+        color: #9ca3af !important;
+        text-decoration: line-through !important;
+        margin-bottom: 0 !important;
+        display: inline-block !important;
     }
     .food-info h3 {
         font-size: 13px !important;
@@ -3359,3 +3386,188 @@ body {
     display: inline-flex;
 }
 
+
+
+/* ==========================================================================
+   DYNAMIC CONTRAST SYSTEM (Och fonda to'q yozuv, to'q fonda och yozuv)
+   ========================================================================== */
+
+/* 1. Och fonli konteynerlar (Modallar, Auth oyna, Karta, Checkout) */
+.modal-content,
+.auth-container,
+.custom-table-card,
+.dash-stat-card {
+    background: #ffffff !important;
+    color: #0f172a !important;
+}
+
+/* Modallar va Kartalar ichidagi sarlavhalar */
+.modal-content h1, .modal-content h2, .modal-content h3, .modal-content h4,
+.auth-container h1, .auth-container h2, .auth-container h3, .auth-container h4,
+#modal-product-title, #modal-cat-title, #modal-order-title, #auth-title {
+    color: #0f172a !important;
+    font-weight: 700 !important;
+}
+
+/* Och fonda labellar: 100% to'q va tiniq ko'rinsin */
+.form-label,
+label.form-label,
+.modal-content label,
+.auth-container label,
+.custom-table-card label,
+.checkout-card label,
+.form-group label {
+    display: block;
+    font-size: 13.5px;
+    font-weight: 600 !important;
+    margin-bottom: 8px;
+    color: #0f172a !important; /* To'q qora-kulrang */
+    letter-spacing: -0.01em;
+}
+
+/* Modal ichidagi chekbox/radio matnlari */
+.modal-content label span,
+.modal-content .form-group span,
+.auth-container span:not(.badge) {
+    color: #1e293b !important;
+    font-weight: 500;
+}
+
+/* Kichik yordamchi matnlar va izohlar */
+.modal-content small,
+.auth-container small,
+.form-group small,
+#auth-subtitle {
+    color: #475569 !important;
+}
+
+/* Modal yopish tugmasi (✕) */
+.modal-close {
+    background: #f1f5f9 !important;
+    border: 1px solid #cbd5e1 !important;
+    color: #334155 !important;
+    font-weight: 700 !important;
+}
+.modal-close:hover {
+    background: #e2e8f0 !important;
+    color: #0f172a !important;
+}
+
+/* 2. To'q fonli Inputlar va Selectlar: "Orqa fon to'q bo'lsa yozuv och bo'lsin" */
+.form-input, 
+.form-textarea, 
+.form-select,
+#prod-search,
+#prod-cat-filter {
+    width: 100%;
+    padding: 13px 16px;
+    background: #1e293b !important; /* To'q fon */
+    border: 1.5px solid #334155 !important;
+    border-radius: 12px;
+    color: #ffffff !important; /* Och oppoq yozuv */
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+    font-family: inherit;
+    box-sizing: border-box;
+}
+
+.form-input:focus, 
+.form-textarea:focus, 
+.form-select:focus,
+#prod-search:focus,
+#prod-cat-filter:focus {
+    background: #0f172a !important;
+    border-color: #ef4444 !important;
+    color: #ffffff !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2) !important;
+}
+
+/* Placeholderlar to'q fonda aniq ko'rinsin */
+.form-input::placeholder,
+.form-textarea::placeholder,
+#prod-search::placeholder {
+    color: #94a3b8 !important; /* Aniq och kulrang placeholder */
+    opacity: 1 !important;
+}
+
+/* Select variantlari to'q fonda och yozuv */
+.form-select option,
+#prod-cat-filter option {
+    background: #1e293b !important;
+    color: #ffffff !important;
+    padding: 8px;
+}
+
+/* Fayl yuklash (file input) to'q fonda och matn */
+input[type="file"].form-input {
+    background: #1e293b !important;
+    color: #cbd5e1 !important;
+}
+input[type="file"].form-input::file-selector-button {
+    background: #334155 !important;
+    color: #ffffff !important;
+    border: 1px solid #475569 !important;
+    padding: 7px 14px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    margin-right: 12px;
+    transition: 0.2s;
+}
+input[type="file"].form-input::file-selector-button:hover {
+    background: #475569 !important;
+    color: #ffffff !important;
+}
+
+/* 3. Aksiya qutisi (Promo box) och modalda chiroyli qizil tusda */
+#modal-product div[style*="rgba(239,68,68"] {
+    background: #fff5f5 !important;
+    border: 1.5px solid #fecaca !important;
+    border-radius: 14px !important;
+}
+#modal-product #prod-is-promo ~ span {
+    color: #dc2626 !important;
+    font-weight: 700 !important;
+    font-size: 14px !important;
+}
+#modal-product #promo-price-group label {
+    color: #991b1b !important;
+    font-weight: 700 !important;
+}
+#modal-product #promo-price-group input {
+    background: #1e293b !important;
+    color: #ffffff !important;
+    border: 1.5px solid #f87171 !important;
+}
+#modal-product #promo-price-group small {
+    color: #7f1d1d !important;
+    font-weight: 500;
+}
+
+/* 4. Jadval (Table) och fonda mukammal kontrast */
+.custom-table th {
+    background: #f8fafc !important;
+    color: #475569 !important;
+    font-size: 12px !important;
+    font-weight: 700 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.04em !important;
+    border-bottom: 2px solid #e2e8f0 !important;
+}
+
+.custom-table td {
+    color: #1e293b !important;
+    border-bottom: 1px solid #f1f5f9 !important;
+}
+
+.custom-table tbody tr:hover {
+    background: #f8fafc !important;
+}
+
+/* 5. 2FA Telegram info qutisi */
+#login-step2-form > div:first-child {
+    background: #fffbeb !important;
+    border: 1px solid #fde68a !important;
+    color: #92400e !important;
+}

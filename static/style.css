@@ -755,6 +755,27 @@ body {
     line-height: 1.2;
 }
 
+.food-promo-price {
+    color: #ef4444 !important;
+    font-weight: 700 !important;
+    font-size: 15px;
+}
+.food-price-wrap {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 2px;
+    line-height: 1.2;
+}
+.food-price-wrap .food-old-price {
+    font-size: 12px;
+    font-weight: 400;
+    color: #9ca3af;
+    text-decoration: line-through;
+    margin-bottom: 0;
+    display: inline-block;
+}
 .food-old-price {
     font-size: 12px;
     font-weight: 400;
@@ -1408,12 +1429,17 @@ footer {
         border-radius: 20px !important;
         padding: 0 !important;
         height: 100% !important;
-        display: flex !important;
+        display: flex;
         flex-direction: column !important;
         justify-content: space-between !important;
         background: #ffffff !important;
         border: 1px solid #f0f0f4 !important;
         box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04) !important;
+    }
+
+    .food-card.is-hidden,
+    .category-title.is-hidden {
+        display: none !important;
     }
 
     .food-card img {

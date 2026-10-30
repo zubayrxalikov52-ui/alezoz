@@ -121,7 +121,7 @@ function initMenuApp() {
         });
     }
 
-    if (foodList && foodCards.length > 0) {
+    if (foodList) {
         /* BO'LIMLAR - DINAMIK VA MOSLASHUVCHAN */
         const knownSvgs = {
             food: `<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="#08281e" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"></path><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"></path><line x1="6" y1="1" x2="6" y2="4"></line><line x1="10" y1="1" x2="10" y2="4"></line><line x1="14" y1="1" x2="14" y2="4"></line></svg>`,
@@ -176,9 +176,8 @@ function initMenuApp() {
             }
         });
 
-        /* FEED UP STYLE CARD ENHANCER (IMAGE WRAPPER, ROUND FLOATING PLUS, DISCOUNT BADGE) */
-        const discountRates = [30, 24, 18, 15, 20, 25];
-        foodCards.forEach((card, index) => {
+        /* FEED UP STYLE CARD ENHANCER (IMAGE WRAPPER) */
+        foodCards.forEach((card) => {
             const img = card.querySelector("img");
 
             // 1. Image wrapper yaratish (agar yo'q bo'lsa)
@@ -189,62 +188,122 @@ function initMenuApp() {
                 img.parentNode.insertBefore(imgWrap, img);
                 imgWrap.appendChild(img);
             }
-
-            // 2. Ortiqcha floating tugma olib tashlandi, faqat kartaning asosiy Savatga tugmasi ishlatiladi
-
-            // 3. Chegirma yorlig'i va eski narx (har 3-taomga rasmdegidek chiroyli chegirma qo'shish)
-            if (index % 3 === 0 && imgWrap && !card.querySelector(".food-badge-discount")) {
-                const rate = discountRates[(index / 3) % discountRates.length];
-                const badge = document.createElement("span");
-                badge.className = "food-badge-discount";
-                badge.textContent = `-${rate}%`;
-                imgWrap.appendChild(badge);
-
-                // Eski narxni hisoblash va ko'rsatish
-                const strong = card.querySelector("strong");
-                if (strong && !card.querySelector(".food-old-price")) {
-                    const priceText = strong.textContent.trim();
-                    const cleanPrice = parseInt(priceText.replace(/\D/g, "")) || 0;
-                    if (cleanPrice > 0) {
-                        const oldPrice = Math.round((cleanPrice / (1 - rate / 100)) / 1000) * 1000;
-                        const oldPriceEl = document.createElement("span");
-                        oldPriceEl.className = "food-old-price";
-                        oldPriceEl.textContent = oldPrice.toLocaleString("uz-UZ");
-                        strong.parentNode.insertBefore(oldPriceEl, strong);
-                    }
-                }
-            }
         });
 
-        /* KATEGORIYA TANLASH */
+        /* KATEGORIYA TANLASH VA FILTRLASH */
         const activeCatHeading = document.querySelector("#active-category-display, #menu-active-category-title");
-        categories.forEach((category) => {
-            category.addEventListener("click", () => {
-                const selected = category.dataset.category;
-                categories.forEach((item) => {
-                    if (item.dataset.category === selected) {
-                        item.classList.add("active");
-                    } else {
-                        item.classList.remove("active");
-                    }
-                });
 
-                if (activeCatHeading) {
-                    const rawName = category.textContent.trim().replace(/^[^a-zA-Z0-9а-яА-ЯёЁ]+/, "").trim();
-                    activeCatHeading.textContent = rawName ? rawName.toUpperCase() : "AKSIYALAR";
+        function applyCategoryFilter(selectedSlug) {
+            const selected = (selectedSlug || "all").toLowerCase();
+
+            // 1. Sinxronlashtirish: Barcha pill tugmalari (desktop, mobil, cloche modal)
+            document.querySelectorAll(".cat-pill, .cat-modal-item, .category").forEach((item) => {
+                const itemCat = (item.dataset.category || "").toLowerCase();
+                if (itemCat === selected) {
+                    item.classList.add("active");
+                } else {
+                    item.classList.remove("active");
+                }
+            });
+
+            // 2. Yuqoridagi sarlavha matnini yangilash
+            if (activeCatHeading) {
+                let titleText = "BARCHA TAOMLAR";
+                if (selected === "all") {
+                    titleText = "BARCHA TAOMLAR";
+                } else if (selected === "promo" || selected === "aksiyalar") {
+                    titleText = "AKSIYALAR";
+                } else {
+                    const activePill = document.querySelector(`.cat-pill[data-category="${selected}"], .cat-modal-item[data-category="${selected}"]`);
+                    if (activePill) {
+                        const lbl = activePill.querySelector(".cat-label, .cat-modal-name");
+                        titleText = (lbl ? lbl.textContent : activePill.textContent).trim().replace(/^[^a-zA-Z0-9а-яА-ЯёЁ]+/, "").trim();
+                    } else if (categoryMap.has(selected)) {
+                        titleText = categoryMap.get(selected).title;
+                    } else {
+                        titleText = selected;
+                    }
+                }
+                activeCatHeading.textContent = titleText ? titleText.toUpperCase() : "MENYU";
+            }
+
+            // 3. Taom kartalarini filtrlash: Faqat tanlangan kategoriyadagi mahsulotlar ko'rinsin, boshqasi emas!
+            let visibleCount = 0;
+            foodCards.forEach((card) => {
+                const cardCat = (card.dataset.category || "food").toLowerCase();
+                let isVisible = false;
+
+                if (selected === "all") {
+                    isVisible = true;
+                } else if (selected === "promo" || selected === "aksiyalar") {
+                    isVisible = card.dataset.promo === "1" || card.classList.contains("has-promo") || card.querySelector(".food-badge-discount") !== null;
+                } else {
+                    isVisible = (cardCat === selected);
                 }
 
-                // Sarlavhalar
-                titles.forEach((title) => {
-                    const visible = selected === "all" || title.dataset.category === selected;
-                    title.style.display = visible ? "" : "none";
-                });
+                if (isVisible) {
+                    card.classList.remove("is-hidden");
+                    card.style.removeProperty("display");
+                    visibleCount++;
+                } else {
+                    card.classList.add("is-hidden");
+                    card.style.setProperty("display", "none", "important");
+                }
+            });
 
-                // Kartalar
-                foodCards.forEach((card) => {
-                    const visible = selected === "all" || card.dataset.category === selected;
-                    card.style.display = visible ? "" : "none";
-                });
+            // 4. Bo'lim sarlavhalari (h2.category-title)
+            titles.forEach((title) => {
+                const titleCat = (title.dataset.category || "").toLowerCase();
+                let showTitle = false;
+
+                if (selected === "all") {
+                    showTitle = foodCards.some(c => (c.dataset.category || "food").toLowerCase() === titleCat && !c.classList.contains("is-hidden"));
+                } else {
+                    showTitle = (titleCat === selected);
+                }
+
+                if (showTitle) {
+                    title.classList.remove("is-hidden");
+                    title.style.removeProperty("display");
+                } else {
+                    title.classList.add("is-hidden");
+                    title.style.setProperty("display", "none", "important");
+                }
+            });
+
+            // 5. Bo'sh kategoriya holati (Empty State)
+            let emptyBox = foodList.querySelector(".category-empty-state");
+            if (visibleCount === 0) {
+                if (!emptyBox) {
+                    emptyBox = document.createElement("div");
+                    emptyBox.className = "category-empty-state";
+                    emptyBox.style.cssText = "grid-column: 1 / -1; text-align: center; padding: 48px 20px; width: 100%;";
+                    emptyBox.innerHTML = `
+                        <div style="font-size: 46px; margin-bottom: 12px;">🍽️</div>
+                        <h3 style="font-size: 18px; font-weight: 700; color: #111827; margin-bottom: 6px;">Ushbu bo‘limda hozircha taomlar mavjud emas</h3>
+                        <p style="font-size: 14px; color: #6b7280;">Boshqa bo‘limlardan sara taomlarni tanlashingiz mumkin.</p>
+                    `;
+                    foodList.appendChild(emptyBox);
+                }
+                emptyBox.style.display = "block";
+            } else if (emptyBox) {
+                emptyBox.style.display = "none";
+            }
+        }
+        window.applyCategoryFilter = applyCategoryFilter;
+
+        // Barcha kategoriya tugmalariga hodisa ulash
+        document.querySelectorAll(".cat-pill, .cat-modal-item, .category").forEach((pill) => {
+            pill.addEventListener("click", (e) => {
+                e.preventDefault();
+                const sel = pill.dataset.category || "all";
+                applyCategoryFilter(sel);
+
+                // URL manzilini yangilash (?category=...)
+                try {
+                    const newUrl = (sel === "all") ? window.location.pathname : `${window.location.pathname}?category=${encodeURIComponent(sel)}`;
+                    window.history.replaceState({ category: sel }, "", newUrl);
+                } catch (err) {}
 
                 if (menuDropdown) menuDropdown.classList.remove("show");
             });
@@ -255,23 +314,50 @@ function initMenuApp() {
         if (searchInput) {
             searchInput.addEventListener("input", (e) => {
                 const query = e.target.value.trim().toLowerCase();
+                const activePill = document.querySelector(".cat-pill.active, .cat-modal-item.active");
+                const currentSelected = activePill ? (activePill.dataset.category || "all").toLowerCase() : "all";
+
+                if (!query) {
+                    applyCategoryFilter(currentSelected);
+                    return;
+                }
+
                 foodCards.forEach(card => {
                     const h3 = card.querySelector("h3") ? card.querySelector("h3").textContent.toLowerCase() : "";
                     const p = card.querySelector("p") ? card.querySelector("p").textContent.toLowerCase() : "";
-                    const matched = !query || h3.includes(query) || p.includes(query);
-                    card.style.display = matched ? "" : "none";
-                });
-                titles.forEach(title => {
-                    if (query) {
-                        const cat = title.dataset.category;
-                        const hasCards = foodCards.some(c => c.dataset.category === cat && c.style.display !== "none");
-                        title.style.display = hasCards ? "" : "none";
+                    const cardCat = (card.dataset.category || "food").toLowerCase();
+
+                    const matchesCategory = (currentSelected === "all") || (cardCat === currentSelected);
+                    const matchesText = h3.includes(query) || p.includes(query);
+                    const isVisible = matchesCategory && matchesText;
+
+                    if (isVisible) {
+                        card.classList.remove("is-hidden");
+                        card.style.removeProperty("display");
                     } else {
-                        title.style.display = "";
+                        card.classList.add("is-hidden");
+                        card.style.setProperty("display", "none", "important");
+                    }
+                });
+
+                titles.forEach(title => {
+                    const titleCat = (title.dataset.category || "").toLowerCase();
+                    const hasCards = foodCards.some(c => (c.dataset.category || "food").toLowerCase() === titleCat && !c.classList.contains("is-hidden"));
+                    if (hasCards) {
+                        title.classList.remove("is-hidden");
+                        title.style.removeProperty("display");
+                    } else {
+                        title.classList.add("is-hidden");
+                        title.style.setProperty("display", "none", "important");
                     }
                 });
             });
         }
+
+        // URL parametrini tekshirish (?category=...)
+        const urlParams = new URLSearchParams(window.location.search);
+        const initialCategory = urlParams.get("category") || window.location.hash.replace("#", "") || "all";
+        applyCategoryFilter(initialCategory);
     }
 
     /* MENYU TUGMASI */
@@ -297,8 +383,8 @@ function initMenuApp() {
         }
         const id = card.dataset.id;
         const title = card.querySelector("h3") ? card.querySelector("h3").textContent.trim() : "Taom";
-        const strong = card.querySelector("strong");
-        const cleanPrice = strong ? (parseInt(strong.textContent.replace(/\D/g, "")) || 0) : 0;
+        const strong = card.querySelector(".food-promo-price") || card.querySelector("strong");
+        const cleanPrice = card.dataset.price ? (parseInt(card.dataset.price) || 0) : (strong ? (parseInt(strong.textContent.replace(/\D/g, "")) || 0) : 0);
         const img = card.querySelector("img") ? card.querySelector("img").src : "";
         const category = card.dataset.category || "food";
         return { id: id, slug: id, name: title, price: cleanPrice, image: img, category: category };

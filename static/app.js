@@ -789,19 +789,31 @@ const AllonApp = (function() {
         });
 
         // 9. Food cards title & description translation
+        // Avvalo data-name-ru attributidan foydalanish (backend dan kelgan ruscha nom)
         document.querySelectorAll('.food-card').forEach(card => {
             const h3 = card.querySelector('h3');
             const p = card.querySelector('p');
             if (h3) {
-                if (!card.dataset.nameOriginal) {
-                    card.dataset.nameOriginal = h3.textContent.trim();
+                // data-name (o'zbekcha) va data-name-ru (ruscha) attributlaridan foydalanish
+                const nameUz = card.dataset.name || h3.textContent.trim();
+                const nameRu = card.dataset.nameRu || '';
+                if (cleanLang === 'ru' && nameRu) {
+                    h3.textContent = nameRu;
+                } else {
+                    h3.textContent = nameUz;
                 }
-                const rawName = card.dataset.nameOriginal.toLowerCase();
-                for (const [key, t] of Object.entries(foodTranslations)) {
-                    if (rawName.includes(key)) {
-                        h3.textContent = (cleanLang === 'ru') ? t.ru : t.uz;
-                        if (p) p.textContent = (cleanLang === 'ru') ? t.ru_desc : t.uz_desc;
-                        break;
+                // Statik foodTranslations ham tekshiramiz (eski fallback)
+                if (!nameRu) {
+                    if (!card.dataset.nameOriginal) {
+                        card.dataset.nameOriginal = nameUz;
+                    }
+                    const rawName = card.dataset.nameOriginal.toLowerCase();
+                    for (const [key, t] of Object.entries(foodTranslations)) {
+                        if (rawName.includes(key)) {
+                            h3.textContent = (cleanLang === 'ru') ? t.ru : t.uz;
+                            if (p) p.textContent = (cleanLang === 'ru') ? t.ru_desc : t.uz_desc;
+                            break;
+                        }
                     }
                 }
             }

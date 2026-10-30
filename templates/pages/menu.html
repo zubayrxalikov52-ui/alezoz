@@ -337,13 +337,17 @@
             <button type="button" class="cat-modal-close" id="cat-modal-close-btn" aria-label="Yopish">✕</button>
         </div>
         <div class="cat-modal-grid">
-            <button type="button" class="cat-modal-item active" data-category="all">
+            <button type="button" class="cat-modal-item{% if not selected_category or selected_category == 'all' %} active{% endif %}" data-category="all">
+                <span class="cat-modal-icon">🍽️</span>
+                <span class="cat-modal-name">Barchasi</span>
+            </button>
+            <button type="button" class="cat-modal-item{% if selected_category == 'promo' or selected_category == 'aksiyalar' %} active{% endif %}" data-category="promo">
                 <span class="cat-modal-icon">%</span>
                 <span class="cat-modal-name">Aksiyalar</span>
             </button>
             {% for cat in categories %}
-                {% if cat.slug != 'all' %}
-                <button type="button" class="cat-modal-item" data-category="{{ cat.slug }}">
+                {% if cat.slug != 'all' and cat.slug != 'promo' and cat.slug != 'aksiyalar' %}
+                <button type="button" class="cat-modal-item{% if selected_category == cat.slug %} active{% endif %}" data-category="{{ cat.slug }}">
                     <span class="cat-modal-icon">{{ cat.icon }}</span>
                     <span class="cat-modal-name">{{ cat.name }}</span>
                 </button>
@@ -458,13 +462,17 @@
                     <span data-i18n="menu.categoriesTitle">Kategoriyalar</span>
                 </div>
                 <div class="sidebar-cat-list">
-                    <button type="button" class="cat-pill active" data-category="all">
+                    <button type="button" class="cat-pill{% if not selected_category or selected_category == 'all' %} active{% endif %}" data-category="all">
+                        <span class="cat-icon">🍽️</span>
+                        <span class="cat-label">Barchasi</span>
+                    </button>
+                    <button type="button" class="cat-pill{% if selected_category == 'promo' or selected_category == 'aksiyalar' %} active{% endif %}" data-category="promo">
                         <span class="cat-icon">%</span>
                         <span class="cat-label">Aksiyalar</span>
                     </button>
                     {% for cat in categories %}
-                        {% if cat.slug != 'all' %}
-                        <button type="button" class="cat-pill" data-category="{{ cat.slug }}">
+                        {% if cat.slug != 'all' and cat.slug != 'promo' and cat.slug != 'aksiyalar' %}
+                        <button type="button" class="cat-pill{% if selected_category == cat.slug %} active{% endif %}" data-category="{{ cat.slug }}">
                             <span class="cat-icon">{{ cat.icon }}</span>
                             <span class="cat-label">{{ cat.name }}</span>
                         </button>
@@ -477,35 +485,57 @@
             <section class="menu-products-section">
                 <!-- MOBILE HORIZONTAL CATEGORY BAR (SCROLLABLE PILLS) -->
                 <div class="category-bar mobile-only-cat-bar" id="category-bar">
-                    <button type="button" class="cat-pill active" data-category="all">
-                        <span>%</span> Aksiyalar
+                    <button type="button" class="cat-pill{% if not selected_category or selected_category == 'all' %} active{% endif %}" data-category="all">
+                        <span class="cat-icon">🍽️</span> <span class="cat-label">Barchasi</span>
+                    </button>
+                    <button type="button" class="cat-pill{% if selected_category == 'promo' or selected_category == 'aksiyalar' %} active{% endif %}" data-category="promo">
+                        <span class="cat-icon">%</span> <span class="cat-label">Aksiyalar</span>
                     </button>
                     {% for cat in categories %}
-                        {% if cat.slug != 'all' %}
-                        <button type="button" class="cat-pill" data-category="{{ cat.slug }}">
-                            <span>{{ cat.icon }}</span> {{ cat.name }}
+                        {% if cat.slug != 'all' and cat.slug != 'promo' and cat.slug != 'aksiyalar' %}
+                        <button type="button" class="cat-pill{% if selected_category == cat.slug %} active{% endif %}" data-category="{{ cat.slug }}">
+                            <span class="cat-icon">{{ cat.icon }}</span> <span class="cat-label">{{ cat.name }}</span>
                         </button>
                         {% endif %}
                     {% endfor %}
                 </div>
 
-                <!-- SECTION TITLE (Меню / АКЦИИ) -->
+                <!-- SECTION TITLE (Menyu / BARCHA TAOMLAR) -->
                 <div class="menu-section-headings">
                     <h1 class="menu-heading-main" data-i18n="nav.menu">Menyu</h1>
-                    <h2 class="menu-heading-sub" id="active-category-display">AKSIYALAR</h2>
+                    <h2 class="menu-heading-sub" id="active-category-display">BARCHA TAOMLAR</h2>
                 </div>
 
                 <!-- FOOD ITEMS GRID -->
                 <div id="food-list" class="food-list">
                 {% for item in all_items %}
-                <article class="food-card" data-category="{{ item.category.slug|default:'food' }}" data-id="{{ item.id }}">
-                    <img src="{{ item.display_image }}" alt="{{ item.name }}" loading="lazy">
+                <article class="food-card{% if item.is_promo and item.promo_price %} has-promo{% endif %}" 
+                         data-category="{{ item.category.slug|default:'food' }}" 
+                         data-id="{{ item.id }}" 
+                         data-promo="{% if item.is_promo and item.promo_price %}1{% else %}0{% endif %}"
+                         data-price="{% if item.is_promo and item.promo_price %}{{ item.promo_price|floatformat:0 }}{% else %}{{ item.price|floatformat:0 }}{% endif %}"
+                         data-popular="{% if item.is_popular %}1{% else %}0{% endif %}"
+                         data-name="{{ item.name }}"
+                         data-name-ru="{{ item.name_ru|default:item.name }}">
+                    <div class="food-card-img-wrap">
+                        {% if item.is_promo and item.promo_price %}
+                        <span class="food-badge-discount">Aksiya</span>
+                        {% endif %}
+                        <img src="{{ item.display_image }}" alt="{{ item.name }}" loading="lazy">
+                    </div>
                     <div class="food-info">
                         <h3>{{ item.name }}</h3>
                         {% if item.description %}
                         <p>{{ item.description }}</p>
                         {% endif %}
+                        {% if item.is_promo and item.promo_price %}
+                        <div class="food-price-wrap" style="display:flex; align-items:baseline; gap:6px; flex-wrap:wrap;">
+                            <span class="food-old-price">{{ item.price|floatformat:0 }} so‘m</span>
+                            <strong class="food-promo-price" style="color:#ef4444 !important;">{{ item.promo_price|floatformat:0 }} so‘m</strong>
+                        </div>
+                        {% else %}
                         <strong>{{ item.price|floatformat:0 }} so‘m</strong>
+                        {% endif %}
                         <div class="food-controls">
                             <button class="minus">−</button>
                             <span class="quantity">0</span>

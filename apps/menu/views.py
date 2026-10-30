@@ -22,10 +22,12 @@ class MenuView(View):
         categories = Category.objects.filter(is_active=True).prefetch_related('items')
         all_items = MenuItem.objects.filter(is_available=True).select_related('category')
         banners = Banner.objects.filter(is_active=True)
+        selected_category = request.GET.get('category', '').strip()
         return render(request, 'pages/menu.html', {
             'categories': categories,
             'all_items': all_items,
             'banners': banners,
+            'selected_category': selected_category,
         })
 
 
@@ -88,6 +90,8 @@ class ProductsApiView(View):
                 'description_uz': it.description_uz or it.description,
                 'description_ru': it.description_ru or it.description,
                 'price': int(it.price),
+                'is_promo': 1 if (it.is_promo and it.promo_price) else 0,
+                'promo_price': int(it.promo_price) if (it.is_promo and it.promo_price) else None,
                 'image': it.display_image,
                 'is_available': 1 if it.is_available else 0,
                 'is_featured': 1 if it.is_popular else 0,

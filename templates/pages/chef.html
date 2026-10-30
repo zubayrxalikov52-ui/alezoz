@@ -33,7 +33,11 @@
             <form id="chef-login-step1">
                 <div class="form-group" style="text-align:left;">
                     <label class="form-label" for="chef-username-input">Oshpaz Logini</label>
-                    <input type="text" id="chef-username-input" class="form-input" placeholder="Alezozchef" value="Alezozchef" required autocomplete="username">
+                    <input type="text" id="chef-username-input" class="form-input" placeholder="••••••••" required autocomplete="username">
+                </div>
+                <div class="form-group" style="text-align:left; margin-top:14px;">
+                    <label class="form-label" for="chef-password-input">Oshpaz Paroli</label>
+                    <input type="password" id="chef-password-input" class="form-input" placeholder="••••••••" required autocomplete="current-password">
                 </div>
                 <button type="submit" id="btn-chef-step1" class="btn-primary" style="width:100%; justify-content:center; padding:15px; margin-top:10px;">
                     Kodni olish <span>→</span>
@@ -124,7 +128,8 @@
             btn.textContent = 'Tekshirilmoqda...';
 
             const payload = {
-                username: document.getElementById('chef-username-input').value
+                username: document.getElementById('chef-username-input').value.trim(),
+                password: document.getElementById('chef-password-input').value
             };
 
             try {
@@ -164,7 +169,7 @@
             btn.textContent = 'Tasdiqlanmoqda...';
 
             const payload = {
-                username: document.getElementById('chef-username-input').value,
+                username: document.getElementById('chef-username-input').value.trim(),
                 code: document.getElementById('chef-2fa-code').value
             };
 

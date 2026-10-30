@@ -11,6 +11,40 @@
     <link rel="stylesheet" href="/static/common_extra.css">
     <!-- Chart.js for analytics -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* Kontrast kafolati: Oq fonda to'q matn, To'q fonda och matn */
+        .modal-content, .auth-container, .custom-table-card {
+            background: #ffffff !important;
+            color: #0f172a !important;
+        }
+        .modal-content h1, .modal-content h2, .modal-content h3, .modal-content h4,
+        .auth-container h1, .auth-container h2, .auth-container h3,
+        .table-filter-group h3 {
+            color: #0f172a !important;
+        }
+        .form-label, label.form-label, .modal-content label, .auth-container label, .form-group label {
+            color: #0f172a !important;
+            font-weight: 600 !important;
+        }
+        .modal-content label span, .modal-content .form-group span {
+            color: #1e293b !important;
+            font-weight: 500 !important;
+        }
+        .form-input, .form-textarea, .form-select, #prod-search, #prod-cat-filter {
+            background: #1e293b !important;
+            color: #ffffff !important;
+            border: 1.5px solid #334155 !important;
+        }
+        .form-input::placeholder, .form-textarea::placeholder, #prod-search::placeholder {
+            color: #94a3b8 !important;
+            opacity: 1 !important;
+        }
+        .modal-close {
+            background: #f1f5f9 !important;
+            border: 1px solid #cbd5e1 !important;
+            color: #0f172a !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -35,7 +69,11 @@
             <form id="login-step1-form">
                 <div class="form-group" style="text-align:left;">
                     <label class="form-label" for="login-username">Admin Logini</label>
-                    <input type="text" id="login-username" class="form-input" placeholder="Alezozadmin" value="Alezozadmin" required autocomplete="username">
+                    <input type="password" id="login-username" class="form-input" placeholder="••••••••" required autocomplete="new-password" style="-webkit-text-security: disc;">
+                </div>
+                <div class="form-group" style="text-align:left; margin-top:14px;">
+                    <label class="form-label" for="login-password">Admin Paroli</label>
+                    <input type="password" id="login-password" class="form-input" placeholder="••••••••" required autocomplete="current-password">
                 </div>
                 <button type="submit" id="btn-login-step1" class="btn-primary" style="width:100%; justify-content:center; padding:15px; margin-top:10px;">
                     Kodni olish <span>→</span>
@@ -197,9 +235,12 @@
             <section id="tab-products" class="admin-tab-content" style="display:none;">
                 <div class="custom-table-card">
                     <div class="table-card-header-row" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px; flex-wrap:wrap; gap:12px;">
-                        <div style="display:flex; gap:12px; align-items:center;" class="table-filter-group">
+                        <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;" class="table-filter-group">
                             <h3 style="font-size:18px; color:var(--white);">Mahsulotlar katalogi</h3>
-                            <input type="text" id="prod-search" class="form-input" placeholder="Taom nomi..." onkeyup="filterProductsTable()" style="width:200px; padding:8px 12px;">
+                            <input type="text" id="prod-search" class="form-input" placeholder="Taom nomi..." onkeyup="filterProductsTable()" style="width:180px; padding:8px 12px;">
+                            <select id="prod-cat-filter" onchange="filterProductsTable()" class="form-input" style="width:160px; padding:8px 12px; background:#111a20; color:#fff; border:1px solid var(--border); border-radius:8px;">
+                                <option value="all">Barcha bo‘limlar</option>
+                            </select>
                         </div>
                         <button onclick="openProductModal()" class="btn-primary" style="padding:10px 18px;">+ Yangi taom qo‘shish</button>
                     </div>
@@ -377,8 +418,12 @@
                 <input type="hidden" id="prod-id">
                 <div class="modal-scroll-area">
                     <div class="form-group">
-                        <label class="form-label" for="prod-name">Nomi *</label>
-                        <input type="text" id="prod-name" class="form-input" required>
+                        <label class="form-label" for="prod-name">Nomi (O'zbekcha) *</label>
+                        <input type="text" id="prod-name" class="form-input" required placeholder="O'zbekcha nomi...">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="prod-name-ru">Nomi (Ruscha)</label>
+                        <input type="text" id="prod-name-ru" class="form-input" placeholder="Название на русском...">
                     </div>
                     <div class="form-group">
                         <label class="form-label" for="prod-cat">Kategoriya *</label>
@@ -413,6 +458,20 @@
                             <input type="checkbox" id="prod-featured">
                             <span>Saralangan (Featured)</span>
                         </label>
+                    </div>
+
+                    <div style="margin-bottom:16px; background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.25); border-radius:12px; padding:12px 14px;">
+                        <label style="display:flex; align-items:center; gap:10px; cursor:pointer; margin:0;">
+                            <input type="checkbox" id="prod-is-promo" onchange="togglePromoPrice(this.checked)" style="width:18px; height:18px; accent-color:#ef4444; cursor:pointer;">
+                            <span style="font-weight:600; color:#ef4444; font-size:14px;">🔥 Aksiya (Chegirma narxi)</span>
+                        </label>
+                        <div id="promo-price-group" style="display:none; margin-top:10px; padding-top:10px; border-top:1px dashed rgba(239,68,68,0.3);">
+                            <label class="form-label" for="prod-promo-price" style="color:#f87171; font-weight:600;">Aksiyadagi sotilish narxi (so‘mda) *</label>
+                            <input type="number" id="prod-promo-price" class="form-input" placeholder="Masalan: 35000" style="border-color:rgba(239,68,68,0.5);">
+                            <small style="color:#94a3b8; font-size:12px; display:block; margin-top:5px;">
+                                💡 Asosiy narx chizilgan (o‘chirilgan) holda, aksiyadagi narx esa foydalanuvchilarga qizil rangda ko‘rinadi.
+                            </small>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer-sticky">
@@ -609,7 +668,8 @@
             btn.textContent = 'Tekshirilmoqda...';
 
             const payload = {
-                username: document.getElementById('login-username').value
+                username: document.getElementById('login-username').value.trim(),
+                password: document.getElementById('login-password').value
             };
 
             try {
@@ -650,7 +710,7 @@
             btn.textContent = 'Tasdiqlanmoqda...';
 
             const payload = {
-                username: document.getElementById('login-username').value,
+                username: document.getElementById('login-username').value.trim(),
                 code: document.getElementById('login-2fa-code').value
             };
 
@@ -722,8 +782,27 @@
         function switchAdminTab(tabId) {
             document.querySelectorAll('.admin-tab-content').forEach(el => el.style.display = 'none');
             document.querySelectorAll('.dash-tab').forEach(b => b.classList.remove('active'));
-            document.getElementById(tabId).style.display = 'block';
-            event.target.classList.add('active');
+            const targetSec = document.getElementById(tabId);
+            if (targetSec) targetSec.style.display = 'block';
+            if (window.event && window.event.target) {
+                const btn = window.event.target.closest('.dash-tab');
+                if (btn) btn.classList.add('active');
+            }
+            if (tabId === 'tab-products') {
+                loadAdminProducts();
+            } else if (tabId === 'tab-orders') {
+                loadAdminOrders();
+            } else if (tabId === 'tab-categories') {
+                loadAdminCategories();
+            } else if (tabId === 'tab-banners') {
+                loadAdminBanners();
+            } else if (tabId === 'tab-chefs') {
+                loadAdminChefs();
+            } else if (tabId === 'tab-messages') {
+                loadAdminMessages();
+            } else if (tabId === 'tab-overview') {
+                loadAdminStats();
+            }
         }
 
         function closeModal(modalId) {
@@ -898,42 +977,107 @@
         }
 
         // PRODUCTS MANAGEMENT
+        let adminProductsData = [];
+
         async function loadAdminProducts() {
             try {
                 const res = await fetch('/api/admin/products', {
                     headers: {'Authorization': 'Bearer ' + adminToken}
                 });
+                if (!res.ok) {
+                    console.error('Products API xatolik:', res.status);
+                    return;
+                }
                 const prods = await res.json();
+                adminProductsData = Array.isArray(prods) ? prods : [];
                 const tbody = document.getElementById('products-tbody');
+                if (!tbody) return;
+
+                // Populate category filter dropdown
+                const catFilterSel = document.getElementById('prod-cat-filter');
+                if (catFilterSel && adminCategoriesData && adminCategoriesData.length) {
+                    const currentVal = catFilterSel.value;
+                    let opts = '<option value="all">Barcha bo‘limlar</option>';
+                    adminCategoriesData.forEach(cat => {
+                        opts += `<option value="${escapeHtml((cat.slug || '').toLowerCase())}">${escapeHtml(cat.name)}</option>`;
+                    });
+                    catFilterSel.innerHTML = opts;
+                    catFilterSel.value = currentVal || 'all';
+                }
+
+                if (!adminProductsData.length) {
+                    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; padding:36px; color:var(--muted); font-size:14px;">Hech qanday mahsulot topilmadi. "+ Yangi taom qo‘shish" tugmasini bosing.</td></tr>';
+                    return;
+                }
+
                 let html = '';
-                prods.forEach(p => {
+                adminProductsData.forEach(p => {
+                    const cSlug = (p.category_slug || '').toLowerCase();
+                    const isPromo = !!(p.is_promo && p.promo_price);
                     html += `
-                        <tr class="prod-row" data-name="${p.name.toLowerCase()}">
-                            <td><img src="${p.image || 'https://loremflickr.com/100/100/food'}" style="width:44px; height:44px; border-radius:10px; object-fit:cover;"></td>
-                            <td><strong>${p.name}</strong></td>
-                            <td><span style="text-transform:uppercase; font-size:12px; color:var(--muted);">${p.category_slug}</span></td>
-                            <td><strong style="color:var(--gold);">${p.price.toLocaleString('uz-UZ')} so‘m</strong></td>
+                        <tr class="prod-row" data-name="${escapeHtml((p.name || '').toLowerCase())}" data-category="${escapeHtml(cSlug)}">
                             <td>
-                                <input type="checkbox" ${p.is_available ? 'checked' : ''} onchange="toggleProductField(${p.id}, 'is_available', this.checked)">
+                                <img src="${p.image || '/static/about-dish.png'}" style="width:48px; height:48px; border-radius:10px; object-fit:cover; border:1px solid rgba(255,255,255,0.1); background:#1e293b;" onerror="this.src='/static/about-dish.png'">
                             </td>
                             <td>
-                                <input type="checkbox" ${p.is_featured ? 'checked' : ''} onchange="toggleProductField(${p.id}, 'is_featured', this.checked)">
+                                <div style="display:flex; flex-direction:column; gap:2px;">
+                                    <strong style="color:var(--white); font-size:14px;">${escapeHtml(p.name)}</strong>
+                                    ${p.name_ru ? `<span style="font-size:12px; color:#38bdf8; font-weight:500;">🇷🇺 ${escapeHtml(p.name_ru)}</span>` : '<span style="font-size:11px; color:#64748b; font-style:italic;">(Ruscha nomi yo‘q)</span>'}
+                                    ${p.description ? `<span style="font-size:11px; color:var(--muted); max-width:240px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;" title="${escapeHtml(p.description)}">${escapeHtml(p.description)}</span>` : ''}
+                                </div>
                             </td>
                             <td>
-                                <button onclick="editProduct(${JSON.stringify(p).replace(/"/g, '&quot;')})" style="border:none; background:transparent; color:var(--gold); cursor:pointer; font-size:16px;">✏️</button>
-                                <button onclick="deleteProduct(${p.id})" style="border:none; background:transparent; color:#f87171; cursor:pointer; font-size:16px; margin-left:8px;">🗑</button>
+                                <span style="background:rgba(232,187,88,0.12); color:var(--gold); border:1px solid rgba(232,187,88,0.3); padding:4px 8px; border-radius:6px; font-size:11px; font-weight:600; text-transform:uppercase;">${escapeHtml(p.category || p.category_slug || 'Taom')}</span>
+                            </td>
+                            <td>
+                                ${isPromo ? `
+                                    <div style="display:flex; flex-direction:column; gap:2px;">
+                                        <span style="text-decoration:line-through; color:#94a3b8; font-size:12px;">${Number(p.price || 0).toLocaleString('uz-UZ')} so‘m</span>
+                                        <strong style="color:#ef4444; font-size:14px; font-weight:700;">${Number(p.promo_price || 0).toLocaleString('uz-UZ')} so‘m</strong>
+                                        <span style="display:inline-block; align-self:flex-start; background:rgba(239,68,68,0.15); color:#ef4444; padding:1px 6px; border-radius:4px; font-size:10px; font-weight:700;">🔥 Aksiya</span>
+                                    </div>
+                                ` : `<strong style="color:var(--gold); font-size:14px;">${Number(p.price || 0).toLocaleString('uz-UZ')} so‘m</strong>`}
+                            </td>
+                            <td>
+                                <label style="cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                                    <input type="checkbox" ${p.is_available ? 'checked' : ''} onchange="toggleProductField(${p.id}, 'is_available', this.checked)" style="width:16px; height:16px; accent-color:var(--gold); cursor:pointer;">
+                                    <span style="font-size:12px; color:${p.is_available ? '#4ade80' : '#f87171'}; font-weight:600;">${p.is_available ? 'Mavjud' : 'Yo‘q'}</span>
+                                </label>
+                            </td>
+                            <td>
+                                <label style="cursor:pointer; display:inline-flex; align-items:center; gap:6px;">
+                                    <input type="checkbox" ${p.is_featured ? 'checked' : ''} onchange="toggleProductField(${p.id}, 'is_featured', this.checked)" style="width:16px; height:16px; accent-color:var(--gold); cursor:pointer;">
+                                    <span style="font-size:12px; color:${p.is_featured ? '#facc15' : 'var(--muted)'}; font-weight:600;">${p.is_featured ? '⭐ Ha' : 'Yo‘q'}</span>
+                                </label>
+                            </td>
+                            <td>
+                                <div style="display:flex; gap:6px; align-items:center;">
+                                    <button type="button" onclick="editProductById(${p.id})" title="Tahrirlash" style="border:none; background:rgba(232,187,88,0.15); color:var(--gold); border-radius:6px; width:32px; height:32px; cursor:pointer; font-size:14px; display:inline-flex; align-items:center; justify-content:center;">✏️</button>
+                                    <button type="button" onclick="deleteProduct(${p.id})" title="O‘chirish" style="border:none; background:rgba(239,68,68,0.15); color:#f87171; border-radius:6px; width:32px; height:32px; cursor:pointer; font-size:14px; display:inline-flex; align-items:center; justify-content:center;">🗑</button>
+                                </div>
                             </td>
                         </tr>
                     `;
                 });
                 tbody.innerHTML = html;
-            } catch (e) {}
+            } catch (e) {
+                console.error('loadAdminProducts error:', e);
+            }
+        }
+
+        function editProductById(id) {
+            const p = adminProductsData.find(item => item.id === id);
+            if (!p) return;
+            editProduct(p);
         }
 
         function filterProductsTable() {
-            const q = document.getElementById('prod-search').value.toLowerCase();
+            const q = (document.getElementById('prod-search').value || '').toLowerCase();
+            const cat = (document.getElementById('prod-cat-filter')?.value || 'all').toLowerCase();
             document.querySelectorAll('.prod-row').forEach(r => {
-                r.style.display = r.dataset.name.includes(q) ? '' : 'none';
+                const nameMatches = r.dataset.name.includes(q);
+                const catMatches = (cat === 'all') || (r.dataset.category === cat);
+                r.style.display = (nameMatches && catMatches) ? '' : 'none';
             });
         }
 
@@ -966,10 +1110,25 @@
         async function openProductModal() {
             document.getElementById('modal-product-title').textContent = 'Yangi taom qo‘shish';
             document.getElementById('form-product').reset();
+            document.getElementById('prod-name-ru').value = '';
             document.getElementById('prod-id').value = '';
+            document.getElementById('prod-is-promo').checked = false;
+            document.getElementById('prod-promo-price').value = '';
+            document.getElementById('promo-price-group').style.display = 'none';
             document.getElementById('image-preview-container').style.display = 'none';
             await populateCategorySelect();
             document.getElementById('modal-product').classList.add('open');
+        }
+
+        function togglePromoPrice(checked) {
+            const group = document.getElementById('promo-price-group');
+            const input = document.getElementById('prod-promo-price');
+            group.style.display = checked ? 'block' : 'none';
+            if (checked) {
+                input.focus();
+            } else {
+                input.value = '';
+            }
         }
 
         async function populateCategorySelect() {
@@ -984,12 +1143,17 @@
                 document.getElementById('modal-product-title').textContent = 'Taomni tahrirlash';
                 document.getElementById('prod-id').value = p.id;
                 document.getElementById('prod-name').value = p.name;
+                document.getElementById('prod-name-ru').value = p.name_ru || '';
                 document.getElementById('prod-cat').value = p.category_slug;
                 document.getElementById('prod-price').value = p.price;
                 document.getElementById('prod-img').value = p.image || '';
                 document.getElementById('prod-desc').value = p.description || '';
                 document.getElementById('prod-available').checked = !!p.is_available;
                 document.getElementById('prod-featured').checked = !!p.is_featured;
+                const isPromo = !!(p.is_promo && p.promo_price);
+                document.getElementById('prod-is-promo').checked = isPromo;
+                document.getElementById('prod-promo-price').value = p.promo_price || '';
+                document.getElementById('promo-price-group').style.display = isPromo ? 'block' : 'none';
 
                 const previewCont = document.getElementById('image-preview-container');
                 const previewImg = document.getElementById('image-preview-img');
@@ -1013,12 +1177,15 @@
 
             const formData = new FormData();
             formData.append('name', document.getElementById('prod-name').value);
+            formData.append('name_ru', document.getElementById('prod-name-ru').value.trim());
             formData.append('category_slug', document.getElementById('prod-cat').value);
             formData.append('price', document.getElementById('prod-price').value);
             formData.append('description', document.getElementById('prod-desc').value);
             formData.append('image_url', document.getElementById('prod-img').value);
             formData.append('is_available', document.getElementById('prod-available').checked ? '1' : '0');
             formData.append('is_featured', document.getElementById('prod-featured').checked ? '1' : '0');
+            formData.append('is_promo', document.getElementById('prod-is-promo').checked ? '1' : '0');
+            formData.append('promo_price', document.getElementById('prod-promo-price').value.trim());
 
             if (fileInput.files && fileInput.files[0]) {
                 formData.append('image_file', fileInput.files[0]);

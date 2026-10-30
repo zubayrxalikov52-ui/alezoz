@@ -194,8 +194,11 @@ class AdminProductsApiView(View):
         item = MenuItem(
             category=cat,
             name=data.get('name', 'Yangi Taom'),
+            name_ru=data.get('name_ru', '').strip() if data.get('name_ru') else '',
             description=data.get('description', ''),
             price=int(data.get('price', 0)),
+            is_promo=str(data.get('is_promo', '0')).lower() in ('1', 'true', 'on'),
+            promo_price=int(data.get('promo_price')) if (str(data.get('is_promo', '0')).lower() in ('1', 'true', 'on') and data.get('promo_price') and str(data.get('promo_price')).strip()) else None,
             image_url=data.get('image_url', data.get('image', '') if isinstance(data.get('image'), str) else ''),
             is_available=str(data.get('is_available', '1')).lower() in ('1', 'true', 'on'),
             is_popular=str(data.get('is_featured', '0')).lower() in ('1', 'true', 'on'),
@@ -212,10 +215,21 @@ class AdminProductsApiView(View):
 
         if 'name' in data:
             item.name = data['name']
+        if 'name_ru' in data:
+            item.name_ru = data['name_ru'].strip() if data['name_ru'] else ''
         if 'description' in data:
             item.description = data['description']
         if 'price' in data:
             item.price = int(data['price'])
+        if 'is_promo' in data:
+            item.is_promo = str(data['is_promo']).lower() in ('1', 'true', 'on')
+            if item.is_promo and 'promo_price' in data and str(data['promo_price']).strip():
+                try:
+                    item.promo_price = int(data['promo_price'])
+                except (ValueError, TypeError):
+                    item.promo_price = None
+            elif not item.is_promo:
+                item.promo_price = None
         if 'image' in data and isinstance(data['image'], str):
             item.image_url = data['image']
         if 'image_url' in data and isinstance(data['image_url'], str):

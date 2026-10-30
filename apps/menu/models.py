@@ -36,6 +36,8 @@ class MenuItem(models.Model):
     description_uz = models.TextField(blank=True)
     description_ru = models.TextField(blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=0, verbose_name="Narxi (so'm)")
+    is_promo = models.BooleanField(default=False, verbose_name="Aksiya")
+    promo_price = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True, verbose_name="Aksiyadagi narx (so'm)")
     image = models.ImageField(upload_to='menu/', blank=True, null=True, verbose_name="Rasm")
     image_url = models.URLField(blank=True, verbose_name="Rasm URL (ixtiyoriy)")
 
@@ -71,13 +73,18 @@ class MenuItem(models.Model):
         return {
             'id': self.pk,
             'name': self.name,
+            'name_ru': self.name_ru or '',
             'description': self.description,
             'price': int(self.price),
+            'is_promo': self.is_promo,
+            'promo_price': int(self.promo_price) if (self.is_promo and self.promo_price) else None,
             'image': self.display_image,
-            'category': self.category.name,
+            'category': self.category.name if self.category else '',
+            'category_slug': self.category.slug if self.category else 'food',
             'category_id': self.category_id,
             'is_available': self.is_available,
             'is_popular': self.is_popular,
+            'is_featured': self.is_popular,
             'is_new': self.is_new,
             'is_spicy': self.is_spicy,
             'is_vegetarian': self.is_vegetarian,
