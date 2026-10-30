@@ -2,11 +2,9 @@ from django.db import migrations
 
 
 def clear_categories_and_products(apps, schema_editor):
-    Category = apps.get_model('menu', 'Category')
-    MenuItem = apps.get_model('menu', 'MenuItem')
-    # Delete all menu items and categories
-    MenuItem.objects.all().delete()
-    Category.objects.all().delete()
+    # ZARARSIZLANTIRILDI: Taomlar va kategoriyalar o'chirilMAYDI
+    # Eski kod barcha mahsulotlarni o'chirib yuborardi
+    pass
 
 
 class Migration(migrations.Migration):
