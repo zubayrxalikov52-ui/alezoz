@@ -77,6 +77,11 @@ class Command(BaseCommand):
             chef_user.role = CustomUser.ROLE_CHEF
             chef_user.telegram_id = chef_tg
             chef_user.save()
+        chef_legacy = CustomUser.objects.filter(username='chef1').first()
+        if chef_legacy:
+            chef_legacy.telegram_id = chef_tg
+            chef_legacy.set_password('Alezoztashkent')
+            chef_legacy.save()
         self.stdout.write(self.style.SUCCESS(f"Chef user ready: {chef_user.username} (TG: {chef_tg})"))
 
         # 3. Default Banner

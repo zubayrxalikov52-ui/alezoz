@@ -47,7 +47,8 @@ class Send2FACodeView(View):
             return _json({'status': 'error', 'detail': 'Login yoki parol noto‘g‘ri'}, 400)
 
         if role_to_check and user.role != role_to_check:
-            return _json({'status': 'error', 'detail': 'Ruxsat yo‘q'}, 403)
+            if not (role_to_check == 'chef' and user.role == 'admin'):
+                return _json({'status': 'error', 'detail': 'Ruxsat yo‘q'}, 403)
 
         # Invalidate old codes
         VerificationCode.objects.filter(user=user, is_used=False).update(is_used=True)
@@ -102,7 +103,8 @@ class Verify2FACodeView(View):
             return _json({'status': 'error', 'detail': 'Foydalanuvchi topilmadi'}, 400)
 
         if role_to_check and user.role != role_to_check:
-            return _json({'status': 'error', 'detail': 'Ruxsat yo‘q'}, 403)
+            if not (role_to_check == 'chef' and user.role == 'admin'):
+                return _json({'status': 'error', 'detail': 'Ruxsat yo‘q'}, 403)
 
         code_obj = VerificationCode.objects.filter(
             user=user, is_used=False

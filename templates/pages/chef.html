@@ -211,7 +211,7 @@
                 });
                 if (res.ok) {
                     const data = await res.json();
-                    if (data.role === 'chef') {
+                    if (data.role === 'chef' || data.role === 'admin') {
                         document.getElementById('chef-display-name').textContent = data.full_name || 'Oshpaz';
                         return true;
                     }
